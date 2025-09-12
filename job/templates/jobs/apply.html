@@ -1,0 +1,54 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Apply for: <strong>{{ job.description }}</strong>
+                </div>
+                <div class="card-body">
+                    {% if error_message %}
+                        <div class="alert alert-danger">{{ error_message }}</div>
+                    {% endif %}
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Full Names</label>
+                            <input type="text" name="full_names" class="form-control" placeholder="Enter your full name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Upload Image</label>
+                            <input type="file" name="image" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Upload CV</label>
+                            <input type="file" name="cv" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select">
+                                <option value="none">--Select Category--</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="text" name="category_new" class="form-control" placeholder="Or add new category">
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">Apply Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

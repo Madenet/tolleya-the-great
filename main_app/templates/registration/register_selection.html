@@ -1,0 +1,63 @@
+{% extends "main_app/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ page_title }}</h2>
+    <p>Please review and accept the Terms & Conditions before selecting a registration type.</p>
+
+    <!-- Terms and Conditions Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">Terms and Conditions (POPI Act)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
+                    <p>By continuing, you agree to the terms set forth by the Protection of Personal Information (POPI) Act...</p>
+                    <p>1. Your data will be processed according to privacy regulations.</p>
+                    <p>2. We will not share your personal data without your consent.</p>
+                    <p>3. You have the right to request access to your data.</p>
+                    <p>4. Read more on our <a href="{% url 'terms_conditions' %}" target="_blank">Terms & Conditions</a>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="declineBtn">Decline</button>
+                    <button type="button" class="btn btn-primary" id="agreeBtn">I Agree</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Links (Initially Disabled) -->
+    <div class="list-group mt-3">
+        {% for link in registration_links %}
+            <a href="{% url link.url %}" class="list-group-item list-group-item-action disabled reg-link">
+                {{ link.name }}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let agreeBtn = document.getElementById("agreeBtn");
+        let declineBtn = document.getElementById("declineBtn");
+        let regLinks = document.querySelectorAll(".reg-link");
+
+        // Show Terms Modal on Page Load
+        let termsModal = new bootstrap.Modal(document.getElementById('termsModal'));
+        termsModal.show();
+
+        // Enable Links After Agreement
+        agreeBtn.addEventListener("click", function () {
+            regLinks.forEach(link => link.classList.remove("disabled"));
+            termsModal.hide();  // Hide the modal
+        });
+
+        // Redirect to index on Decline
+        declineBtn.addEventListener("click", function () {
+            window.location.href = "{% url 'index' %}";
+        });
+    });
+</script>
+{% endblock %}

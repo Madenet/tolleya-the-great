@@ -1,0 +1,65 @@
+{% extends "main_app/base.html" %}
+{% load i18n%}
+
+
+{% block title %} {{ quiz.title }} | Learning management system {% endblock %}
+{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+
+{% block content %}
+<body>
+    <div class="container mt-5">
+        <h1>Cases in the Circuit</h1>
+        <p>This section is dedicated to addressing issues, disputes, and challenges within the circuit. We aim to create a transparent and fair environment for managing concerns that arise among schools, educators, students, and parents.</p>
+        
+        <hr>
+        
+        <h2>Types of Cases Managed:</h2>
+        <ul>
+            <li><strong>Disciplinary Cases</strong>: Addressing behavioral concerns involving students, staff, or school administrators.</li>
+            <li><strong>Administrative Disputes</strong>: Resolving conflicts related to resource allocation, policies, and operational challenges.</li>
+            <li><strong>Academic Irregularities</strong>: Investigating incidents of malpractice in assessments, examinations, or record-keeping.</li>
+            <li><strong>Student Welfare Cases</strong>: Addressing concerns related to bullying, mental health, and overall student safety.</li>
+            <li><strong>Parent-Teacher Concerns</strong>: Managing grievances raised by parents or guardians in relation to their children’s education.</li>
+        </ul>
+        
+        <hr>
+        
+        <h2>Case Reporting and Resolution Process:</h2>
+        <p>Follow these steps for filing and resolving cases within the circuit:</p>
+        <ol>
+            <li><strong>Filing a Case</strong>:  
+                Stakeholders (parents, educators, or staff) can report cases directly through the Circuit Manager’s office or via an online reporting system. Ensure all details and supporting documents are submitted during filing.</li>
+            <li><strong>Initial Review</strong>:  
+                The Circuit Manager and their administrative team conduct a preliminary review to assess the case’s validity and jurisdiction.</li>
+            <li><strong>Investigation</strong>:  
+                Assigned officers or committees investigate the case thoroughly, gathering statements, evidence, and expert opinions.</li>
+            <li><strong>Resolution Meeting</strong>:  
+                All parties involved are invited to a resolution meeting to discuss findings and agree on a solution.</li>
+            <li><strong>Follow-Up</strong>:  
+                Periodic reviews ensure that resolutions are effectively implemented and monitored.</li>
+        </ol>
+        
+        <hr>
+        
+        <h2>Roles in Case Management:</h2>
+        <ul>
+            <li><strong>Circuit Manager</strong>: Oversees case processes, ensures impartiality, and upholds circuit policies.</li>
+            <li><strong>Circuit Administrator</strong>: Coordinates communication between parties, schedules hearings, and maintains records.</li>
+            <li><strong>School Representatives</strong>: Provide insights and evidence regarding cases involving their institutions.</li>
+            <li><strong>Special Committees</strong>: Handle specific types of cases such as academic integrity or student welfare.</li>
+        </ul>
+        
+        <hr>
+        
+        <h2>Rendered Activities:</h2>
+        <ul>
+            <li>Workshops on conflict resolution and case management.</li>
+            <li>Training programs for educators on managing classroom discipline.</li>
+            <li>Awareness sessions for parents on reporting procedures and their roles in resolution.</li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "main_app/base.html" %}
+{% block content %}
+<div class="container">
+    <h2>{{ page_title }}</h2>
+    <ul>
+        {% for paper in question_papers %}
+            <li>
+                <a href="{% url 'student:question_paper_detail' paper.pk %}">
+                    {{ paper.title }} - {{ paper.subject.name }} (Grade {{ paper.grade.name }})
+                </a>
+            </li>
+        {% empty %}
+            <li>No question papers available.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

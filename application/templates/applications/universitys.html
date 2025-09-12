@@ -1,0 +1,45 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+<!-- universitys.html -->
+<form action="{% url 'add_university' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group m-3">
+        <label>Select universities</label>
+        <select id="university-select" class="form-control" multiple>
+            <option value='none'>Select universities...</option>
+            {% for university in universities %}
+                <option value='{{ university.id }}'>{{ university.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Add University</button>
+</form>
+
+<div id="selected-universities">
+    <h3>Selected Universities:</h3>
+    <ul>
+        {% for application in university_applications %}
+            <li>{{ application.university.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+<script>
+// Add this script at the end of the HTML body or use window.onload event
+document.addEventListener('DOMContentLoaded', function() {
+    var select = document.getElementById('university-select');
+    var form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        var selectedOptions = select.selectedOptions;
+        for (var i = 0; i < selectedOptions.length; i++) {
+            var selectedUniversity = selectedOptions[i];
+            // You may need to adjust this part according to your Django implementation
+            // You can send an AJAX request to add the selected university to the backend
+            console.log('Selected University ID:', selectedUniversity.value);
+            console.log('Selected University Name:', selectedUniversity.textContent);
+        }
+    });
+});
+</script>

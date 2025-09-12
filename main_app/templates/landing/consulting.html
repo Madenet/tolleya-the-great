@@ -1,0 +1,77 @@
+{% extends "main_app/base.html" %}
+{% load i18n%}
+
+
+{% block title %} {{ quiz.title }} | Learning management system {% endblock %}
+{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+
+{% block content %}
+
+<body>
+    <div class="container mt-5">
+        <h1>Consulting Services</h1>
+        <p>Our consulting services aim to assist schools, educators, and administrators in improving their operations, resolving challenges, and promoting a positive learning environment. We offer expert guidance and solutions tailored to your unique needs.</p>
+        
+        <hr>
+        
+        <h2>Consulting Areas:</h2>
+        <ul>
+            <li><strong>School Administration & Operations</strong>: Providing strategies for efficient school management, including staffing, scheduling, and resource allocation.</li>
+            <li><strong>Curriculum Development</strong>: Assisting in designing effective curricula that align with educational standards and promote student success.</li>
+            <li><strong>Conflict Resolution & Mediation</strong>: Facilitating resolution of disputes between students, staff, parents, and the community.</li>
+            <li><strong>Educational Leadership Training</strong>: Offering leadership development programs to help school leaders manage teams, foster collaboration, and improve school culture.</li>
+            <li><strong>Student Welfare & Safety</strong>: Providing strategies to improve student mental health, safety, and overall well-being within the school environment.</li>
+        </ul>
+        
+        <hr>
+        
+        <h2>Case Management Consulting:</h2>
+        <p>We also offer consulting services for handling cases within the school circuit. These services help you manage disputes, grievances, and any other concerns in an effective and structured manner. Our services include:</p>
+        
+        <h3>Types of Cases Managed:</h3>
+        <ul>
+            <li><strong>Disciplinary Cases</strong>: Handling cases involving students or staff behavior, including bullying, misconduct, or violations of school policies.</li>
+            <li><strong>Administrative Disputes</strong>: Consulting on conflicts related to school management, operational challenges, and resource allocation.</li>
+            <li><strong>Academic Irregularities</strong>: Advising on handling cases of cheating, plagiarism, or other academic misconduct.</li>
+            <li><strong>Student Welfare Cases</strong>: Consulting on managing cases related to student mental health, bullying, and safety concerns.</li>
+            <li><strong>Parent-Teacher Concerns</strong>: Offering advice on handling grievances raised by parents regarding their children’s education and welfare.</li>
+        </ul>
+
+        <hr>
+
+        <h2>Case Reporting and Resolution Process:</h2>
+        <p>We help guide schools and circuit administrators through an efficient case reporting and resolution process:</p>
+        <ol>
+            <li><strong>Filing a Case</strong>: Initial steps to submit a case, including the gathering of necessary documentation and details.</li>
+            <li><strong>Initial Review</strong>: Conducting a preliminary review of the case to determine validity and relevance.</li>
+            <li><strong>Investigation</strong>: Facilitating the investigation process, ensuring all parties are heard and relevant information is gathered.</li>
+            <li><strong>Resolution Meeting</strong>: Organizing meetings to discuss findings, present solutions, and resolve the case in a fair manner.</li>
+            <li><strong>Follow-Up</strong>: Ensuring that the resolution is implemented effectively and monitoring for any ongoing issues.</li>
+        </ol>
+
+        <hr>
+        
+        <h2>Roles in Case Management Consulting:</h2>
+        <ul>
+            <li><strong>Circuit Manager</strong>: Provides oversight of the case management process, ensuring policies are followed and cases are handled impartially.</li>
+            <li><strong>Circuit Administrator</strong>: Coordinates the case management process, including documentation, scheduling meetings, and communication between parties.</li>
+            <li><strong>School Representatives</strong>: Assist in gathering necessary documentation and representing their school during case proceedings.</li>
+            <li><strong>Special Committees</strong>: Help with specific cases that require specialized expertise, such as academic integrity or student welfare.</li>
+        </ul>
+        
+        <hr>
+        
+        <h2>Rendered Activities:</h2>
+        <ul>
+            <li>Workshops on conflict resolution, case management, and leadership training.</li>
+            <li>Seminars for parents and teachers on effective communication and dispute resolution.</li>
+            <li>Training sessions for school administrators on handling sensitive cases and maintaining a healthy school environment.</li>
+        </ul>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+
+{% endblock %}

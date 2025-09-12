@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ page_title }}</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Subject</th>
+                <th>Session</th>
+                <th>Total Students</th>
+                <th>Present</th>
+                <th>Absent</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in attendance_reports %}
+                <tr>
+                    <td>{{ attendance.date }}</td>
+                    <td>{{ attendance.subject.name }}</td>
+                    <td>{{ attendance.session.name }}</td>
+                    <td>{{ attendance.total_students }}</td>
+                    <td>{{ attendance.present_count }}</td>
+                    <td>{{ attendance.absent_count }}</td>
+                    <td>
+                        <a href="{% url 'view_attendance_details' attendance.id %}" class="btn btn-info btn-sm">View Details</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No attendance records found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

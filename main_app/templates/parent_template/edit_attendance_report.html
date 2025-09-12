@@ -1,0 +1,12 @@
+<!-- templates/parent_template/edit_attendance_report.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ page_title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+</form>
+<a href="{% url 'parent_manage_attendance_reports' %}">Back to Manage Attendance Reports</a>
+{% endblock %}

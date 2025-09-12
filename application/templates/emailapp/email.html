@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+		<h4>Dear <span style = "text-transform:capitalize;">{{name}}</span>,</h4>
+
+		<p>{{message|safe|linebreaksbr}}</p>
+        <p>Kind Regards</P>
+        <p>Elim Circuit</P>
+		<div class="col-md-5 col-sm-6">
+			<a href="{{ home_page_url }}" class="btn btn-light">Go to Home Page</a>
+		</div>
+		<div class="text-center me-3">
+			<a class="btn btn-sm btn-dark mb-1 bi bi-cash" target="_blank" href="{{ listview_url }}" role="button"></a>
+			<p style="color: rgb(247, 239, 249);">Bursary</p>
+		</div>
+		<div class="text-center">
+			<a class="btn btn-sm btn-dark mb-1 bi bi-bar-chart-line" target="_blank" href="{{ brokerview_url }}" role="button"></a>
+			<p style="color: rgb(247, 239, 249);">University</p>
+		</div>
+        <p>----------------------------------------------------------------------------------------------------------------</P>
+
+		<p><i>Disclaimer: This communication including all its content is confidential and privileged and is directed to and for the use of the addressee(s) only and may contain confidential and/or privileged information and may be legally protected from disclosure. The recipient if not the addressee(s) should not use this message if erroneously received, and access and use of this e-mail in any manner by anyone other than the addressee(s) is unauthorised and strictly prohibited.</i></small></p>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Delete College/University{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Are you sure you want to delete "{{ college.title }}"?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'college_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}

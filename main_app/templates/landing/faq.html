@@ -1,0 +1,49 @@
+{% extends "main_app/base.html" %}
+{% load i18n%}
+
+
+{% block title %} {{ quiz.title }} | Learning management system {% endblock %}
+{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Frequently Asked Questions (FAQ)</h1>
+    <p class="lead text-center">Get answers to your common questions regarding the Elim Circuit, Vhembe West, and our services.</p>
+
+    <div class="row">
+        <!-- Location Section -->
+        <div class="col-md-6">
+            <h3>Where is the Elim Circuit located?</h3>
+            <p>The Elim Circuit is located at the Tsakani Primary School office, near the Rivoni School for the Blind and the Tribal Office in the Vhembe West area.</p>
+        </div>
+
+        <!-- Circuit Manager Role Section -->
+        <div class="col-md-6">
+            <h3>What is the role of the Circuit Manager?</h3>
+            <p>The Circuit Manager is responsible for overseeing the operations within the Elim Circuit. This includes coordinating educational activities, ensuring schools comply with educational standards, and addressing any issues that arise in schools within the circuit.</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Admin Role Section -->
+        <div class="col-md-6">
+            <h3>What is the role of the Circuit Manager's admin?</h3>
+            <p>The Circuit Manager's admin supports the Circuit Manager in handling administrative tasks, such as managing records, coordinating communication, and assisting with the implementation of educational programs within the circuit.</p>
+        </div>
+
+        <!-- Educational Activities Section -->
+        <div class="col-md-6">
+            <h3>What activities are conducted within the Elim Circuit?</h3>
+            <p>The Elim Circuit oversees various educational programs, including teacher training, student support services, curriculum development, and performance evaluations. These activities ensure that educational standards are met and improved within the circuit.</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Contact Section -->
+        <div class="col-md-12">
+            <h3>How can I contact the Elim Circuit office?</h3>
+            <p>You can reach us by visiting the Tsakani Primary School office. For any inquiries, feel free to call the office or send us an email. Our team is available to assist you with any questions or concerns.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

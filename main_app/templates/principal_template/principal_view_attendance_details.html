@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Attendance Details for {{ attendance.date }}</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance_records %}
+                <tr>
+                    <td>{{ record.student.admin.last_name }} {{ record.student.admin.first_name }}</td>
+                    <td>{{ record.status }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2" class="text-center">No records found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'principal_view_attendance' %}" class="btn btn-secondary">Back to Attendance</a>
+</div>
+{% endblock %}

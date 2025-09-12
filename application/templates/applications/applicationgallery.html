@@ -1,0 +1,77 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+
+    <Style>
+        .image-thumbail {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .list-group-item a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+</head>
+<br>
+<br>
+<body class="m-5">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        University
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="{% url 'applicationgallery' %}">All</a>
+                        </li>
+                        {% for university in universitys %}
+                        <li class=" list-group-item">
+                            <a href="{% url 'applicationgallery' %}?university={{university.name}}">
+                                {{university.name}}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        
+
+                        <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Institution</a>
+                        <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Logout</a>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+
+                    {% for application in applications %}
+                    <div class="col-md-4">
+                        <div class="card my-2">
+                            <img class="image-thumbail" src="{{application.image.url}}" alt="Card image cap">
+
+                            <div class="card-body">
+                                <small>university: {{application.universitys.name}}</small>
+                                <small>date: {{application.uploaded_on}}</small>
+                                <a href="{% url 'delete-application' application.id %}" class="edit-color"><i class="fas fa-trash"></i></a>
+                            </div>
+                            <a href="{% url 'application' application.id %}" class="btn btn-outline-dark btn-sm m-1">View</a>
+                        </div>
+                    </div>
+                    {% empty %} 
+                    <h3>No Institution {'='}</h3>
+                    {% endfor %}
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+{% endblock %}

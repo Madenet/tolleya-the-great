@@ -1,0 +1,33 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+
+<section class="content">
+    <div class="container mt-5">
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Form Fields -->
+            <div class="row">
+                {% for field in form %}
+                    <div class="mb-3 col-md-6">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+    
+            <!-- Submit Button -->
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">Add School</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock content %}

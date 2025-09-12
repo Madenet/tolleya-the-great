@@ -1,0 +1,44 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block content %}
+
+<body>
+    <h1>Timetable</h1>
+
+    {% if timetables %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Grade</th>
+                    <th>Course</th>
+                    <th>Subjects</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for timetable in timetables %}
+                    <tr>
+                        <td>{{ timetable.day }}</td>
+                        <td>{{ timetable.grade.name }}</td>
+                        <td>{{ timetable.grade.course.name }}</td>
+                        <td>
+                            {% for subject in timetable.subjects.all %}
+                                <span {% if user_subjects and subject in user_subjects %}style="font-weight: bold;"{% endif %}>
+                                    {{ subject.name }}
+                                </span>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ timetable.start_time }}</td>
+                        <td>{{ timetable.end_time }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No timetables available for your grade, course, or subjects.</p>
+    {% endif %}
+</body>
+{% endblock content %}

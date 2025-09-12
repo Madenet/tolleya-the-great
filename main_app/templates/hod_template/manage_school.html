@@ -1,0 +1,62 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><a href="{% url 'school_dashboard' %}" class="d-block">{{page_title}}</a></h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>School Name</th>
+                                    <th>grade</th>
+                                    <th>Website</th>
+                                    <th>Email</th>
+                                    <th>Contacts</th>
+                                    <th>Address</th>
+                                    <th>Year</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for school in schools %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <div onclick="window.location='{% url 'school_dashboard' %}';" style="cursor: pointer;">
+                                    <td>{{school.name}}</td>
+                                    </div>
+                                    <td>{{school.grade}}</td>
+                                    <td>{{school.website_url}}</td>
+                                    <td>{{school.email}}</td>
+                                    <td>{{school.whatsapp_number}}</td>
+                                    <td>{{school.address}}</td>
+                                    <td>{{school.year}}</td>
+                                    <td>{{school.count}}</td>
+                                    
+                                    
+                                    
+                                    <td><a href="{% url 'edit_school' school.id %}" class="btn btn-info">Edit</a> -
+                                        <a href="{% url 'delete_school' school.id %}" class="btn btn-danger" onclick="return confirm('Are you sure about this ?')">Delete</a>
+
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

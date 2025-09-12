@@ -1,0 +1,59 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+<!-- school_dashboard.html -->
+<h1>Welcome to {{ school.name }} Dashboard</h1>
+<body>
+    <div class="container mt-4">
+        <h1>Welcome, {{ user_role }}</h1>
+        {% if school %}
+            <h2>School: {{ school.name }}</h2>
+        {% else %}
+            <p>No school assigned to you.</p>
+        {% endif %}
+
+        <div class="row mt-4">
+            <!-- Submit Documents -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Submit Documents</h5>
+                        <p class="card-text">Upload and manage school-related documents.</p>
+                        <a href="{% url 'submit_documents' %}" class="btn btn-primary">Go</a>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <div class="row mt-4">
+            <!-- View Textbooks and Question Papers -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Textbooks & Question Papers</h5>
+                        <p class="card-text">Access textbooks and past question papers.</p>
+                        <a href="{% url 'view_textbooks' %}" class="btn btn-primary">Go</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="row mt-4">
+            <!-- Educators -->
+            
+            
+            <a href="{% url 'view_textbooks' %}">View Textbooks</a>
+
+            <!-- Students -->
+            
+        </div>
+    </div>
+</body>
+
+{% endblock content %}

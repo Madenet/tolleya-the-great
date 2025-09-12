@@ -1,0 +1,79 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Add New SOS</h2>
+    
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <!-- Display error message if present -->
+        {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+            <label for="image" class="form-label">Upload Image</label>
+            <input type="file" name="image" id="image" class="form-control" required>
+            <div class="invalid-feedback">Please upload an image.</div>
+        </div>
+
+        <!-- Select Existing SOS Category -->
+        <div class="mb-3">
+            <label for="soscategory" class="form-label">Select SOS Category</label>
+            <select name="soscategory" id="soscategory" class="form-select">
+                <option value="none">Select an existing category</option>
+                {% for category in soscategories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Add New SOS Category -->
+        <div class="mb-3">
+            <label for="soscategory_new" class="form-label">Or Create New Category</label>
+            <input type="text" name="soscategory_new" id="soscategory_new" class="form-control" placeholder="New category name">
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
+            <div class="invalid-feedback">Please provide a description.</div>
+        </div>
+
+        <!-- Subject -->
+        <div class="mb-3">
+            <label for="subject" class="form-label">Subject</label>
+            <input type="text" name="subject" id="subject" class="form-control" required>
+            <div class="invalid-feedback">Please provide the subject.</div>
+        </div>
+
+        <!-- Grade -->
+        <div class="mb-3">
+            <label for="grade" class="form-label">Grade</label>
+            <input type="text" name="grade" id="grade" class="form-control">
+        </div>
+
+        <!-- Date -->
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="text" name="date" id="date" class="form-control" placeholder="YYYY-MM-DD">
+        </div>
+
+        <!-- Assessment -->
+        <div class="mb-3">
+            <label for="assessment" class="form-label">Assessment</label>
+            <input type="text" name="assessment" id="assessment" class="form-control">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{% url 'soslistview' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

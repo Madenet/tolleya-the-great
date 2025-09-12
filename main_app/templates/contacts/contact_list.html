@@ -1,0 +1,28 @@
+{% extends 'main_app/base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Contact Messages</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Submitted At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.full_names }}</td>
+                <td>{{ contact.gmail }}</td>
+                <td>{{ contact.phone_number }}</td>
+                <td>{{ contact.submitted_at }}</td>
+                <td><a href="{% url 'contact_detail' contact.id %}" class="btn btn-primary btn-sm">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!-- member_template/view_attendance.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+    <h1>{{ page_title }}</h1>
+    <ul>
+        {% for report in attendance_reports %}
+            <li>{{ report.date }} - {{ report.status }}</li>
+        {% empty %}
+            <li>No attendance reports available.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'member_add_attendance_report' %}">Add Attendance Report</a>
+</body>
+</html>

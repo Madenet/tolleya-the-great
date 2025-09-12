@@ -1,0 +1,21 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<h2>{{ page_title }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attendance in attendance_reports %}
+        <tr>
+            <td>{{ attendance.date }}</td>
+            <td>{{ attendance.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+ 
+  
+  <!-- Form for uploading question papers -->
+
+  <h1>Upload Question Paper</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label for="{{ form.school.id_for_label }}">School</label>
+      {{ form.school }}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.grade.id_for_label }}">Grade</label>
+      {{ form.grade }}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.term.id_for_label }}">Term</label>
+      {{ form.term }}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.department.id_for_label }}">Department</label>
+      {{ form.department }}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.complexity_rating.id_for_label }}">Complexity Rating</label>
+      {{ form.complexity_rating }}
+    </div>
+    
+
+    <div class="form-group">
+      <label for="topics">Topics</label>
+      <div class="form-check">
+        {% for checkbox in form.topics %}
+          <div class="form-check-inline">
+            {{ checkbox.tag }} {{ checkbox.choice_label }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-group">
+      {{ form.number_of_questions }}
+    </div>
+    <div class="form-group">
+      {{ form.file }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form>
+  
+
+  
+  <hr>
+
+  <!-- Buttons for navigating to Topic and Department CRUD views -->
+  <div class="mt-4">
+    <h2>Manage Related Data</h2>
+    <a href="{% url 'topic_list' %}" class="btn btn-secondary">Manage Topics</a>
+    <a href="{% url 'department_list' %}" class="btn btn-secondary">Manage Departments</a>
+  </div>
+  <style>
+    .form-check-inline {
+      margin-right: 10px;
+      margin-bottom: 10px; /* Prevent checkboxes from spreading too far down */
+    }
+    .form-check {
+      display: inline-block; /* Ensure checkboxes align horizontally */
+      margin-right: 15px;
+    }
+  </style>
+  
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+    <h2>Edit Prospector</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label>Institution:</label>
+        <input type="text" name="institution" value="{{ prospector.institution }}" required>
+        
+        <label>Address:</label>
+        <input type="text" name="address" value="{{ prospector.address }}" required>
+        
+        <label>Prospectus Copy:</label>
+        <input type="file" name="copy">
+        
+        <label>Logo:</label>
+        <input type="file" name="logo">
+        
+        <button type="submit">Save Changes</button>
+    </form>
+    
+    <a href="{% url 'prospectors_search' %}">Cancel</a>
+{% endblock %}

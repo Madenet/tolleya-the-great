@@ -1,0 +1,21 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+  <h1>Upload Question Paper</h1>
+  
+  <!-- Form for uploading question papers -->
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form>
+  
+  <hr>
+
+  <!-- Buttons for navigating to Topic and Department CRUD views -->
+  <div class="mt-4">
+    <h2>Manage Related Data</h2>
+    <a href="{% url 'questpaper:topic_list' %}" class="btn btn-secondary">Manage Topics</a>
+    <a href="{% url 'questpaper:department_list' %}" class="btn btn-secondary">Manage Departments</a>
+  </div>
+{% endblock %}

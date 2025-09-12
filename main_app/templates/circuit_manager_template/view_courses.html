@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ page_title }}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>{{ course.id }}</td>
+                <td>{{ course.name }}</td>
+                <td>
+                    <a href="{% url 'circuit_manager_edit_course' course.id %}">Edit</a> |
+                    <a href="{% url 'circuit_manager_delete_course' course.id %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'circuit_manager_add_course' %}" class="btn btn-primary">Add Course</a>
+</div>
+{% endblock %}

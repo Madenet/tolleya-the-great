@@ -1,0 +1,25 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>School of Assessment List</h2>
+    <div class="row">
+        {% for sos in soss %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="{{ sos.image.url }}" class="card-img-top" alt="{{ sos.description }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ sos.description }}</h5>
+                        <p>Subject: {{ sos.subject }}</p>
+                        <p>Grade: {{ sos.grade }}</p>
+                        <p>Date: {{ sos.date }}</p>
+                        <p>Assessment: {{ sos.assessment }}</p>
+                        <a href="{% url 'viewSos' sos.id %}" class="btn btn-primary">View</a>
+                        <a href="{% url 'deleteSos' sos.id %}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

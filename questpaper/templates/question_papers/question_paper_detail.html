@@ -1,0 +1,34 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+<body>
+    <h1>Question Paper Details</h1>
+
+    <ul>
+        <li><strong>Grade:</strong> {{ question_paper.grade }}</li>
+        <li><strong>Term:</strong> {{ question_paper.term }}</li>
+        <li><strong>School:</strong> {{ question_paper.school }}</li>
+        <li><strong>Department:</strong> {{ question_paper.department }}</li>
+        <li><strong>Educator:</strong> {{ question_paper.educator }}</li>
+        <li><strong>Subject:</strong> {{ question_paper.subject }}</li>
+        <li><strong>Complexity Rating:</strong> Level {{ question_paper.complexity_rating }}</li>
+        <li><strong>Number of Questions:</strong> {{ question_paper.number_of_questions }}</li>
+        <li><strong>Topics:</strong> 
+            {% for topic in question_paper.topics.all %}
+                {{ topic.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </li>
+    </ul>
+
+    <div>
+        <a href="{% url 'download' question_paper.pk %}">Download Question Paper</a>
+        {% if question_paper.file.name.endswith ".pdf" %}
+            <a href="{% url 'view' question_paper.pk %}" target="_blank">View Question Paper</a>
+        {% else %}
+            <p>This file format cannot be viewed directly.</p>
+        {% endif %}
+    </div>
+</body>
+{% endblock content %}

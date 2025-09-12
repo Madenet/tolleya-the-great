@@ -1,0 +1,18 @@
+<!-- member_template/edit_attendance_report.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+    <h1>{{ page_title }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Attendance Report</button>
+    </form>
+    <a href="{% url 'member_manage_attendance_reports' %}">Back to Attendance Reports</a>
+</body>
+</html>

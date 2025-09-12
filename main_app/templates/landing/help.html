@@ -1,0 +1,75 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - Vhembe West, Elim Circuit</title>
+</head>
+<body>
+    <header>
+        <h1>Help Center</h1>
+        <p>Welcome to the Help Center for Vhembe West, Elim Circuit. Find answers to common questions and guidance for using our platform effectively.</p>
+    </header>
+    <section>
+        <h2>Login Help</h2>
+        <p>If you’re experiencing issues with logging in or navigating the platform, here’s how the system works based on your role:</p>
+        <ul>
+            <li>
+                <strong>Administrator Login:</strong> Administrators are redirected to the <a href="/admin_home">Admin Dashboard</a> where they can manage the entire system, including users and settings.
+            </li>
+            <li>
+                <strong>Staff Login:</strong> Staff members are redirected to the <a href="/staff_home">Staff Dashboard</a>, where they can manage school operations and track activities.
+            </li>
+            <li>
+                <strong>Student Login:</strong> Students are redirected to the <a href="/student_home">Student Dashboard</a>, where they can access assignments, grades, and resources.
+            </li>
+            <li>
+                <strong>Principal Login:</strong> Principals are directed to the <a href="/principal_home">Principal Dashboard</a>, which provides oversight of school performance and staff.
+            </li>
+            <li>
+                <strong>Educator Login:</strong> Educators are redirected to the <a href="/educator_home">Educator Dashboard</a>, where they can manage their classes, attendance, and reports.
+            </li>
+            <li>
+                <strong>Circuit Manager Login:</strong> Circuit Managers access the <a href="/circuit_manager_home">Circuit Manager Dashboard</a>, providing tools to oversee multiple schools.
+            </li>
+            <li>
+                <strong>Parent Login:</strong> Parents are redirected to the <a href="/parent_home">Parent Dashboard</a>, which helps them monitor their children’s academic progress and attendance.
+            </li>
+            <li>
+                <strong>Member Login:</strong> Members are redirected to the <a href="/member_home">Member Dashboard</a>, tailored to their specific roles within the organization.
+            </li>
+        </ul>
+        <p>If your login details are invalid, you will receive an error message. Please double-check your email and password or contact support if you need assistance.</p>
+    </section>
+    <section>
+        <h2>Common Issues and Solutions</h2>
+        <ul>
+            <li>
+                <strong>Forgot Password?</strong>
+                <p>Click on the <a href="/password_reset">Forgot Password</a> link on the login page to reset your password.</p>
+            </li>
+            <li>
+                <strong>Access Denied?</strong>
+                <p>Ensure that you are using the correct credentials and logging in with the email and password registered for your role.</p>
+            </li>
+            <li>
+                <strong>Role-Based Issues?</strong>
+                <p>If you believe your role is incorrectly assigned, contact the system administrator for corrections.</p>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>Contact Support</h2>
+        <p>If you need further assistance, please reach out:</p>
+        <p>Email: <a href="mailto:support@elimcircuit.vhembe.co.za">support@elimcircuit.vhembe.co.za</a></p>
+        <p>Phone: +27 15 123 4567</p>
+        <p>Address: Elim Circuit Office, Vhembe West, Limpopo, South Africa</p>
+    </section>
+    <footer>
+        <p>&copy; 2024 Vhembe West, Elim Circuit. All rights reserved.</p>
+    </footer>
+</body>
+{% endblock content %}

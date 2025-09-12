@@ -1,0 +1,49 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ page_title }}</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Department</th>
+                                    <th>Message</th>
+                                    <th>Submitted At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ appointment.first_name }} {{ appointment.last_name }}</td>
+                                    <td>{{ appointment.email }}</td>
+                                    <td>{{ appointment.phone }}</td> <!-- Access school name -->
+                                    <td>{{ appointment.department }}</td> <!-- Access grade name -->
+                                    <td>{{ appointment.message }}</td> <!-- Access course name -->
+                                    <td>{{ appointment.Submitted_at}}</td>
+                            
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

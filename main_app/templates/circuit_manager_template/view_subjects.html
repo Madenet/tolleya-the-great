@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ page_title }}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects %}
+            <tr>
+                <td>{{ subject.id }}</td>
+                <td>{{ subject.name }}</td>
+                <td>
+                    <a href="{% url 'circuit_manager_edit_subject' subject.id %}">Edit</a> |
+                    <a href="{% url 'circuit_manager_delete_subject' subject.id %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'circuit_manager_add_subject' %}" class="btn btn-primary">Add Subject</a>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1>Send Feedback to {{ appointment.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="feedback">Feedback</label>
+            <textarea id="feedback" name="feedback" class="form-control" rows="4">` </textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">send feedback</button>
+    </form>
+</div>
+{% endblock %}

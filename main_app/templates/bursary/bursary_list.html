@@ -1,0 +1,107 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Bursaries | Learning Management System{% endblock title %}
+
+{% block content %}
+
+<!-- Tailwind CDN if not already included -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Breadcrumb -->
+<nav class="text-sm text-gray-600 mb-4" aria-label="Breadcrumb">
+  <ol class="flex items-center space-x-2">
+    <li>
+      <a href="/" class="hover:text-blue-600">Home</a>
+    </li>
+    <li class="mx-1">›</li>
+    <li class="font-medium text-gray-800">Bursary List</li>
+  </ol>
+</nav>
+
+<!-- Add New Bursary (Admin Only) -->
+{% if request.user.is_superuser %}
+<div class="flex justify-end mb-6">
+  <a href="{% url 'bursary_add' %}" 
+     class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition flex items-center gap-2">
+    <i class="fas fa-plus"></i> Add New Bursary
+  </a>
+</div>
+{% endif %}
+
+<!-- Page Title -->
+<div class="flex items-center gap-2 text-2xl font-bold text-gray-800 mb-6">
+  <i class="fas fa-graduation-cap text-blue-600"></i>
+  Bursary List
+</div>
+
+<!-- Messages -->
+{% if messages %}
+  <div class="space-y-3 mb-6">
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+          <i class="fas fa-exclamation-circle"></i> {{ message }}
+        </div>
+      {% else %}
+        <div class="bg-green-100 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
+          <i class="fas fa-check-circle"></i> {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- Bursaries Grid -->
+<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+  {% for bursary in bursaries %}
+  <div class="bg-white rounded-2xl shadow p-4 flex flex-col">
+    <!-- Image -->
+    <img src="{{ bursary.get_picture }}" alt="{{ bursary.title }}" 
+         class="h-40 w-full object-cover rounded-lg mb-4">
+
+    <!-- Title -->
+    <h2 class="text-lg font-semibold text-gray-800 mb-2 truncate">{{ bursary.title }}</h2>
+
+    <!-- Summary -->
+    <p class="text-sm text-gray-600 mb-3 line-clamp-3">{{ bursary.summary }}</p>
+
+    <!-- Meta -->
+    <div class="text-xs text-gray-500 space-y-1 mb-4">
+      <p><span class="font-medium">Posted As:</span> {{ bursary.get_posted_as_display }}</p>
+      <p><span class="font-medium">Uploaded:</span> {{ bursary.upload_time }}</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-auto flex justify-between items-center">
+      <a href="{% url 'bursary_detail' pk=bursary.pk %}" 
+         class="text-blue-600 hover:underline text-sm font-medium">
+        View Details
+      </a>
+
+      {% if request.user.is_superuser %}
+      <div class="flex gap-2">
+        <a href="{% url 'bursary_update' pk=bursary.pk %}" 
+           class="p-2 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200" 
+           title="Edit">
+          <i class="fas fa-pencil-alt"></i>
+        </a>
+        <a href="{% url 'bursary_delete' pk=bursary.pk %}" 
+           class="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200" 
+           title="Delete">
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <p class="col-span-full text-center text-gray-500 py-6">
+    No Bursaries available. 
+    {% if request.user.is_superuser %}
+      <a href="{% url 'bursary_add' %}" class="text-blue-600 hover:underline">Add one now</a>.
+    {% endif %}
+  </p>
+  {% endfor %}
+</div>
+
+{% endblock content %}

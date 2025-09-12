@@ -1,0 +1,14 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>Are you sure you want to delete this SOS?</h2>
+    <p>Description: {{ sos.description }}</p>
+    <img src="{{ sos.image.url }}" class="img-thumbnail mb-3" alt="{{ sos.description }}">
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'soslistview' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

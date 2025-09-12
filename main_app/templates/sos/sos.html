@@ -1,0 +1,17 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>SOS Details</h2>
+    <div class="card">
+        <img src="{{ sos.image.url }}" class="card-img-top" alt="{{ sos.description }}">
+        <div class="card-body">
+            <h5 class="card-title">Description: {{ sos.description }}</h5>
+            <p><strong>Subject:</strong> {{ sos.subject }}</p>
+            <p><strong>Grade:</strong> {{ sos.grade }}</p>
+            <p><strong>Date:</strong> {{ sos.date }}</p>
+            <p><strong>Assessment:</strong> {{ sos.assessment }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

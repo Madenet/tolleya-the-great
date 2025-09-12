@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ page_title }}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Score</th>
+                <th>Course</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result.student.get_full_name }}</td>
+                <td>{{ result.score }}</td>
+                <td>{{ result.course }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

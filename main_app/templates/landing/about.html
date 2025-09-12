@@ -1,0 +1,99 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+<body>
+    <!-- Header -->
+    
+    <!-- Breadcrumb -->
+    <section class="breadcrumb">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>Learn more about the vision, mission, and history of Elim Circuit.</p>
+        </div>
+    </section>
+
+    <!-- Vision and Mission -->
+    <section class="vision-mission section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Our Vision</h3>
+                    <p>Quality education for every child in every classroom in every school across the Elim Circuit.</p>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Our Mission</h3>
+                    <p>To provide innovative, inclusive, and sustainable education solutions, ensuring academic excellence and holistic development.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History -->
+    <section class="history section">
+        <div class="container">
+            <h3>Our History</h3>
+            <p>The Elim Circuit was established to foster collaboration and innovation among schools in the region. With a legacy of over 20 years, we have grown to support 24 schools, impacting the lives of thousands of students and educators.</p>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section class="team section">
+        <div class="container">
+            <h3>Meet Our Leadership</h3>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <img src="{% static 'assets/mediafiles/img/team1.jpg' %}" alt="Circuit_Manager" class="img-fluid">
+                        <h4>Mr. NJ Rantsu</h4>
+                        <p>Circuit Manager</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <img src="{% static 'assets/mediafiles/img/team2.jpg' %}" alt="Coordinator" class="img-fluid">
+                        <h4>Mr. TG Ntshani</h4>
+                        <p>Education Coordinator</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <img src="{% static 'assets/mediafiles/img/team3.jpg' %}" alt="Administrator" class="img-fluid">
+                        <h4>Ms. Mary Johnson</h4>
+                        <p>Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="core-values section">
+        <div class="container">
+            <h3>Our Core Values</h3>
+            <ul>
+                <li>Inclusivity and Diversity</li>
+                <li>Commitment to Excellence</li>
+                <li>Collaboration and Community Engagement</li>
+                <li>Integrity and Accountability</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta section">
+        <div class="container">
+            <h3>Join Us in Shaping the Future</h3>
+            <p>Whether you're a parent, teacher, or community member, we welcome your involvement and support in achieving our mission.</p>
+            <a href="www.madenet.site" class="btn btn-primary">Contact Us</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+
+{% endblock content %}

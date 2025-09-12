@@ -1,0 +1,67 @@
+{% extends "main_app/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Edit Photo</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label>Category:</label>
+        <input type="text" name="category" value="{{ photo.category.id }}" class="form-control">
+        
+        <label>Image:</label>
+        <input type="file" name="image" class="form-control">
+        <img src="{{ photo.image.url }}" alt="Current Image" width="100">
+
+        <label>Video:</label>
+        <input type="file" name="video" class="form-control">
+        
+        <label>Website URL:</label>
+        <input type="text" name="website_url" value="{{ photo.website_url }}" class="form-control">
+
+        <label>Gmail URL:</label>
+        <input type="text" name="gmail_url" value="{{ photo.gmail_url }}" class="form-control">
+
+        <label>WhatsApp Number:</label>
+        <input type="text" name="whatsapp_number" value="{{ photo.whatsapp_number }}" class="form-control">
+
+        <label>Facebook URL:</label>
+        <input type="text" name="facebook_url" value="{{ photo.facebook_url }}" class="form-control">
+
+        <label>TikTok URL:</label>
+        <input type="text" name="tiktok_url" value="{{ photo.tiktok_url }}" class="form-control">
+
+        <label>Zoom URL:</label>
+        <input type="text" name="zoom_url" value="{{ photo.zoom_url }}" class="form-control">
+
+        <label>Microsoft Teams URL:</label>
+        <input type="text" name="microsoftTeam_url" value="{{ photo.microsoftTeam_url }}" class="form-control">
+
+        <label>Location:</label>
+        <input type="text" name="location" value="{{ photo.location }}" class="form-control">
+
+        <label>Twitter URL:</label>
+        <input type="text" name="twitter_url" value="{{ photo.twitter_url }}" class="form-control">
+
+        <label>Playstore URL:</label>
+        <input type="text" name="playstore_url" value="{{ photo.playstore_url }}" class="form-control">
+
+        <label>LinkedIn URL:</label>
+        <input type="text" name="linkedin_url" value="{{ photo.linkedin_url }}" class="form-control">
+
+        <label>Instagram URL:</label>
+        <input type="text" name="instagram_url" value="{{ photo.instagram_url }}" class="form-control">
+
+        <label>Pinterest URL:</label>
+        <input type="text" name="pinterest_url" value="{{ photo.pinterest_url }}" class="form-control">
+
+        <label>YouTube URL:</label>
+        <input type="text" name="youtube_url" value="{{ photo.youtube_url }}" class="form-control">
+
+        <label>Description:</label>
+        <textarea name="description" class="form-control">{{ photo.description }}</textarea>
+
+        <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+        <a href="{% url 'gallery' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+{% endblock %}

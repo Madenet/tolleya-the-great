@@ -1,0 +1,303 @@
+{% extends 'main_app/base.html' %}
+
+<!-- member_template/home_content.html -->
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+</head>
+         
+<div>
+    <div class="title-1">News &amp; Events</div>
+  </div>
+  <div>
+  <div class="title-1">News &amp; Events</div>
+</div>
+
+<div class="container-fluid">
+  {% if items %}
+<style>
+    /* Card styling */
+    .news-card {
+        min-width: 250px;
+        max-width: 250px;
+        scroll-snap-align: start;
+        flex: 0 0 auto;
+        border-radius: 1rem;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+    .news-card:hover {
+        transform: scale(1.03);
+    }
+
+    .news-slider {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+        gap: 1rem;
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        scrollbar-width: none;
+    }
+    .news-slider::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Read more behavior */
+    .summary-text {
+        max-height: 80px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .summary-text.expanded {
+        max-height: 1000px;
+    }
+    .read-more {
+        display: inline-block;
+        margin-top: 5px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: #0d6efd;
+    }
+
+    /* Scroll buttons */
+    .scroll-btn {
+        position: absolute;
+        top: 40%;
+        z-index: 10;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        opacity: 0.8;
+        background-color: white;
+        border: 1px solid #ccc;
+    }
+    .scroll-btn:hover {
+        opacity: 1;
+    }
+    .left-scroll-btn {
+        left: 10px;
+        transform: translateY(-50%);
+    }
+    .right-scroll-btn {
+        right: 10px;
+        transform: translateY(-50%);
+    }
+</style>
+
+<div class="position-relative px-3">
+    <!-- Scroll Buttons -->
+    <button class="scroll-btn left-scroll-btn">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="scroll-btn right-scroll-btn">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <div class="news-slider" id="newsSlider">
+        {% for item in items %}
+        <div class="card news-card shadow-sm border-0">
+            <div class="card-header text-white fw-semibold 
+                {% if item.posted_as == 'News' %}bg-primary{% else %}bg-success{% endif %}">
+                {{ item.title|truncatechars:50 }}
+            </div>
+
+            <div class="card-body small">
+                <div class="summary-text">{{ item.summary }}</div>
+                <span class="read-more">Read More</span>
+            </div>
+
+            <div class="card-footer text-end bg-light small text-muted">
+                <i class="fa fa-calendar-alt me-1"></i> {{ item.updated_date|timesince }} ago
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Read more toggle
+        document.querySelectorAll(".read-more").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                const summary = this.previousElementSibling;
+                summary.classList.toggle("expanded");
+                this.textContent = summary.classList.contains("expanded") ? "Read Less" : "Read More";
+            });
+        });
+
+        // Scroll buttons
+        const scrollContainer = document.getElementById("newsSlider");
+        document.querySelector(".left-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        document.querySelector(".right-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    });
+</script>
+{% else %}
+<div class="text-center text-muted my-5">
+    <i class="fa-regular fa-folder-open fa-2x mb-3"></i>
+    <p>No news or events available at the moment.</p>
+</div>
+{% endif %} 
+</div>
+<body>
+    <h1>{{ page_title }}</h1>
+    <a href="{% url 'member_view_attendance' %}">View Attendance</a>
+    <a href="{% url 'member_view_profile' %}">View Profile</a>
+</body>
+<!--Advertisement Ads-->
+
+<!--end-->
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{total_students}}</h3>
+
+                <p>Total Students</p>
+            </div>
+            <div class="icon">
+              <i class="nav-icon fas fa-user-graduate"></i>
+            </div>
+
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{total_staff}}</h3>
+
+                <p>Total Staff</p>
+            </div>
+            <div class="icon">
+              <i class="nav-icon fas fa-users"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-purple">
+            <div class="inner">
+                <h3>{{total_course}}</h3>
+
+                <p>Total Streams</p>
+            </div>
+            <div class="icon">
+              <i class="nav-icon fas fa-th-list"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{total_subject}}</h3>
+
+                <p>Total Subjects</p>
+            </div>
+            <div class="icon">
+              <i class="nav-icon fas fa-book"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{total_schools}}</h3>
+
+                <p>Total Schools</p>
+            </div>
+            <div class="icon">
+              <i class="nav-icon fas fa-book"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-purple">
+          <div class="inner">
+              <h3>{{total_grade}}</h3>
+
+              <p>Total Grades</p>
+          </div>
+          <div class="icon">
+            <i class="nav-icon fas fa-th-list"></i>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{total_educators}}</h3>
+
+                <p>Total Educators</p>
+            </div>
+            <div class="icon">
+              <i class="nav-icon fas fa-book"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-success">
+          <div class="inner">
+              <h3>{{total_principals}}</h3>
+
+              <p>Total Principals</p>
+          </div>
+          <div class="icon">
+            <i class="nav-icon fas fa-users"></i>
+          </div>
+      </div>
+  </div>
+  <!-- ./col -->
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-purple">
+        <div class="inner">
+            <h3>{{total_members}}</h3>
+
+            <p>Total Members</p>
+        </div>
+        <div class="icon">
+          <i class="nav-icon fas fa-th-list"></i>
+        </div>
+    </div>
+  </div>
+   <!-- ./col -->
+   <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-purple">
+        <div class="inner">
+            <h3>{{total_parents}}</h3>
+
+            <p>Total Parents</p>
+        </div>
+        <div class="icon">
+          <i class="nav-icon fas fa-th-list"></i>
+        </div>
+    </div>
+  </div>
+  
+
+</div>
+{% endblock %}

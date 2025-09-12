@@ -1,0 +1,15 @@
+{% extends 'main_app/base.html' %}
+<!-- add_university.html -->
+{% block content %}
+<body>
+    <h2>Add University</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">University Name:</label>
+        <input type="text" id="name" name="name">
+        <!-- Add more fields for university details as needed -->
+        <button type="submit">Add University</button>
+    </form>
+</body>
+
+{% endblock %}

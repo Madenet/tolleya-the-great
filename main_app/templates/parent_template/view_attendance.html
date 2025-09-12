@@ -1,0 +1,16 @@
+<!-- templates/parent_template/view_attendance.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ page_title }}</h2>
+<ul>
+    {% for report in attendance_reports %}
+        <li>
+            {{ report.date }} - {{ report.status }}
+            <a href="{% url 'parent_edit_attendance_report' report.id %}">Edit</a>
+            <a href="{% url 'parent_delete_attendance_report' report.id %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'parent_add_attendance_report' %}">Add Attendance Report</a>
+{% endblock %}

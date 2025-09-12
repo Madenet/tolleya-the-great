@@ -1,0 +1,461 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block content %}
+<style>
+  .fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 24px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .fab:hover {
+      text-decoration: none;
+      opacity: 0.9;
+  }
+</style>
+<div>
+  <div class="title-1">News &amp; Events</div>
+</div>
+
+<div class="container-fluid">
+  {% if items %}
+<style>
+    /* Card styling */
+    .news-card {
+        min-width: 250px;
+        max-width: 250px;
+        scroll-snap-align: start;
+        flex: 0 0 auto;
+        border-radius: 1rem;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+    .news-card:hover {
+        transform: scale(1.03);
+    }
+
+    .news-slider {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+        gap: 1rem;
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        scrollbar-width: none;
+    }
+    .news-slider::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Read more behavior */
+    .summary-text {
+        max-height: 80px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .summary-text.expanded {
+        max-height: 1000px;
+    }
+    .read-more {
+        display: inline-block;
+        margin-top: 5px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: #0d6efd;
+    }
+
+    /* Scroll buttons */
+    .scroll-btn {
+        position: absolute;
+        top: 40%;
+        z-index: 10;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        opacity: 0.8;
+        background-color: white;
+        border: 1px solid #ccc;
+    }
+    .scroll-btn:hover {
+        opacity: 1;
+    }
+    .left-scroll-btn {
+        left: 10px;
+        transform: translateY(-50%);
+    }
+    .right-scroll-btn {
+        right: 10px;
+        transform: translateY(-50%);
+    }
+</style>
+
+<div class="position-relative px-3">
+    <!-- Scroll Buttons -->
+    <button class="scroll-btn left-scroll-btn">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="scroll-btn right-scroll-btn">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <div class="news-slider" id="newsSlider">
+        {% for item in items %}
+        <div class="card news-card shadow-sm border-0">
+            <div class="card-header text-white fw-semibold 
+                {% if item.posted_as == 'News' %}bg-primary{% else %}bg-success{% endif %}">
+                {{ item.title|truncatechars:50 }}
+            </div>
+
+            <div class="card-body small">
+                <div class="summary-text">{{ item.summary }}</div>
+                <span class="read-more">Read More</span>
+            </div>
+
+            <div class="card-footer text-end bg-light small text-muted">
+                <i class="fa fa-calendar-alt me-1"></i> {{ item.updated_date|timesince }} ago
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Read more toggle
+        document.querySelectorAll(".read-more").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                const summary = this.previousElementSibling;
+                summary.classList.toggle("expanded");
+                this.textContent = summary.classList.contains("expanded") ? "Read Less" : "Read More";
+            });
+        });
+
+        // Scroll buttons
+        const scrollContainer = document.getElementById("newsSlider");
+        document.querySelector(".left-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        document.querySelector(".right-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    });
+</script>
+{% else %}
+<div class="text-center text-muted my-5">
+    <i class="fa-regular fa-folder-open fa-2x mb-3"></i>
+    <p>No news or events available at the moment.</p>
+</div>
+{% endif %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{total_attendance}}</h3>
+
+                        <p>Total Attendance</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-calendar-alt"></i>
+                    </div>
+                    {# <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> #}
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ percent_present }}<sup style="font-size: 20px">%</sup></h3>
+
+                        <p>Percentage Present</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-calendar-check"></i>
+                    </div>
+                    {# <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> #}
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{percent_absent}}<sup style="font-size: 20px">%</sup></h3>
+
+                        <p>Percentage Absent</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-calendar-minus"></i>
+                    </div>
+                    {# <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> #}
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                  <div class="inner">
+                      <h3>{{ question_paper_count }}</h3>
+
+                      <p>Total Question Papers Available</p>
+                  </div>
+                  <div class="icon">
+                    <i class="nav-icon fas fa-calendar-alt"></i>
+                  </div>
+                  <a href="{% url 'question_paper_list' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-primary">
+                    <div class="inner">
+                        <h3>{{total_subject}}</h3>
+
+                        <p>Total Subject</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-book"></i>
+                    </div>
+                    {# <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> #}
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+           
+                        <!-- DONUT CHART -->
+                        <div class="card card-secondary">
+                          <div class="card-header">
+                            <h3 class="card-title">{{page_title}}</h3>
+            
+                            <div class="card-tools">
+                              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                              </button>
+                              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <canvas id="attendanceData" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                        <a href="{% url 'addapplication' %}" class="btn btn-primary fab" title="Add Application">
+                          <i class="fas fa-plus"></i>
+                        </a>
+                      
+                        <!-- /.card -->
+            </div>
+                  
+            <div class="col-lg-6">
+            
+                        <div class="card card-secondary">
+                          <div class="card-header">
+                            <h3 class="card-title">{{page_title}}</h3>
+            
+                            <div class="card-tools">
+                              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                              </button>
+                              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <div class="chart">
+                              <canvas id="attendanceStatistics" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                          <!-- /.card-body -->
+                        <!-- /.card -->
+                        </div> 
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>  
+                        </section>
+{% endblock content %}
+
+{% block custom_js %}
+  <script>
+$(document).ready(function(){
+
+    //Dataset
+    var subjects = {{data_name|safe}}
+    var data_present = {{data_present}}
+    var data_absent = {{data_absent}}
+
+    //-------------
+    //- DONUT CHART -
+    var attendanceDataCanvas = $('#attendanceData').get(0).getContext('2d')
+    var donutData        = {
+      labels: [
+         'Present', 'Absent'
+      ],
+      datasets: [
+        {
+          data: [{{percent_present}}, {{percent_absent}}],
+          backgroundColor : ['#00a65a','#f56954'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    var attendanceData = new Chart(attendanceDataCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions      
+    });
+
+    //attendanceStatistics
+//Bar Chart
+var areaChartData = {
+    labels  : subjects,
+    datasets: [
+    {
+        label               : 'Present In Class',
+        backgroundColor     : 'rgba(60,141,188,0.9)',
+        borderColor         : 'rgba(60,141,188,0.8)',
+        pointRadius          : false,
+        pointColor          : '#3b8bba',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : data_present
+      },
+
+      {
+        label               : 'Absent In Class',
+        backgroundColor     : 'rgba(210, 214, 222, 1)',
+        borderColor         : 'rgba(210, 214, 222, 1)',
+        pointRadius         : false,
+        pointColor          : 'rgba(210, 214, 222, 1)',
+        pointStrokeColor    : '#c1c7d1',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data                : data_absent
+      },
+    ]
+  }
+var barChartCanvas = $('#attendanceStatistics').get(0).getContext('2d')
+var barChartData = jQuery.extend(true, {}, areaChartData)
+var temp = areaChartData.datasets[0]
+barChartData.datasets[0] = temp
+var barChartOptions = {
+  responsive              : true,
+  maintainAspectRatio     : false,
+  datasetFill             : false
+}
+
+var barChart = new Chart(barChartCanvas, {
+  type: 'bar', 
+  data: barChartData,
+  options: barChartOptions
+})
+
+ 
+})
+
+  </script>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-messaging.js"></script>
+    
+    
+        <script>
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            var firebaseConfig = {
+                apiKey: "AIzaSyBarDWWHTfTMSrtc5Lj3Cdw5dEvjAkFwtM",
+                authDomain: "sms-with-django.firebaseapp.com",
+                databaseURL: "https://sms-with-django.firebaseio.com",
+                projectId: "sms-with-django",
+                storageBucket: "sms-with-django.appspot.com",
+                messagingSenderId: "945324593139",
+                appId: "1:945324593139:web:03fa99a8854bbd38420c86",
+                measurementId: "G-2F2RXTL9GT"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig)
+            const messaging = firebase.messaging();
+            function InitializeFireBaseMessaging() {
+                messaging
+                    .requestPermission()
+                    .then(function () {
+                        console.log("Notification Permission");
+                        return messaging.getToken();
+                    })
+                    .then(function (token) {
+                        console.log("Token : " + token);
+                        sendToServer(token);
+                    })
+                    .catch(function (reason) {
+                        console.log(reason)
+                    })
+            }
+            messaging.onMessage(function (payload) {
+                const notificationOption = {
+                    body: payload.notification.body,
+                    icon: payload.notification.icon,
+    
+                }
+                if (Notification.permission == 'granted') {
+                    var notification = new Notification(payload.notification.title, notificationOption);
+                    notification.onclick = function (event) {
+                        event.preventDefault();
+                        window.open(payload.notification.click_action, "_blank");
+                        notification.close();
+                    }
+                }
+                console.log(payload);
+            });
+            messaging.onTokenRefresh(function () {
+                messaging.getToken()
+                    .then(function (newToken) {
+                        console.log("New Token : " + newToken);
+                        sendToServer(newToken);
+  
+                    })
+                    .catch(function (reason) {
+                        console.log(reason)
+                    })
+            })
+    
+            function sendToServer(token){
+              $.ajax({
+                url: "{% url 'student_fcmtoken' %}",
+                type: 'POST',
+                data: {
+                    token: token,
+                }
+            }).done(function (response) {
+               
+      
+               
+            }).fail(function (response) {
+            })
+  
+            }
+            
+            InitializeFireBaseMessaging();
+        </script>
+{% endblock custom_js %}

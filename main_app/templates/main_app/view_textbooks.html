@@ -1,0 +1,38 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+
+<h1>Available Textbooks</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Subject</th>
+            <th>Grade</th>
+            <th>Download</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for textbook in textbooks %}
+        <tr>
+            <td>{{ textbook.title }}</td>
+            <td>{{ textbook.author }}</td>
+            <td>{{ textbook.subject }}</td>
+            <td>{{ textbook.grade }}</td>
+            <td>
+                <a href="{{ textbook.file.url }}" target="_blank" class="btn btn-primary">Download</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No textbooks available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

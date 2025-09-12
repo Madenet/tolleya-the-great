@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} | Learning Management System{% endblock title %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">News form</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label>Title:</label>
+                <input type="text" name="title" required><br>
+              
+                <label>Summary:</label>
+                <textarea name="summary" required></textarea><br>
+              
+                <label>Posted as:</label>
+                <select name="posted_as" required>
+                  <option value="News">News</option>
+                  <option value="Event">Event</option>
+                </select><br>
+              
+                <label>Image:</label>
+                <input type="file" name="image"><br>
+              
+                <button type="submit">Post</button>
+              </form>              
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h2 class="mt-4">News and Events</h2>
+<div class="row">
+    {% for news in news_events %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                {% if news.image %}
+                    <img src="{{ news.image.url }}" class="card-img-top" alt="{{ news.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ news.title }}</h5>
+                    <p class="card-text">{{ news.summary }}</p>
+                    <p class="card-text"><small class="text-muted">Posted on {{ news.date_posted }}</small></p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-center">No news and events available.</p>
+    {% endfor %}
+</div>
+
+{% endblock content %}

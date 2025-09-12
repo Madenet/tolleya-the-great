@@ -1,0 +1,29 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <h2>Add Customer</h2>
+  <form method="post" action="{% url 'add_customer' %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="email" name="email_address" required>
+    </div>
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select class="form-select" id="status" name="status">
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Customer</button>
+  </form>
+{% else %}
+<h2>This page is only accessed by Domain and Developers only</h2>
+{% endif %}
+{% endblock %}

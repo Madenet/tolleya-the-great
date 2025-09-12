@@ -1,0 +1,23 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Add Bursary | Learning Management System{% endblock title %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'bursary_list' %}">Bursary List</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Bursary</li>
+    </ol>
+</nav>
+
+<div class="title-1"><i class="fas fa-plus"></i>Add New Bursary</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Bursary</button>
+</form>
+
+{% endblock content %}

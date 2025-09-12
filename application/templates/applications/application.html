@@ -1,0 +1,50 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+
+            <!-- Back button -->
+            <a href="{% url 'applicationgallery' %}" class="btn btn-dark my-3">Go Back</a>
+
+            <!-- Application image and details -->
+            <div class="card shadow p-3" style="height: auto;">
+                {% if application.image %}
+                    <img class="img-fluid mb-3" src="{{ application.image.url }}" alt="Application Image" style="max-height: 400px; object-fit: contain;">
+                {% else %}
+                    <p class="text-muted">No image available</p>
+                {% endif %}
+
+                <!-- Student info -->
+                <h5 class="mt-3">Student Name:</h5>
+                <p>{{ application.student }}</p>
+
+                <h5>University:</h5>
+                <p>{{ application.university.name }}</p>
+
+                <h5>Details:</h5>
+                <p>{{ application.details }}</p>
+
+                <h5>Varsity:</h5>
+                <p>{{ application.varsity }}</p>
+
+                <h5>Disability:</h5>
+                <p>{{ application.disability }}</p>
+
+                <h5>Address:</h5>
+                <p>{{ application.address }}</p>
+
+                <h5>Next of Kin:</h5>
+                <p>{{ application.keen }}</p>
+
+                <h5>Bursary Info:</h5>
+                <p>{{ application.bursary }}</p>
+
+                <small class="text-muted">Submitted by {{ application.author.email }}</small>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

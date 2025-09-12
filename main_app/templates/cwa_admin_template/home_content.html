@@ -1,0 +1,300 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block content %}
+<div>
+  <div class="title-1">News &amp; Events</div>
+</div>
+
+<div class="container-fluid">
+  {% if items %}
+<style>
+    /* Card styling */
+    .news-card {
+        min-width: 250px;
+        max-width: 250px;
+        scroll-snap-align: start;
+        flex: 0 0 auto;
+        border-radius: 1rem;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+    .news-card:hover {
+        transform: scale(1.03);
+    }
+
+    .news-slider {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+        gap: 1rem;
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        scrollbar-width: none;
+    }
+    .news-slider::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Read more behavior */
+    .summary-text {
+        max-height: 80px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .summary-text.expanded {
+        max-height: 1000px;
+    }
+    .read-more {
+        display: inline-block;
+        margin-top: 5px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: #0d6efd;
+    }
+
+    /* Scroll buttons */
+    .scroll-btn {
+        position: absolute;
+        top: 40%;
+        z-index: 10;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        opacity: 0.8;
+        background-color: white;
+        border: 1px solid #ccc;
+    }
+    .scroll-btn:hover {
+        opacity: 1;
+    }
+    .left-scroll-btn {
+        left: 10px;
+        transform: translateY(-50%);
+    }
+    .right-scroll-btn {
+        right: 10px;
+        transform: translateY(-50%);
+    }
+</style>
+
+<div class="position-relative px-3">
+    <!-- Scroll Buttons -->
+    <button class="scroll-btn left-scroll-btn">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="scroll-btn right-scroll-btn">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <div class="news-slider" id="newsSlider">
+        {% for item in items %}
+        <div class="card news-card shadow-sm border-0">
+            <div class="card-header text-white fw-semibold 
+                {% if item.posted_as == 'News' %}bg-primary{% else %}bg-success{% endif %}">
+                {{ item.title|truncatechars:50 }}
+            </div>
+
+            <div class="card-body small">
+                <div class="summary-text">{{ item.summary }}</div>
+                <span class="read-more">Read More</span>
+            </div>
+
+            <div class="card-footer text-end bg-light small text-muted">
+                <i class="fa fa-calendar-alt me-1"></i> {{ item.updated_date|timesince }} ago
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Read more toggle
+        document.querySelectorAll(".read-more").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                const summary = this.previousElementSibling;
+                summary.classList.toggle("expanded");
+                this.textContent = summary.classList.contains("expanded") ? "Read Less" : "Read More";
+            });
+        });
+
+        // Scroll buttons
+        const scrollContainer = document.getElementById("newsSlider");
+        document.querySelector(".left-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        document.querySelector(".right-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    });
+</script>
+{% else %}
+<div class="text-center text-muted my-5">
+    <i class="fa-regular fa-folder-open fa-2x mb-3"></i>
+    <p>No news or events available at the moment.</p>
+</div>
+{% endif %}
+{% endblock content %}
+
+{% block custom_js %}
+  <script>
+      $(document).ready(function(){
+        var donutData        = {
+            labels: ['Attendance', 'Leave'],
+            datasets: [
+              {
+                data:[{{total_attendance}}, {{total_leave}}],
+                backgroundColor : ['#00a65a', '#f39c12',],
+              }
+            ]
+          }
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieData        = donutData;
+        var pieOptions     = {
+          maintainAspectRatio : false,
+          responsive : true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var pieChart = new Chart(pieChartCanvas, {
+          type: 'pie',
+          data: pieData,
+          options: pieOptions      
+        });
+
+        var subject_list = {{ subject_list|safe|escape }};
+        var attendance_list = {{ attendance_list }};
+  
+            var barChartData = {
+      labels  : subject_list,
+      datasets: [
+      {
+        label               : 'Attendance Per Subject',
+        backgroundColor     : '#17A2B8',
+        borderColor         : 'rgba(60,141,188,0.8)',
+        pointRadius          : false,
+        pointColor          : '#3b8bba',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : attendance_list
+      }, 
+      
+      ]
+    }
+        var barChartCanvas = $('#barChart').get(0).getContext('2d')
+        var temp0 = barChartData.datasets[0]
+        //var temp1 = areaChartData.datasets[1]
+        barChartData.datasets[0] = temp0
+       // barChartData.datasets[1] = temp0
+    
+    var stackedBarChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+    
+        var barChart = new Chart(barChartCanvas, {
+          type: 'bar', 
+          data: barChartData,
+          options: stackedBarChartOptions
+        })
+      })
+
+    
+  </script>
+      <!-- The core Firebase JS SDK is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
+
+      <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+      <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-analytics.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-messaging.js"></script>
+  
+  
+      <script>
+          // Your web app's Firebase configuration
+          // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+          var firebaseConfig = {
+              apiKey: "AIzaSyBarDWWHTfTMSrtc5Lj3Cdw5dEvjAkFwtM",
+              authDomain: "sms-with-django.firebaseapp.com",
+              databaseURL: "https://sms-with-django.firebaseio.com",
+              projectId: "sms-with-django",
+              storageBucket: "sms-with-django.appspot.com",
+              messagingSenderId: "945324593139",
+              appId: "1:945324593139:web:03fa99a8854bbd38420c86",
+              measurementId: "G-2F2RXTL9GT"
+          };
+          // Initialize Firebase
+          firebase.initializeApp(firebaseConfig)
+          const messaging = firebase.messaging();
+          function InitializeFireBaseMessaging() {
+              messaging
+                  .requestPermission()
+                  .then(function () {
+                      console.log("Notification Permission");
+                      return messaging.getToken();
+                  })
+                  .then(function (token) {
+                      console.log("Token : " + token);
+                      sendToServer(token);
+                  })
+                  .catch(function (reason) {
+                      console.log(reason)
+                  })
+          }
+          messaging.onMessage(function (payload) {
+              const notificationOption = {
+                  body: payload.notification.body,
+                  icon: payload.notification.icon,
+  
+              }
+              if (Notification.permission == 'granted') {
+                  var notification = new Notification(payload.notification.title, notificationOption);
+                  notification.onclick = function (event) {
+                      event.preventDefault();
+                      window.open(payload.notification.click_action, "_blank");
+                      notification.close();
+                  }
+              }
+              console.log(payload);
+          });
+          messaging.onTokenRefresh(function () {
+              messaging.getToken()
+                  .then(function (newToken) {
+                      console.log("New Token : " + newToken);
+                      sendToServer(newToken);
+
+                  })
+                  .catch(function (reason) {
+                      console.log(reason)
+                  })
+          })
+  
+          function sendToServer(token){
+            $.ajax({
+              url: "{% url 'staff_fcmtoken' %}",
+              type: 'POST',
+              data: {
+                  token: token,
+              }
+          }).done(function (response) {
+   
+             
+          }).fail(function (response) {
+          })
+
+          }
+          
+          InitializeFireBaseMessaging();
+      </script>
+{% endblock custom_js %}

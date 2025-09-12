@@ -1,0 +1,11 @@
+<!-- templates/parent_template/view_profile.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ page_title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Profile</button>
+</form>
+{% endblock %}

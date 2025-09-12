@@ -1,0 +1,610 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+         
+<div>
+  <div class="title-1">News &amp; Events</div>
+</div>
+
+<div class="container-fluid">
+  {% if items %}
+<style>
+    /* Card styling */
+    .news-card {
+        min-width: 250px;
+        max-width: 250px;
+        scroll-snap-align: start;
+        flex: 0 0 auto;
+        border-radius: 1rem;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+    .news-card:hover {
+        transform: scale(1.03);
+    }
+
+    .news-slider {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+        gap: 1rem;
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        scrollbar-width: none;
+    }
+    .news-slider::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Read more behavior */
+    .summary-text {
+        max-height: 80px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .summary-text.expanded {
+        max-height: 1000px;
+    }
+    .read-more {
+        display: inline-block;
+        margin-top: 5px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: #0d6efd;
+    }
+
+    /* Scroll buttons */
+    .scroll-btn {
+        position: absolute;
+        top: 40%;
+        z-index: 10;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        opacity: 0.8;
+        background-color: white;
+        border: 1px solid #ccc;
+    }
+    .scroll-btn:hover {
+        opacity: 1;
+    }
+    .left-scroll-btn {
+        left: 10px;
+        transform: translateY(-50%);
+    }
+    .right-scroll-btn {
+        right: 10px;
+        transform: translateY(-50%);
+    }
+</style>
+
+<div class="position-relative px-3">
+    <!-- Scroll Buttons -->
+    <button class="scroll-btn left-scroll-btn">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="scroll-btn right-scroll-btn">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <div class="news-slider" id="newsSlider">
+        {% for item in items %}
+        <div class="card news-card shadow-sm border-0">
+            <div class="card-header text-white fw-semibold 
+                {% if item.posted_as == 'News' %}bg-primary{% else %}bg-success{% endif %}">
+                {{ item.title|truncatechars:50 }}
+            </div>
+
+            <div class="card-body small">
+                <div class="summary-text">{{ item.summary }}</div>
+                <span class="read-more">Read More</span>
+            </div>
+
+            <div class="card-footer text-end bg-light small text-muted">
+                <i class="fa fa-calendar-alt me-1"></i> {{ item.updated_date|timesince }} ago
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Read more toggle
+        document.querySelectorAll(".read-more").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                const summary = this.previousElementSibling;
+                summary.classList.toggle("expanded");
+                this.textContent = summary.classList.contains("expanded") ? "Read Less" : "Read More";
+            });
+        });
+
+        // Scroll buttons
+        const scrollContainer = document.getElementById("newsSlider");
+        document.querySelector(".left-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        document.querySelector(".right-scroll-btn").addEventListener("click", () => {
+            scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    });
+</script>
+{% else %}
+<div class="text-center text-muted my-5">
+    <i class="fa-regular fa-folder-open fa-2x mb-3"></i>
+    <p>No news or events available at the moment.</p>
+</div>
+{% endif %}
+
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{total_students}}</h3>
+
+                        <p>Total Students</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-user-graduate"></i>
+                    </div>
+                    <a href="{% url 'manage_student' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{total_staff}}</h3>
+
+                        <p>Total Staff</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-users"></i>
+                    </div>
+                    <a href="{% url 'manage_staff' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-purple">
+                    <div class="inner">
+                        <h3>{{total_course}}</h3>
+
+                        <p>Total Streams</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-th-list"></i>
+                    </div>
+                    <a href="{% url 'manage_course' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{total_subject}}</h3>
+
+                        <p>Total Subjects</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-book"></i>
+                    </div>
+                    <a href="{% url 'manage_subject' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{total_schools}}</h3>
+
+                        <p>Total Schools</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-book"></i>
+                    </div>
+                    <a href="{% url 'manage_school' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-purple">
+                  <div class="inner">
+                      <h3>{{total_grade}}</h3>
+
+                      <p>Total Grades</p>
+                  </div>
+                  <div class="icon">
+                    <i class="nav-icon fas fa-th-list"></i>
+                  </div>
+                  <a href="{% url 'manage_course' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{total_educators}}</h3>
+
+                        <p>Total Educators</p>
+                    </div>
+                    <div class="icon">
+                      <i class="nav-icon fas fa-book"></i>
+                    </div>
+                    <a href="{% url 'manage_educator' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                  <div class="inner">
+                      <h3>{{total_principals}}</h3>
+
+                      <p>Total Principals</p>
+                  </div>
+                  <div class="icon">
+                    <i class="nav-icon fas fa-users"></i>
+                  </div>
+                  <a href="{% url 'manage_principal' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+          </div>
+          <!-- ./col -->
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-purple">
+                <div class="inner">
+                    <h3>{{total_members}}</h3>
+
+                    <p>Total Members</p>
+                </div>
+                <div class="icon">
+                  <i class="nav-icon fas fa-th-list"></i>
+                </div>
+                <a href="{% url 'manage_member' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+           <!-- ./col -->
+           <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-purple">
+                <div class="inner">
+                    <h3>{{total_parents}}</h3>
+
+                    <p>Total Parents</p>
+                </div>
+                <div class="icon">
+                  <i class="nav-icon fas fa-th-list"></i>
+                </div>
+                <a href="{% url 'manage_parent' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          
+        
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+            <div class="col-md-6">
+                <!-- LINE CHART -->
+                <div class="card card-dark">
+                  <div class="card-header">
+                    <h3 class="card-title">Staffs - Students Overview</h3>
+    
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div></div>
+                  <!-- /.card-body -->
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-dark">
+              <div class="card-header">
+                <h3 class="card-title">Attendance Per Subject</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+                </div>
+            <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+        <div class="row">
+          <div class="col-lg-12">
+            <!-- BAR CHART -->
+            <div class="card card-dark">
+              <div class="card-header">
+                <h3 class="card-title">Student's Attendance & Leave Overview</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+
+          <div class="col-lg-6">
+            
+          </div>
+        
+        </div>
+
+        <div class="row">
+
+          <div class="col-lg-6">
+            <!-- PIE CHART -->
+            <div class="card card-dark">
+              <div class="card-header">
+                <h3 class="card-title">Total Students in Each Course</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+              <!-- /.card-body -->
+              </div>
+          </div>
+
+          <div class="col-lg-6">
+            <!-- PIE CHART -->
+            <div class="card card-dark">
+              <div class="card-header">
+                <h3 class="card-title">Total Students in Each Subject</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+              <!-- /.card-body -->
+          </div>
+          </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+  <script>
+      $(document).ready(function(){
+        var donutData        = {
+            labels: ['Students', 'Staff'],
+            datasets: [
+              {
+                data:[{{total_students}}, {{total_staff}}],
+                backgroundColor : ['#00a65a', '#f39c12',],
+              }
+            ]
+          }
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieData        = donutData;
+        var pieOptions     = {
+          maintainAspectRatio : false,
+          responsive : true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var pieChart = new Chart(pieChartCanvas, {
+          type: 'pie',
+          data: pieData,
+          options: pieOptions      
+        });
+
+        var subject_list = {{ subject_list|safe|escape }};
+        var attendance_list = {{ attendance_list }};
+  
+            var barChartData = {
+      labels  : subject_list,
+      datasets: [
+      {
+        label               : 'Attendance Per Subject',
+        backgroundColor     : '#17A2B8',
+        borderColor         : 'rgba(60,141,188,0.8)',
+        pointRadius          : false,
+        pointColor          : '#3b8bba',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : attendance_list
+      }, 
+      
+      ]
+    }
+        var barChartCanvas = $('#barChart').get(0).getContext('2d')
+        var temp0 = barChartData.datasets[0]
+        //var temp1 = areaChartData.datasets[1]
+        barChartData.datasets[0] = temp0
+       // barChartData.datasets[1] = temp0
+    
+    var stackedBarChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+    
+        var barChart = new Chart(barChartCanvas, {
+          type: 'bar', 
+          data: barChartData,
+          options: stackedBarChartOptions
+        })
+       
+
+      // Total Students in Each Subject
+      var student_count_list_in_subject = {{ student_count_list_in_subject }}
+      var subject_list = {{ subject_list|safe }}
+      var pieData3 = {
+        labels: subject_list,
+        datasets: [
+          {
+            data: student_count_list_in_subject,
+            backgroundColor : ['#8f251f', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#894e9c', '#0b523a', '#a1156d', '#9e4603'],
+          }
+        ]
+      }
+
+      //-------------
+      //- PIE CHART -
+      //-------------
+      // Get context with jQuery - using jQuery's .get() method.
+      var pieChartCanvas3 = $('#pieChart3').get(0).getContext('2d')
+      var pieData3        = pieData3;
+      var pieOptions3     = {
+        maintainAspectRatio : false,
+        responsive : true,
+      }
+
+      var pieChart3 = new Chart(pieChartCanvas3, {
+        type: 'pie',
+        data: pieData3,
+        options: pieOptions3      
+      })   
+
+      
+
+         //- BAR CHART - Student Attendance & Leave Overview //
+      var student_attendance_present_list = {{ student_attendance_present_list }};
+      var student_attendance_leave_list = {{ student_attendance_leave_list }};
+      var student_name_list = {{ student_name_list|safe }};
+
+      var areaChartData2 = {
+        labels  : student_name_list,
+        datasets: [
+          {
+            label               : 'Absent/Leave',
+            backgroundColor     : '#b50a04',
+            borderColor         : '#b50a04',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : student_attendance_leave_list 
+          },
+          {
+            label               : 'Attendance',
+            backgroundColor     : '#5a615c',
+            borderColor         : 'rgba(210, 214, 222, 1)',
+            pointRadius         : false,
+            pointColor          : 'rgba(210, 214, 222, 1)',
+            pointStrokeColor    : '#c1c7d1',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data                : student_attendance_present_list
+          },
+        ]
+      }
+
+
+      var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
+      var barChartData2 = jQuery.extend(true, {}, areaChartData2)
+      var temp02 = areaChartData2.datasets[0]
+      var temp12 = areaChartData2.datasets[1]
+      barChartData2.datasets[0] = temp12
+      barChartData2.datasets[1] = temp02
+
+      var barChartOptions2 = {
+        responsive              : true,
+        maintainAspectRatio     : false,
+        datasetFill             : false
+      }
+
+      var barChart2 = new Chart(barChartCanvas2, {
+        type: 'bar', 
+        data: barChartData2,
+        options: barChartOptions2
+      })
+      
+
+      // Total Students in Each Course
+      //var donutChartCanvas = $('#pieChart2').get(0).getContext('2d')
+      var course_name_list = {{ course_name_list|safe }}
+      var student_count_list_in_course = {{ student_count_list_in_course }}
+      var pieData2 = {
+        labels: course_name_list,
+        datasets: [
+          {
+            data: student_count_list_in_course,
+            backgroundColor : ['#cc0404', '#00a65a', '#f39c12', '#00A4BD', '#045c8f', '#894e9c', '#9e4603', '#71bfb2'],
+          }
+        ]
+      }
+
+      //-------------
+      //- PIE CHART -
+      //-------------
+      // Get context with jQuery - using jQuery's .get() method.
+      var pieChartCanvas2 = $('#pieChart2').get(0).getContext('2d')
+      var pieData2        = pieData2;
+      var pieOptions2     = {
+        maintainAspectRatio : false,
+        responsive : true,
+      }
+
+      var pieChart2 = new Chart(pieChartCanvas2, {
+        type: 'pie',
+        data: pieData2,
+        options: pieOptions2      
+      })
+      
+      
+      })
+  </script>
+{% endblock custom_js %}

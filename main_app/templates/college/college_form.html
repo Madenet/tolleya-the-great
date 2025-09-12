@@ -1,0 +1,15 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}{{ form.instance.pk|yesno:"Update College/University,Add College/University" }}{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{{ form.instance.pk|yesno:"Update College/University,Add College/University" }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'college_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}

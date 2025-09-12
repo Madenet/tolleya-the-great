@@ -1,0 +1,133 @@
+{% extends 'main_app/base.html' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<section class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10 col-sm-12 text-center"> 
+            {% if q %}
+                <h1>Search results for "{{ q }}"</h1>
+                <p>
+                    {% with total_results=results.news_items.count|add:results.bursary_items.count|add:results.school_dashboard.count|add:results.college_items.count|add:results.question_papers.count %}
+                        Found {{ total_results }} result{{ total_results|pluralize }}.
+                    {% endwith %}
+                </p>
+
+                <h3>News & Events</h3>
+                {% for item in results.news_items %}
+                    <h5><a href="{% url 'admin_home' %}">{{ item.title }}</a></h5>
+                {% empty %}
+                    <p>No news items found.</p>
+                {% endfor %}
+
+                <div id="search-results" class="mt-4">
+                    <h3 class="mb-4">Bursaries</h3>
+                    <div class="row">
+                        {% for item in results.bursary_items %}
+                        <div class="col-lg-4 col-md-6 col-12 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <!-- Bursary Header -->
+                                <div class="card-header text-center bg-primary text-white">
+                                    <h5 class="card-title mb-0">{{ item.title }}</h5>
+                                </div>
+                                <!-- Bursary Details -->
+                                <div class="card-body text-center">
+                                    <a href="https://{{ item.website_url }}" target="_blank">
+                                        <img src="{{ item.get_picture }}" alt="{{ item.title }}" class="img-thumbnail mb-3" style="max-width: 120px; max-height: 120px;">
+                                    </a>
+                                    <p class="card-text text-muted">{{ item.summary|truncatewords:15 }}</p>
+                                </div>
+                                <!-- View Details Button -->
+                                <div class="card-footer text-center">
+                                    <a href="{% url 'bursary_list' %}" class="btn btn-primary btn-sm">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12">
+                            <p class="text-danger text-center">No bursaries found.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <h3>Schools</h3>
+                {% for item in results.school_dashboard %}
+                    <h5><a href="{% url 'school_dashboard' %}">{{ item.name }}</a></h5>
+                {% empty %}
+                    <p>No schools found.</p>
+                {% endfor %}
+
+                <h3 class="text-center mb-4">Colleges</h3>
+                <div class="container my-4">
+                    <div class="row">
+                        {% for item in results.college_items %}
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+                            <div class="card shadow-sm text-center h-100">
+                                <!-- College Image -->
+                                <a href="https://{{ item.website_url }}" target="_blank" class="text-decoration-none">
+                                    <div class="card-body">
+                                        <img src="{{ item.get_picture }}" alt="{{ item.title }}" class="img-fluid rounded-circle mb-3" style="max-width: 100px; max-height: 100px;">
+                                        <h5 class="card-title text-dark">{{ item.title }}</h5>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center">
+                            <p class="text-danger">No colleges found.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+
+
+                <h3>Question Papers</h3>
+                {% for item in results.question_papers %}
+                    <h5><a href="{% url 'view_question_paper' item.pk %}">{{ item.subject.name }}</a></h5>
+                {% empty %}
+                    <p>No question papers found.</p>
+                {% endfor %}
+            {% else %}
+                <h2>Search for your favorite items</h2>
+                <form method="GET" class="d-flex">
+                    <div class="input-group">
+                        <input type="text" name="q" id="id_q" class="form-control" placeholder="Search here..." value="{{ q }}">
+                        <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                </form>
+                <ul id="list"></ul>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).on('keyup', '#id_q', function (e) {
+        e.preventDefault();
+        var minlength = 3;
+        if ($('#id_q').val().length >= minlength) {
+            $.ajax({
+                type: 'POST',
+                url: '{% url "general_search_view" %}',
+                data: {
+                    ss: $('#id_q').val(),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success: function (data) {
+                    // Update results dynamically (e.g., render items into a dropdown or section)
+                    console.log(data);
+                },
+                error: function (xhr, errmsg, err) {
+                    console.error(errmsg);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

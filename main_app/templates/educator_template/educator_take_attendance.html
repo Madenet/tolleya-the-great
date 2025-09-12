@@ -1,0 +1,47 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="subject">Subject</label>
+        <select name="subject" id="subject" class="form-control">
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="session">Session</label>
+        <select name="session" id="session" class="form-control">
+            {% for session in sessions %}
+                <option value="{{ session.id }}">{{ session }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label>Students</label>
+        <ul>
+            {% for student in subject.students.all %}
+                <li>
+                    <input type="checkbox" name="students" value="{{ student.id }}">
+                    {{ student.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <label for="status">Status</label>
+        <select name="status" id="status" class="form-control">
+            <option value="present">Present</option>
+            <option value="absent">Absent</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Attendance</button>
+</form>
+{% endblock content %}

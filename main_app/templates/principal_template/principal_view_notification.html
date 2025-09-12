@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ page_title }}</h2>
+    <div class="list-group">
+        {% for notification in notifications %}
+            <div class="list-group-item">
+                <h5>{{ notification.title }}</h5>
+                <p>{{ notification.message }}</p>
+                <small>{{ notification.created_at }}</small>
+            </div>
+        {% empty %}
+            <div class="list-group-item">
+                <p>No notifications available.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

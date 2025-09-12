@@ -1,0 +1,47 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+    <h2>Search for Prospectors</h2>
+
+    <!-- Search Form -->
+    <form method="get" action="{% url 'prospectors_search' %}">
+        <input type="text" name="q" placeholder="Search for a prospector" value="{{ request.GET.q }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if request.GET.q %}
+        {% if prospectors %}
+            <h3>Search Results</h3>
+            <table border="1">
+                <tr>
+                    <th>Institution</th>
+                    <th>Address</th>
+                    <th>Copy</th>
+                    <th>Logo</th>
+                </tr>
+                {% for prospector in prospectors %}
+                <tr>
+                    <td>{{ prospector.institution }}</td>
+                    <td>{{ prospector.address }}</td>
+                    <td>
+                        {% if prospector.copy %}
+                            <a href="{{ prospector.copy.url }}" target="_blank">View Copy</a>
+                        {% else %}
+                            No file uploaded
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if prospector.logo %}
+                            <img src="{{ prospector.logo.url }}" alt="Logo" width="100">
+                        {% else %}
+                            No logo uploaded
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No results found for your search.</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

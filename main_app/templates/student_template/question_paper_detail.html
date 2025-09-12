@@ -1,0 +1,14 @@
+{% extends "main_app/base.html" %}
+{% block content %}
+<div class="container">
+    <h2>{{ page_title }}</h2>
+    <h3>{{ question_paper.title }}</h3>
+    <p>Subject: {{ question_paper.subject.name }}</p>
+    <p>Grade: {{ question_paper.grade.name }}</p>
+    <p>Examiner: {{ question_paper.examiner_name }}</p>
+    <p>Complexity: {{ question_paper.complexity_rating }}</p>
+    <p>Topics: {{ question_paper.topics }}</p>
+    <a href="{{ question_paper.file.url }}" class="btn btn-primary" download>Download</a>
+    <a href="{{ question_paper.file.url }}" class="btn btn-secondary" target="_blank">View</a>
+</div>
+{% endblock %}

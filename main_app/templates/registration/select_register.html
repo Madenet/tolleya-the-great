@@ -1,0 +1,21 @@
+{% extends 'main_app/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <li class="big-title"><a href="{% url 'login_page' %}">Already Registered? Sign In</a></li>
+    <h2 class="text-center">Select User</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="user_type">Register</label>
+        <select id="user_type" name="user_type" class="form-control">
+            <option value="">-- Select User Type</option>
+            <option value="staff">-- Staff</option>
+            <option value="student">Student</option>
+            <option value="principal">Principal</option>
+            <option value="educator">Educator</option>
+            <option value="circuit_manager">Circuit Manager</option>
+            <option value="parent">Parent</option>
+            <option value="member">member</option>
+        </select>
+    </form>
+</div>
+{% endblock %}

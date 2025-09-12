@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Add Attendance Report</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Attendance</button>
+        <a href="{% url 'principal_view_attendance' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

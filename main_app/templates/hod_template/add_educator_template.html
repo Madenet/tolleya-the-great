@@ -1,0 +1,115 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+    .invalid {
+        font-style: italic;
+        font-weight: bold;
+        color: red;
+    }
+    .valid {
+        font-style: italic;
+        font-weight: bold;
+        color: green;
+    }
+    .subjects-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    .subjects-grid .form-check {
+        margin-bottom: 5px;
+    }
+    @media (max-width: 768px) {
+        .subjects-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ page_title }}</h3>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="first_name">First Name</label>
+                                <input type="text" class="form-control" name="first_name" placeholder="Enter First Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" placeholder="Enter Last Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select class="form-control" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea class="form-control" name="address" rows="3" placeholder="Enter Address"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="school">School</label>
+                                <select class="form-control" name="school" required>
+                                    <option value="">Select School</option>
+                                    {% for school in schools %}
+                                        <option value="{{ school.id }}">{{ school.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="subjects">Subjects</label>
+                                <div class="subjects-grid">
+                                    {% for subject in subjects %}
+                                        <div class="form-check">
+                                            <input 
+                                                type="checkbox" 
+                                                class="form-check-input" 
+                                                id="subject_{{ subject.id }}" 
+                                                name="subjects" 
+                                                value="{{ subject.id }}">
+                                            <label class="form-check-label" for="subject_{{ subject.id }}">
+                                                {{ subject.name }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="profile_pic">Profile Picture</label>
+                                <input type="file" class="form-control" name="profile_pic">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Add Educator</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

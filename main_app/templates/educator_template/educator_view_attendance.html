@@ -1,0 +1,33 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="subject">Subject</label>
+        <select name="subject" id="subject" class="form-control">
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="start_date">Start Date</label>
+        <input type="date" name="start_date" id="start_date" class="form-control">
+    </div>
+
+    <div>
+        <label for="end_date">End Date</label>
+        <input type="date" name="end_date" id="end_date" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary">View Attendance</button>
+</form>
+
+<div>
+    <ul id="attendance-list">
+        <!-- Attendance list will be populated here via JS -->
+    </ul>
+</div>
+{% endblock content %}

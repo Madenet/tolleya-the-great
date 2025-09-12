@@ -1,0 +1,114 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<h2 class="text-center small-heading">All Question Papers</h2>
+
+<style>
+    .small-heading {
+        font-size: 1.5rem; /* Adjust size as needed */
+    }
+</style>
+
+<!-- Filter Bar -->
+<div class="container-fluid bg-light py-2 mb-4 shadow-sm">
+  <div class="row justify-content-center">
+    <div class="col-md-10 d-flex flex-wrap align-items-center gap-2">
+      <form method="GET" id="filterForm" class="d-flex flex-wrap w-100">
+        <select name="department" id="department" class="form-select me-2">
+          <option value="">Department</option>
+          {% for department in departments %}
+            <option value="{{ department.id }}" {% if request.GET.department == department.id|stringformat:'s' %}selected{% endif %}>{{ department.name }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="grade" id="grade" class="form-select me-2">
+          <option value="">Grade</option>
+          {% for grade in grades %}
+            <option value="{{ grade.id }}" {% if request.GET.grade == grade.id|stringformat:'s' %}selected{% endif %}>{{ grade.name }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="term" id="term" class="form-select me-2">
+          <option value="">Term</option>
+          {% for term in terms %}
+            <option value="{{ term.id }}" {% if request.GET.term == term.id|stringformat:'s' %}selected{% endif %}>{{ term.term_name }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="school" id="school" class="form-select me-2">
+          <option value="">School</option>
+          {% for school in schools %}
+            <option value="{{ school.id }}" {% if request.GET.school == school.id|stringformat:'s' %}selected{% endif %}>{{ school.name }}</option>
+          {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">Apply</button>
+        <button type="reset" id="resetFilters" class="btn btn-secondary">Reset</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- Loading Indicator -->
+<div id="loading" class="text-center mt-3" style="display: none;">
+  <p>Loading...</p>
+</div>
+
+<!-- Grouped Question Papers -->
+<div id="papersContainer">
+  {% for grade in grades %}
+    <h2 class="text-center small-heading">Grade {{ grade.name }}</h2>
+    <div class="row">
+      {% for paper in question_papers %}
+        {% if paper.grade.id == grade.id %}
+          <!-- Adjust the columns for different screen sizes -->
+          <div class="col-6 col-md-3 paper-card" data-grade="{{ paper.grade.id }}" data-term="{{ paper.term.id }}" data-department="{{ paper.department.id }}" data-school="{{ paper.school.id }}">
+            <div class="card shadow-sm p-3 mb-4">
+              <div class="card-body">
+                <h5 class="card-title">{{ paper.term }}</h5>
+                <p class="card-text">Department: {{ paper.department.name }} | Complexity: {{ paper.complexity_rating }}</p>
+                <div class="d-flex justify-content-between">
+                  <a href="{% url 'view' paper.id %}" class="btn btn-info btn-sm" target="_blank">View</a>
+                  <a href="{% url 'download' paper.id %}" class="btn btn-success btn-sm">Download</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  document.getElementById("filterForm").addEventListener("change", function() {
+    let grade = document.getElementById("grade").value;
+    let term = document.getElementById("term").value;
+    let department = document.getElementById("department").value;
+    let school = document.getElementById("school").value;
+
+    document.getElementById("loading").style.display = "block";
+    setTimeout(() => {
+      document.querySelectorAll(".paper-card").forEach(function(card) {
+        let match = true;
+        if (grade && card.getAttribute("data-grade") !== grade) match = false;
+        if (term && card.getAttribute("data-term") !== term) match = false;
+        if (department && card.getAttribute("data-department") !== department) match = false;
+        if (school && card.getAttribute("data-school") !== school) match = false;
+        card.style.display = match ? "block" : "none";
+      });
+      document.getElementById("loading").style.display = "none";
+    }, 500);
+  });
+
+  document.getElementById("resetFilters").addEventListener("click", function() {
+    document.getElementById("filterForm").reset();
+    document.querySelectorAll(".paper-card").forEach(function(card) {
+      card.style.display = "block";
+    });
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "main_app/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ page_title }}</h2>
+    <form method="POST" action="{% url 'submit_attendance' %}">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="subjectSelect" class="form-label">Select Subject:</label>
+            <select name="subject" id="subjectSelect" class="form-control" required>
+                {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="sessionSelect" class="form-label">Select Session:</label>
+            <select name="session" id="sessionSelect" class="form-control" required>
+                {% for session in sessions %}
+                    <option value="{{ session.id }}">{{ session }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <h3>Sessions</h3>
+
+        <h4>Attendance Status</h4>
+        <div class="form-check">
+            <input type="radio" name="status" id="present" value="present" class="form-check-input" required>
+            <label for="present" class="form-check-label">Present</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" name="status" id="absent" value="absent" class="form-check-input" required>
+            <label for="absent" class="form-check-label">Absent</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Submit Attendance</button>
+    </form>
+    <ul>
+        {% for session in sessions %}
+            <li>{{ session }}</li>
+        {% empty %}
+            <li>No sessions available.</li>
+        {% endfor %}
+    </ul>
+    
+</div>
+{% endblock %}

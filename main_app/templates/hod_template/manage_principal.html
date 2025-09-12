@@ -1,0 +1,61 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ page_title }}</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>School</th>
+                                    <th>Grade</th>
+                                    <th>Course</th>
+                                    <th>Count</th>
+                                    <th>Avatar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for principal in principals %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ principal.first_name }} {{ principal.last_name }}</td>
+                                    <td>{{ principal.email }}</td>
+                                    <td>{{ principal.principal.school.name }}</td> <!-- Access school name -->
+                                    <td>{{ principal.principal.grade.name }}</td> <!-- Access grade name -->
+                                    <td>{{ principal.principal.course.name }}</td> <!-- Access course name -->
+                                    <td>{{ principal.principal.term.term }}</td>
+                                    <td>{{principal.count}}</td>
+                                    <td>
+                                        {% if principal.profile_pic %}
+                                        <img class="img img-fluid mb-2" height="56" width="56"
+                                             src="{{ principal.profile_pic.url }}" alt="Avatar">
+                                        {% else %}
+                                        No Image
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <!-- Add any action buttons here -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

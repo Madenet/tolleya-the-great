@@ -1,0 +1,2121 @@
+{% load static %}
+{% csrf_token %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <!-- Meta Tags -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5924073395226525"
+        crossorigin="anonymous"></script>
+		<meta name="keywords" content="Site keywords here">
+		<meta name="description" content="">
+		<meta name='copyright' content=''>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<script type="application/ld+json">
+			{
+			  "@context": "https://schema.org",
+			  "@type": "Organization",
+			  "name": "Tolleya",
+			  "url": "https://tolleya.com",
+			  "logo": "https://tolleya.com/static/images/logo.png"
+			}
+		</script>
+		<!-- Title -->
+        <title>Tolleya</title>
+		<link rel="icon" href="{% static 'images/logo.png' %}">
+		
+	<!-- Favicon -->
+    <link rel="icon" href="{% static 'images/logo.png' %}">
+	<!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Your custom CSS (if any) -->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+	<!-- Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+		<!-- Nice Select CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/nice-select.css' %}">
+		<!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
+		<!-- icofont CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/icofont.css' %}">
+		<!-- Slicknav -->
+		<link rel="stylesheet" href="{% static 'assets/css/slicknav.min.css' %}">
+		<!-- Owl Carousel CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/owl-carousel.css' %}">
+		<!-- Datepicker CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/datepicker.css' %}">
+		<!-- Animate CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
+		<!-- Magnific Popup CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+		
+		<!-- Medipro CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/normalize.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/style.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/css/nav.css' %}">
+    </head>
+    <body>
+	    <!--MESSAGES-->
+		{% if messages %}
+		{% for message in messages %}
+		{% if message.tags == 'error' %}
+		<div class="alert alert-danger">
+			<i class="fas fa-exclamation-circle"></i>{{ message }}
+		</div>
+		{% else %}
+		<div class="alert alert-success">
+			<i class="fas fa-check-circle"></i>{{ message }}
+		</div>
+		{% endif %}
+		{% endfor %}
+		{% endif %}
+		<!--END-->
+		<!-- Preloader -->
+       
+        <!-- End Preloader -->
+		
+		<!-- Get Pro Button -->
+		<ul class="pro-features">
+			<!-- Login Button with Dropdown for Role Selection -->
+			<li class="dropdown">
+				<a class="get-pro dropdown-toggle" href="#" role="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="color: rgb(252, 252, 252); font-weight: bold;">
+					Login
+				</a>
+			</li>
+		
+			<!-- Additional Navigation Links -->
+			<li class="big-title"><a href="{% url 'login_page' %}">Sign In</a></li>
+			<li class="big-title"><a href="{% url 'register_selection' %}">Sign Up</a></li>
+			<li class="title"><a href="{% url 'college_list' %}">Apply to Universities</a></li>
+			<li><a href="{% url 'bursary_list' %}">Apply for Bursaries</a></li>
+			
+		
+			<!-- External Action Buttons -->
+			<div class="button">
+				<a href="{% url 'joblistview' %}" target="_blank" class="btn">
+					Apply for Jobs
+				</a>
+				{% for paper in question_papers %}
+					<div class="question-paper">
+						<h3>{{ paper.grade.name }} - {{ paper.term.term }} - {{ paper.school.name }} - {{ paper.subject.name }}</h3>
+						<a href="{% url 'download' paper.id %}" class="btn btn-success">Download</a>
+					</div>
+				{% endfor %}
+			</div>
+		</ul>
+		
+	
+		<!-- Header Area -->
+		<header class="header" >
+			<!-- Topbar -->
+			<div class="topbar">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6 col-md-5 col-12">
+							<!-- Contact -->
+							<ul class="top-link">
+								<li><a href="{% url 'about' %}">About</a></li>
+								<li><a href="{% url 'circuitmanager' %}">C.Manager</a></li>
+								<li><a href="{% url 'contact_form' %}">Contact</a></li>
+								<li><a href="{% url 'faq' %}">FAQ</a></li>
+							</ul>
+							<!-- End Contact -->
+						</div>
+						<div class="col-lg-6 col-md-7 col-12">
+							<!-- Top Contact -->
+							<ul class="top-contact">
+								<li><i class="fa fa-phone"></i>+27 68 477 1271</li>
+							    <li><i class="fa fa-envelope"></i> <a href="mailto:support@tolleya.vhembe.co.za">support@tolleya.vhembe.co.za</a></li>
+							</ul>
+							<!-- End Top Contact -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Topbar -->
+			<!-- Header Inner -->
+			<div class="header-inner">
+				<div class="container">
+					<div class="inner">
+						<div class="row">
+							<div class="navbar-container">
+								<!-- Top Navigation Bar -->
+								<div class="top-nav">
+									<!-- Left Section -->
+									<div class="left-section">
+										<!-- Logo Section -->
+										<div class="logo-section">
+											<img src="{% static 'images/logo.png' %}" alt="Logo">
+										</div>
+										<div onclick="window.location='{% url 'index' %}';" style="cursor: pointer;">
+											<button class="icon-button">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+												</svg>
+											</button>
+										</div>
+									</div>
+							
+									<!-- Right Section -->
+									<div class="right-section">
+										<div class="menu" id="menuButton2">
+											<button class="icon-button" id="plusBtn" title="Add New">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<line x1="12" y1="5" x2="12" y2="19"></line>
+													<line x1="5" y1="12" x2="19" y2="12"></line>
+												</svg>
+											</button>
+											<ul class="dropdown-menu" id="dropdownMenu2">
+												<li><a href="{% url 'schoolupload' %}">School Upload</a></li>
+												<li><a href="{% url 'school_dashboard' %}">School Dashboard</a></li>
+												<li class="title"><a href="{% url 'college_list' %}">Apply to Universities</a></li>
+			                                    <li><a href="{% url 'bursary_list' %}">Apply for Bursaries</a></li>
+											</ul>
+										</div>
+										
+										<div class="searchToggle">
+											<!-- Search Icon -->
+											<button class="icon-button" id="searchToggle" title="SearchBar">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<circle cx="11" cy="11" r="8"></circle>
+													<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+												</svg>
+											</button>
+											<!-- Search Dropdown -->
+											<div class="search-dropdown" id="searchDropdown" >
+												<form method="GET" action="{% url 'general_search_view' %}">
+													<div class="input-group">
+														<input type="text" name="q" id="id_q" class="form-control" placeholder="Search here..." value="{{ q }}">
+														<button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i> Search</button>
+													</div>
+												</form>												
+											</div>
+										</div>
+										<style>
+											.search-dropdown {
+												position: absolute;
+												top: 100%; /* Position below the search icon */
+												left: 0;
+												right: 0;
+												background: white;
+												border: 1px solid #ddd;
+												padding: 10px;
+												z-index: 1000;
+												display: none; /* Hidden by default */
+											}
+											.search-input {
+												width: 100%;
+												padding: 8px;
+												border: 1px solid #ccc;
+												border-radius: 4px;
+											}
+											.search-submit-btn {
+												display: inline-block;
+												margin-top: 5px;
+												background-color: #007bff;
+												color: white;
+												border: none;
+												padding: 8px 12px;
+												cursor: pointer;
+												border-radius: 4px;
+											}
+											.search-submit-btn:hover {
+												background-color: #0056b3;
+											}
+
+										</style>
+										<script>
+											document.addEventListener("DOMContentLoaded", function () {
+											const searchToggle = document.getElementById("searchToggle");
+											const searchDropdown = document.getElementById("searchDropdown");
+
+											searchToggle.addEventListener("click", function () {
+												// Toggle visibility
+												if (searchDropdown.style.display === "none" || !searchDropdown.style.display) {
+													searchDropdown.style.display = "block";
+												} else {
+													searchDropdown.style.display = "none";
+												}
+											});
+
+											// Close dropdown when clicking outside
+											document.addEventListener("click", function (event) {
+												if (!searchDropdown.contains(event.target) && !searchToggle.contains(event.target)) {
+													searchDropdown.style.display = "none";
+												}
+											});
+										});
+
+										</script>
+										<div class="menu">
+											<!-- AI Magic Button -->
+											<button class="icon-button" title="AI Assistant" id="aiButton">
+												<!-- AI Icon -->
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
+													stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+													<path d="M12 3v2"></path>
+													<path d="M12 19v2"></path>
+													<path d="M5 12H3"></path>
+													<path d="M21 12h-2"></path>
+													<path d="M16.95 7.05l1.41-1.41"></path>
+													<path d="M5.64 18.36l1.41-1.41"></path>
+													<path d="M16.95 16.95l1.41 1.41"></path>
+													<path d="M5.64 5.64l1.41 1.41"></path>
+													<circle cx="12" cy="12" r="3"></circle>
+												</svg>
+												<span style="margin-left: 5px;">AI</span>
+											</button>
+										</div>
+
+										<script>
+										// Simply show the chat on button click
+										document.getElementById("aiButton").addEventListener("click", function () {
+											window.botpressWebChat.sendEvent({ type: "show" });
+										});
+										</script>
+
+										
+										<div class="menu" id="menuButton1">
+											<button class="icon-button" title="Profile">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+													<circle cx="12" cy="7" r="4"></circle>
+												</svg>
+											</button>
+											<ul class="dropdown-menu" id="dropdownMenu1">
+												<li><a href="{% url 'login_page' %}">Sign In</a></li>
+												<li><a href="{% url 'register_selection' %}">Sign Up</a></li>
+											</ul>
+										</div>
+				
+										<div class="menu">
+											<!-- Menu Button -->
+											<button class="icon-button" title="Menu" id="menuButton">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<line x1="3" y1="12" x2="21" y2="12"></line>
+													<line x1="3" y1="6" x2="21" y2="6"></line>
+													<line x1="3" y1="18" x2="21" y2="18"></line>
+												</svg>
+											</button>
+									    
+											<!-- Dropdown Menu -->
+											<ul class="dropdown-menu  dropdown-menu-left" id="dropdownMenu">
+												<li><a href="{% url 'index' %}">Home</a></li>
+												<li><a href="{% url 'help' %}">Help</a></li>
+												<li><a href="{% url 'services' %}">Services</a></li>
+												<li><a href="#college-section">College & Universities</a></li>
+												<li><a href="#bursary-section">Bursaries</a></li>
+												<li><a href="#school-section">School Dashboard</a></li>
+												<li><a href="{% url 'contact_form' %}">Contact Us</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							
+								<!-- Search Bar -->
+								<div class="search-bar" id="searchBar">
+									<div class="search-input-wrapper">
+										<input type="text" class="search-input" placeholder="Search content...">
+										<button class="search-submit">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+												<circle cx="11" cy="11" r="8"></circle>
+												<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+											</svg>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+							
+							<div class="col-lg-7 col-md-9 col-12">
+								<!-- Main Menu -->
+								<div class="main-menu">
+									<nav class="navigation">
+										<ul class="nav menu">
+											<li class="active"><a href="{% url 'index' %}">Home <i class="icofont-rounded-down"></i></a>
+												
+											</li>
+											<li><a href="{% url 'help' %}">Help</a></li>
+											<li><a href="{% url 'services' %}">Services </a></li>
+											<li><a href="#">Pages <i class="icofont-rounded-down"></i></a>
+												<ul class="dropdown">
+													<li><a href="#college-section">College&Universities</a></li>
+													<li><a href="#bursary-section">Bursaries</a></li>
+												</ul>
+												
+											</li>
+											<li><a href="#">School <i class="icofont-rounded-down"></i></a>
+												<ul class="dropdown">
+													<li><a href="#school-section">School Dashboard</a></li>
+												</ul>
+											</li>
+											<li><a href="{% url 'contact_form' %}">Contact Us</a></li>
+										</ul>
+									</nav>
+								</div>
+								<!--/ End Main Menu -->
+							</div>
+							<div class="col-lg-2 col-12">
+								<div class="get-quote">
+									<a href="#appointment-section" class="btn">Book Appointment</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Header Inner -->
+		</header>
+        <!-- End Header Area -->
+		<!-- Slider Area -->
+		<section class="slider">
+			<div class="hero-slider">
+				<!-- Tolleya Static Intro (unchanged) -->
+				<div class="single-slider" style="background-color:#f0f0f0;">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-7">
+								<div class="text">
+									<h1>Welcome to Vhembe West <span>Tolleya</span> Education Network.</h1>
+									<h1><span>Never Again, Not In Our Lifetime</span></h1>
+									<p>Connecting schools within our circuit to foster collaboration, share resources, and build a brighter future for every learner.</p>
+									<div class="button">
+										<a href="{% url 'register_selection' %}" class="btn">Register</a>
+										<a href="{% url 'school_dashboard' %}" class="btn primary">School Dashboard</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Dynamic Photo Slides -->
+					{% for photo in photos %}
+					<div class="single-slider" style="background-image: url(''); background-size: cover; background-position: center;">
+						<div class="container">
+							<div class="row">
+								<div class="col-lg-7">
+									<div class="text position-relative">
+										<!-- Minimal Top-Right Image Badge -->
+										<div class="sponsor-badge">
+											<a href="{% url 'photo' photo.id %}" class="sponsor-overlay-link">
+												<span class="sponsor-overlay-text"><span style="color:rgb(233, 30, 30);">Proudly Sponsor</span>
+											</a>
+										
+											<a href="https://{{ photo.website_url }}" target="_blank" rel="noopener noreferrer">
+												<img src="{{ photo.image.url }}" alt="Sponsor Logo">
+											</a>
+										</div>
+										
+										
+										<p class="description"><span>{{ photo.description }}</span></p>
+				
+										{% if request.user.is_superuser %}
+										<div class="admin-actions mb-3">
+											<a href="{% url 'edit_photo' photo.id %}" class="update"><i class="fas fa-pencil-alt"></i> Edit</a>
+											<a href="{% url 'delete-photo' photo.id %}" class="delete"><i class="fas fa-trash-alt"></i> Delete</a>
+										</div>
+										{% endif %}
+				
+										<div class="button">
+											{% if photo.website_url %}
+												<a href="https://{{ photo.website_url }}" class="btn">Visit Us</a>
+											{% else %}
+												<a href="{% url 'register_selection' %}" class="btn">Register</a>
+											{% endif %}
+				
+											{% if photo.facebook_url %}
+												<a href="https://{{ photo.facebook_url }}" class="btn primary">Facebook</a>
+											{% else %}
+												<a href="{% url 'school_dashboard' %}" class="btn primary">School Dashboard</a>
+											{% endif %}
+										</div>
+				
+										<ul class="social">
+											{% if photo.whatsapp_number %}
+												<li><a href="https://wa.me/{{ photo.whatsapp_number }}" target="_blank"><i class="icofont-whatsapp"></i></a></li>
+											{% endif %}
+											{% if photo.zoom_url %}
+												<li><a href="https://{{ photo.zoom_url }}"><i class="icofont-zoom"></i></a></li>
+											{% endif %}
+											{% if photo.microsoftTeam_url %}
+												<li><a href="https://{{ photo.microsoftTeam_url }}"><i class="icofont-microsoft-teams"></i></a></li>
+											{% endif %}
+											{% if photo.twitter_url %}
+												<li><a href="https://{{ photo.twitter_url }}"><i class="icofont-twitter"></i></a></li>
+											{% endif %}
+											{% if photo.tiktok_url %}
+												<li><a href="https://{{ photo.tiktok_url }}"><i class="icofont-tiktok"></i></a></li>
+											{% endif %}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+				
+		</section>
+
+		<!-- Styles (Put this in the <head> of your base template, or before </body> if inline) -->
+		<style>
+		.hero-slider .sponsor-text {
+			font-size: 24px;
+			color: #ffd700;
+			text-transform: uppercase;
+			font-weight: 600;
+		}
+
+		.button {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
+
+		.btn, .btn.primary {
+			display: inline-block;
+		}
+
+		.sponsor-text {
+			font-size: 1.5rem;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: rgb(213, 221, 231);
+			letter-spacing: 2px;
+		}
+
+		.social li {
+			display: inline-block;
+			margin-right: 10px;
+		}
+
+		.social li a {
+			font-size: 24px;
+			color: #000;
+			transition: color 0.3s ease;
+		}
+
+		.social li a:hover {
+			color: #007bff;
+		}
+
+		.btn i, .social li a i {
+			font-size: 30px;
+		}
+
+		.icofont-whatsapp {
+			color: #25D366;
+		}
+
+		.icofont-facebook {
+			color: #3b5998;
+		}
+
+		.icofont-twitter {
+			color: #1DA1F2;
+		}
+
+		.icofont-tiktok {
+			color: #000000;
+		}
+
+		.icofont-zoom {
+			color: #2D8BCE;
+		}
+
+		.icofont-microsoft-teams {
+			color: #6264A7;
+		}
+
+		.sponsor-badge {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 10px;
+			z-index: 10;
+		}
+		
+		.sponsor-badge img {
+			max-width: 275px;
+			max-height: 100px;
+			object-fit: contain;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+			background-color: white;
+		}
+		
+		</style>
+
+		<!--/ End Slider Area -->
+
+		<script src="https://cdn.botpress.cloud/webchat/v2.5/inject.js"></script>
+        <script src="https://files.bpcontent.cloud/2025/05/11/09/20250511095855-CN72ENNA.js"></script>
+		
+		<!--/End Schedule Area -->
+		<!--email system integrations-->
+		<script>
+			var url = 'https://wati-integration-service.clare.ai/ShopifyWidget/shopifyWidget.js?13663';
+			var s = document.createElement('script');
+			s.type = 'text/javascript';
+			s.async = true;
+			s.src = url;
+			var options = {
+			"enabled":true,
+			"chatButtonSetting":{
+				"backgroundColor":"#4dc247",
+				"ctaText":"",
+				"borderRadius":"50",
+				"marginLeft":"0",
+				"marginBottom":"25",
+				"marginRight":"50",
+				"position":"left"
+			},
+			"brandSetting":{
+				"brandName":"Tolleya Manager",
+				"brandSubTitle":"Typically replies during office hours",
+				"brandImg":"https://cdn.clare.ai/wati/images/WATI_logo_square_2.png",
+				"welcomeText":"Thank you for contacting Us, Welcome to Tolleya Office.",
+				"messageText":"{{page_link}}Hello, I have a question about",
+				"backgroundColor":"#0a5f54",
+				"ctaText":"Start Chat",
+				"borderRadius":"25",
+				"autoShow":false,
+				"phoneNumber":"27825504528"
+			}
+			};
+				s.onload = function() {
+					CreateWhatsappChatWidget(options);
+				};
+				var x = document.getElementsByTagName('script')[0];
+				x.parentNode.insertBefore(s, x);
+		</script>
+		<!--STUDENT DETAILS-->
+		<section class="Features section shortcuts-section">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="section-title text-center shortcuts-title">
+							<h2>Shortcuts</h2>
+							<img src="{% static 'images/section-img.png' %}" alt="#">
+							<p class="mt-3">Visit all the links directly from Shortcuts</p>
+						</div>
+					</div>
+				</div>
+				<div class="row d-flex justify-content-center">
+					<!-- Start Single Feature -->
+					<div class="col-6 col-sm-4 col-md-3 text-center mb-4">
+						<div class="single-features shortcuts-feature">
+							<div onclick="window.location='#school-section';" style="cursor: pointer;">
+								<div class="single-icon position-relative">
+									<i class="icofont icofont-school-bag"></i>
+									<span class="badge badge-danger position-absolute top-0 end-0">
+										{{ schools_count }}
+									</span>
+								</div>
+								<h3>Schools</h3>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Feature -->
+		
+					<!-- Start Single Feature -->
+					<div class="col-6 col-sm-4 col-md-3 text-center mb-4">
+						<div class="single-features shortcuts-feature">
+							<div onclick="window.location='{% url 'questionpaperlist' %}';" style="cursor: pointer;">
+								<div class="single-icon position-relative">
+									<i class="icofont icofont-file-document"></i>
+									<span class="badge badge-danger position-absolute top-0 end-0">
+										{{ question_papers_count }}
+									</span>
+								</div>
+								<h3>Question Papers</h3>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Feature -->
+		
+					<!-- Start Single Feature -->
+					<div class="col-6 col-sm-4 col-md-3 text-center mb-4">
+						<div class="single-features shortcuts-feature">
+							<div onclick="window.location='{% url 'prospectors_list' %}';" style="cursor: pointer;">
+								<div class="single-icon position-relative">
+									<i class="icofont icofont-book"></i>
+									<span class="badge badge-danger position-absolute top-0 end-0">
+										{{ prospectors_count }}
+									</span>
+								</div>
+								<h3>Prospectors</h3>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Feature -->
+		
+					<!-- Start Single Feature -->
+					<div class="col-6 col-sm-4 col-md-3 text-center mb-4">
+						<div class="single-features shortcuts-feature">
+							<div onclick="window.location='{% url 'college_list' %}';" style="cursor: pointer;">
+								<div class="single-icon position-relative">
+									<i class="icofont icofont-university"></i>
+									<span class="badge badge-danger position-absolute top-0 end-0">
+										{{ colleges_count }}
+									</span>
+								</div>
+								<h3>Universities & Colleges</h3>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Feature -->
+		
+					<!-- Start Single Feature -->
+					<div class="col-6 col-sm-4 col-md-3 text-center mb-4">
+						<div class="single-features shortcuts-feature">
+							<div onclick="window.location='{% url 'bursary_list' %}';" style="cursor: pointer;">
+								<div class="single-icon position-relative">
+									<i class="icofont icofont-money-bag"></i>
+									<span class="badge badge-danger position-absolute top-0 end-0">
+										{{ bursaries_count }}
+									</span>
+								</div>
+								<h3>Bursaries</h3>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Feature -->
+		
+					<!-- Start Single Feature -->
+					<div class="col-6 col-sm-4 col-md-3 text-center mb-4">
+						<div class="single-features shortcuts-feature">
+							<div onclick="window.location='{% url 'soslistview' %}';" style="cursor: pointer;">
+								<div class="single-icon position-relative">
+									<i class="icofont icofont-calendar"></i>
+									<span class="badge badge-danger position-absolute top-0 end-0">
+										{{ assessment_dates_count }}
+									</span>
+								</div>
+								<h3>Assessment Dates</h3>
+							</div>
+						</div>
+					</div>
+					<!--job content-->
+					<!-- Start Single Feature -->
+					<div class="col-6 col-sm-4 col-md-3 text-center mb-4">
+						<div class="single-features shortcuts-feature">
+							<div onclick="window.location='{% url 'joblistview' %}';" style="cursor: pointer;">
+								<div class="single-icon position-relative">
+									<i class="icofont icofont-briefcase"></i>
+									<span class="badge badge-danger position-absolute top-0 end-0">
+										{{ jobs_count }}
+									</span>
+								</div>
+								<h3>Jobs</h3>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Feature -->
+					<!-- End Single Feature -->
+				</div>
+			</div>
+		</section>
+        <style>
+			.badge-danger {
+				background-color: red;
+				color: white;
+				font-size: 12px;
+				padding: 5px 8px;
+				border-radius: 50%;
+				font-weight: bold;
+			}
+			
+			.single-icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+			
+			.position-absolute.top-0.end-0 {
+				transform: translate(50%, -50%);
+			}
+			
+		</style>
+        
+		<!--Start -->
+		<!--/ End Feautes -->
+		<div class="question-papers-section">
+			<h3>
+				<div 
+					class="d-flex align-items-center toggle-line" 
+					type="button" 
+					data-bs-toggle="collapse" 
+					data-bs-target="#questionPapersCollapse" 
+					aria-expanded="false" 
+					aria-controls="questionPapersCollapse"
+				>
+					<hr class="flex-grow-1 me-2">
+					<span class="arrow-indicator">Question Papers</span> <!-- Downward arrow -->
+				</div>
+			</h3>
+		
+			<div class="collapse" id="questionPapersCollapse">
+				<ul class="list-group">
+					<!-- Grouped Question Papers -->
+					<div id="papersContainer">
+						{% for grade in grades %}
+						<h2 class="text-center small-heading">Grade {{ grade.name }}</h2>
+						<div class="row">
+							{% for paper in question_papers %}
+							{% if paper.grade.id == grade.id %}
+								<!-- Adjust the columns for different screen sizes -->
+								<div class="col-6 col-md-3 paper-card" data-grade="{{ paper.grade.id }}" data-term="{{ paper.term.id }}" data-department="{{ paper.department.id }}" data-school="{{ paper.school.id }}">
+								<div class="card shadow-sm p-3 mb-4">
+									<div class="card-body">
+									<h5 class="card-title">{{ paper.term }}</h5>
+									<p class="card-text">Department: {{ paper.department.name }} | Complexity: {{ paper.complexity_rating }}</p>
+									<div class="d-flex justify-content-between">
+										<a href="{% url 'view' paper.id %}" class="btn btn-info btn-sm" target="_blank">View</a>
+										<a href="{% url 'download' paper.id %}" class="btn btn-success btn-sm">Download</a>
+									</div>
+									</div>
+								</div>
+								</div>
+							{% endif %}
+							{% endfor %}
+						</div>
+						{% endfor %}
+					</div>
+				</ul>
+			</div>
+		</div>
+		
+		<!-- Add this at the top of your content block -->
+		{% if highlight_news %}
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				setTimeout(function() {
+					const newsId = "{{ highlight_news }}";
+					const targetCard = document.querySelector(`.news-card[data-id="${newsId}"]`);
+					if (targetCard) {
+						// Scroll to the specific card
+						const container = document.querySelector('.news-carousel');
+						const scrollPos = targetCard.offsetLeft - container.offsetLeft;
+						container.scrollTo({ left: scrollPos, behavior: 'smooth' });
+						
+						// Add highlight effect
+						targetCard.classList.add('highlight-card');
+						setTimeout(() => {
+							targetCard.classList.remove('highlight-card');
+						}, 3000);
+					}
+				}, 500);
+			});
+		</script>
+		{% endif %}
+		<!-- News Section with Expandable Summaries -->
+		<div class="row mt-5">
+			<div class="col-12">
+				<h3 class="section-title">Latest News & Updates</h3>
+				
+				<div class="position-relative">
+					<!-- Navigation Arrows -->
+					<div class="custom-nav">
+						<button class="btn btn-prev">
+							<i class="fa fa-chevron-left"></i>
+						</button>
+						<button class="btn btn-next">
+							<i class="fa fa-chevron-right"></i>
+						</button>
+					</div>
+					
+					<!-- News Carousel -->
+					<div class="news-carousel">
+						{% for item in news_items %}
+						<div class="news-card" data-id="{{ item.id }}">
+							<div class="bg-white border h-100 d-flex flex-column">
+								<!-- News Image -->
+								{% if item.image %}
+								<div class="news-image-container">
+									<div class="news-image">
+										<img src="{{ item.get_image }}" class="img-fluid" alt="{{ item.title }}">
+										<div class="watermark">tolleya.com</div>
+									</div>
+								</div>
+								{% endif %}
+								
+								<!-- News Content -->
+								<div class="p-3 flex-grow-1 d-flex flex-column">
+									<div class="news-header {% if item.posted_as == 'News' %}news-highlight{% else %}events-highlight{% endif %} mb-2">
+										<h4 class="mb-0">{{ item.title|title }}</h4>
+									</div>
+									
+									<div class="news-summary mb-3 flex-grow-1">
+										<div class="summary-content">
+											{{ item.summary }}
+										</div>
+										{% if item.summary|length > 150 %}
+										<div class="read-more-container mt-2">
+											<button class="btn btn-read-more btn-sm" onclick="toggleReadMore(this)">
+												Read More <i class="fas fa-chevron-down"></i>
+											</button>
+										</div>
+										{% endif %}
+									</div>
+									
+									<div class="mt-auto">
+										<div class="d-flex justify-content-between align-items-center mb-2">
+											<div class="text-muted small">
+												<i class="fa fa-calendar"></i>
+												{{ item.updated_date|timesince }} ago
+											</div>
+											{% if request.user.is_superuser %}
+											<div class="dropdown">
+												<button class="btn btn-sm" data-bs-toggle="dropdown">
+													<i class="fas fa-ellipsis-v"></i>
+												</button>
+												<div class="dropdown-menu dropdown-menu-end">
+													<a class="dropdown-item" href="{% url 'edit_post' pk=item.id %}">
+														<i class="fas fa-pencil-alt me-2"></i> Edit
+													</a>
+													<a class="dropdown-item" href="{% url 'delete_post' pk=item.id %}">
+														<i class="fas fa-trash-alt me-2"></i> Delete
+													</a>
+												</div>
+											</div>
+											{% endif %}
+										</div>
+										
+										<!-- Share Section -->
+										<div class="share-section d-flex justify-content-between align-items-center p-2 bg-light">
+											<div class="social-share">
+												<a href="#" class="share-btn facebook" data-id="{{ item.id }}" title="Share on Facebook">
+													<i class="fab fa-facebook-f"></i>
+												</a>
+												<a href="#" class="share-btn twitter" data-id="{{ item.id }}" title="Share on Twitter">
+													<i class="fab fa-twitter"></i>
+												</a>
+												<a href="#" class="share-btn whatsapp" data-id="{{ item.id }}" title="Share on WhatsApp">
+													<i class="fab fa-whatsapp"></i>
+												</a>
+											</div>
+											<button class="btn btn-sm btn-copy-link" data-id="{{ item.id }}" title="Copy link">
+												<i class="fas fa-link"></i> Copy Link
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% empty %}
+						<div class="col-12 text-center py-5">
+							<i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+							<h5 class="text-muted">No news items available</h5>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			/* News Carousel Styles */
+			.news-carousel {
+				display: flex;
+				overflow-x: auto;
+				scroll-snap-type: x mandatory;
+				scroll-behavior: smooth;
+				-webkit-overflow-scrolling: touch;
+				margin-bottom: 20px;
+				padding-bottom: 15px;
+				gap: 20px;
+				overflow-y: hidden;
+			}
+
+			.news-card {
+				flex: 0 0 auto;
+				width: 300px;
+				scroll-snap-align: start;
+				transition: transform 0.2s;
+			}
+
+			/* Image Container for Consistent Sizing */
+			.news-image-container {
+				width: 100%;
+				height: 180px;
+				overflow: hidden;
+				position: relative;
+			}
+
+			.news-image {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.news-image img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: center;
+				transition: transform 0.3s ease;
+			}
+
+			/* Summary and Read More Styles */
+			.news-summary {
+				position: relative;
+				overflow: hidden;
+			}
+			
+			.summary-content {
+				display: -webkit-box;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				transition: all 0.3s ease;
+			}
+			
+			.news-summary.expanded .summary-content {
+				display: block;
+				-webkit-line-clamp: unset;
+			}
+			
+			.btn-read-more {
+				background-color: transparent;
+				color: #3498db;
+				padding: 0;
+				border: none;
+				font-size: 0.85rem;
+			}
+			
+			.btn-read-more:hover {
+				color: #2980b9;
+				text-decoration: underline;
+			}
+			
+			.btn-read-more i {
+				transition: transform 0.3s ease;
+				font-size: 0.7rem;
+				margin-left: 3px;
+			}
+			
+			.news-summary.expanded .btn-read-more i {
+				transform: rotate(180deg);
+			}
+			
+			.read-more-container {
+				text-align: right;
+			}
+
+			/* Mobile Responsive Adjustments */
+			@media (max-width: 768px) {
+				.news-carousel {
+					padding: 0 15px;
+				}
+				
+				.news-card {
+					width: calc(100vw - 30px);
+					margin-right: 15px;
+				}
+
+				.news-image-container {
+					height: 160px;
+				}
+				
+				.summary-content {
+					-webkit-line-clamp: 2;
+				}
+			}
+
+			/* Keep original styling */
+			.section-title:after {
+				content: '';
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				width: 50px;
+				height: 3px;
+				background: #3498db;
+			}
+
+			.watermark {
+				position: absolute;
+				bottom: 10px;
+				right: 10px;
+				background-color: rgba(255, 255, 255, 0.7);
+				padding: 2px 5px;
+				border-radius: 3px;
+				font-size: 10px;
+				color: #333;
+			}
+
+			.highlight-card {
+				animation: highlight-pulse 2s;
+				transform: scale(1);
+			}
+
+			@keyframes highlight-pulse {
+				0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); }
+				70% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
+				100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+			}
+		</style>
+
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Carousel Navigation Fix
+			const carousel = document.querySelector('.news-carousel');
+			const prevBtn = document.querySelector('.btn-prev');
+			const nextBtn = document.querySelector('.btn-next');
+
+			if (carousel && prevBtn && nextBtn) {
+				const scrollAmount = 320;
+				
+				nextBtn.addEventListener('click', () => {
+					carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+				});
+
+				prevBtn.addEventListener('click', () => {
+					carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+				});
+			}
+
+			// Toggle Read More functionality
+			window.toggleReadMore = function(button) {
+				const summaryContainer = button.closest('.news-summary');
+				summaryContainer.classList.toggle('expanded');
+				
+				const icon = button.querySelector('i');
+				if (summaryContainer.classList.contains('expanded')) {
+					button.innerHTML = 'Read Less <i class="fas fa-chevron-up"></i>';
+				} else {
+					button.innerHTML = 'Read More <i class="fas fa-chevron-down"></i>';
+				}
+			};
+
+			// Improved Share Functionality
+			function getShareUrl(newsId) {
+				return `https://www.tolleya.com/#news-${newsId}`;
+			}
+
+			// Copy Link with Better Feedback
+			document.querySelectorAll('.btn-copy-link').forEach(btn => {
+				btn.addEventListener('click', function() {
+					const newsId = this.dataset.id;
+					const shareUrl = getShareUrl(newsId);
+					
+					navigator.clipboard.writeText(shareUrl).then(() => {
+						const originalText = this.innerHTML;
+						this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+						setTimeout(() => this.innerHTML = originalText, 2000);
+					}).catch(err => {
+						console.error('Copy failed:', err);
+					});
+				});
+			});
+
+			// Social Sharing with Preview
+			document.querySelectorAll('.share-btn').forEach(btn => {
+				btn.addEventListener('click', function(e) {
+					e.preventDefault();
+					const newsId = this.dataset.id;
+					const shareUrl = getShareUrl(newsId);
+					const newsCard = this.closest('.news-card');
+					const title = newsCard.querySelector('h4').textContent;
+					const image = newsCard.querySelector('img')?.src || '';
+
+					if (this.classList.contains('facebook')) {
+						window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+					} 
+					else if (this.classList.contains('twitter')) {
+						window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+					} 
+					else if (this.classList.contains('whatsapp')) {
+						window.open(`https://wa.me/?text=${encodeURIComponent(title + ' - ' + shareUrl)}`, '_blank');
+					}
+				});
+			});
+
+			// Hash Navigation Fix
+			if (window.location.hash.startsWith('#news-')) {
+				const newsId = window.location.hash.split('-')[1];
+				const targetCard = document.querySelector(`.news-card[data-id="${newsId}"]`);
+				
+				if (targetCard) {
+					setTimeout(() => {
+						targetCard.scrollIntoView({
+							behavior: 'smooth',
+							block: 'nearest',
+							inline: 'start'
+						});
+					}, 500);
+				}
+			}
+		});
+		</script>
+
+		
+		<!-- Pricing Table -->
+		<!-- FontAwesome (for share icon) -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+		<!-- ===================== BURSARIES SECTION ===================== -->
+		<section class="pricing-table section">
+		<div class="container">
+			<div class="row">
+			<div class="col-lg-12 text-center">
+				<div class="section-title">
+				<h2>Available Bursaries</h2>
+				<p>Explore the available bursaries and apply for the one that suits you best.</p>
+				</div>
+			</div>
+			</div>
+			<div class="row">
+			{% for bursary in bursaries %}
+			<div class="col-lg-3 col-md-6 col-12 mb-4 d-flex">
+				<div class="single-table card d-flex flex-column h-100 p-3 shadow-sm w-100">
+				<div class="table-head text-center">
+					<a href="{% url 'bursary_detail' pk=bursary.pk %}" target="_blank">
+					<div class="icon mb-2">
+						<img src="{{ bursary.get_picture }}" alt="{{ bursary.title }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+					</div>
+					<h5 class="title">{{ bursary.title }}</h5>
+					</a>
+				</div>
+				<ul class="table-list flex-grow-1">
+					<li>
+					<span class="summary-short d-block">{{ bursary.summary|truncatechars:80 }}</span>
+					<span class="summary-full d-none">{{ bursary.summary }}</span>
+					<a href="javascript:void(0);" class="read-more text-primary small">Read More</a>
+					</li>
+					<li>Posted as: {{ bursary.get_posted_as_display }}</li>
+					<li>Uploaded on: {{ bursary.upload_time }}</li>
+				</ul>
+				<div class="mt-auto d-flex justify-content-between align-items-center">
+					<button class="btn btn-outline-secondary btn-sm share-btn"
+					data-title="{{ bursary.title }}"
+					data-url="{% url 'bursary_detail' pk=bursary.pk %}"
+					data-img="{{ bursary.get_picture }}">
+					<i class="fas fa-share-alt"></i>
+					</button>
+					{% if request.user.is_superuser %}
+					<div>
+					<a href="{% url 'bursary_update' pk=bursary.pk %}" class="text-warning me-2"><i class="fas fa-pencil-alt"></i></a>
+					<a href="{% url 'bursary_delete' pk=bursary.pk %}" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+					</div>
+					{% endif %}
+				</div>
+				</div>
+			</div>
+			{% empty %}
+			<div class="col-12 text-center">
+				<span class="text-danger">No Bursaries available.
+				{% if request.user.is_superuser %}
+				<a href="{% url 'bursary_add' %}" class="text-primary">Add Bursary Now</a>
+				{% endif %}
+				</span>
+			</div>
+			{% endfor %}
+			</div>
+		</div>
+		</section>
+		<style>
+			.jobs-section .image-thumbnail {
+				height: 200px;
+				object-fit: cover;
+				cursor: pointer;
+			}
+
+			.jobs-section .list-group-item a {
+				text-decoration: none;
+				color: black;
+			}
+
+			/* Custom styles for the card and container */
+			.jobs-section .job-card {
+				border: none;
+				box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+				transition: transform 0.3s, border-color 0.3s;
+				border-color: transparent;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+
+			.jobs-section .job-card:hover {
+				transform: scale(1.05);
+				border-color: #d2dde2;
+			}
+
+			.jobs-section .job-container {
+				background-color: #43586d;
+				padding: 20px;
+				border-radius: 10px;
+				margin-bottom: 20px;
+				height: 100%;
+			}
+
+			.jobs-section .job-heading {
+				font-size: 24px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+		</style>
+
+		<!-- ===================== COMMUNITY EMPLOYMENT ================= -->
+		<body>
+			<div class="container jobs-section"> <!-- 👈 wrapper for jobs -->
+				<div class="row">
+					<div class="col-md-3">
+						<div class="card">
+							<div class="card-header">Categories</div>
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item">
+									<a href="{% url 'jobgallery' %}">All</a>
+								</li>
+								<li class="list-group-item">
+									<a href="{% url 'joblistview' %}" class="btn btn-dark btn-block btn-sm m-1 text-white">View All Jobs</a>
+								</li>
+								{% if user.is_authenticated %}
+								<a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Job</a>
+								{% endif %}
+								<a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Advertisement</a>
+							</ul>
+						</div>
+					</div>
+							{% for job in jobs %}
+							<div class="col-md-4">
+								<div class="custom-container">
+									<div class="card custom-card">
+										<a href="{% url 'jobview' job.id %}">
+											<img class="image-thumbnail" src="{{ job.image.url }}" alt="Job Image">
+										</a>
+										<div class="card-body">
+											<h5 class="card-title">{{ job.description }}</h5>
+											<p class="card-text">Category: {{ job.category.name }}</p>
+											<a href="{% url 'apply_job' job.id %}" class="btn btn-primary mt-2">Apply</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+
+							{% for job in jobs %}
+							<div class="modal fade" id="applyJobModal{{ job.id }}" tabindex="-1" aria-labelledby="applyJobLabel{{ job.id }}" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered">
+									<div class="modal-content">
+									<div class="modal-header bg-primary text-white">
+										<h5 class="modal-title" id="applyJobLabel{{ job.id }}">Apply for: {{ job.description }}</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<form method="POST" enctype="multipart/form-data" action="{% url 'apply_job' job.id %}">
+										{% csrf_token %}
+										
+										<div class="mb-3">
+											<label class="form-label">Full Names</label>
+											<input type="text" name="full_names" class="form-control" placeholder="Enter your full name">
+										</div>
+
+										<div class="mb-3">
+											<label class="form-label">Upload Image</label>
+											<input type="file" name="image" class="form-control">
+										</div>
+
+										<div class="mb-3">
+											<label class="form-label">Upload CV</label>
+											<input type="file" name="cv" class="form-control">
+										</div>
+
+										<div class="mb-3">
+											<label class="form-label">Category</label>
+											<select name="category" class="form-select">
+											<option value="none">--Select Category--</option>
+											{% for cat in categories %}
+												<option value="{{ cat.id }}">{{ cat.name }}</option>
+											{% endfor %}
+											</select>
+										</div>
+
+										<div class="mb-3">
+											<input type="text" name="category_new" class="form-control" placeholder="Or add new category">
+										</div>
+
+										<button type="submit" class="btn btn-success w-100">Apply Now</button>
+										</form>
+									</div>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+
+							{% for job in jobs %}
+							<div class="col-md-4">
+								<div class="job-container">
+									<div class="card job-card">
+										{% if user.is_authenticated and user.id == job.author.id %}
+										<a href="{% url 'delete-job' job.id %}" class="edit-color"><i class="fas fa-trash"></i></a>
+										{% endif %}
+
+										<a href="{% url 'job' job.id %}">
+											<img class="image-thumbnail" src="{{job.image.url}}" alt="Card image cap">
+										</a>
+										<div class="card-body">
+											<h5 class="card-title">{{ job.description }}</h5>
+											<p class="card-text">Category: {{ job.category.name }}</p>
+											<ul class="list-unstyled">
+												{% if job.website_url %}
+												<li><a href="https://{{ job.website_url }}">Website</a></li>
+												{% endif %}
+												{% if job.whatsapp_number %}
+												<li>
+													<a href="https://wa.me/{{ job.whatsapp_number }}" target="_blank" class="whatsapp">
+														<i class="bx bxl-whatsapp">WhatsApp</i>
+													</a>
+												</li>
+												{% endif %}
+												{% if job.facebook_url %}
+												<li><a href="https://{{ job.facebook_url }}">Facebook</a></li>
+												{% endif %}
+												{% if job.zoom_url %}
+												<li><a href="https://{{ job.zoom_url }}">Zoom</a></li>
+												{% endif %}
+												{% if job.microsoftTeam_url %}
+												<li><a href="https://{{ job.microsoftTeam_url }}">Microsoft Teams</a></li>
+												{% endif %}
+												{% if job.twitter_url %}
+												<li><a href="https://{{ job.twitter_url }}">Twitter</a></li>
+												{% endif %}
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							{% empty %}
+							<div class="col-md-12">
+								<h3>No Job Opportunities</h3>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</body>
+
+		<section>
+
+		</section>
+
+		<!-- ===================== COLLEGES SECTION ===================== -->
+		<section class="pricing-table section">
+		<div class="container">
+			<div class="row">
+			<div class="col-lg-12 text-center">
+				<div class="section-title">
+				<h2>Explore Top Universities</h2>
+				<p>Find the best Universities & Colleges that match your aspirations and apply today.</p>
+				</div>
+			</div>
+			</div>
+			<div class="row">
+			{% for college in colleges %}
+			<div class="col-lg-3 col-md-6 col-12 mb-4 d-flex">
+				<div class="single-table card d-flex flex-column h-100 p-3 shadow-sm w-100">
+				<div class="table-head text-center">
+					<a href="{% url 'college_detail' pk=college.pk %}" target="_blank">
+					<div class="icon mb-2">
+						<img src="{{ college.get_picture }}" alt="{{ college.title }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+					</div>
+					<h5 class="title">{{ college.title }}</h5>
+					</a>
+				</div>
+				<ul class="table-list flex-grow-1">
+					<li>
+					<span class="summary-short d-block">{{ college.summary|truncatechars:80 }}</span>
+					<span class="summary-full d-none">{{ college.summary }}</span>
+					<a href="javascript:void(0);" class="read-more text-primary small">Read More</a>
+					</li>
+					<li>Posted as: {{ college.get_posted_as_display }}</li>
+					<li>Uploaded on: {{ college.upload_time }}</li>
+				</ul>
+				<div class="mt-auto d-flex justify-content-between align-items-center">
+					<button class="btn btn-outline-secondary btn-sm share-btn"
+					data-title="{{ college.title }}"
+					data-url="{% url 'college_detail' pk=college.pk %}"
+					data-img="{{ college.get_picture }}">
+					<i class="fas fa-share-alt"></i>
+					</button>
+					{% if request.user.is_superuser %}
+					<div>
+					<a href="{% url 'college_update' pk=college.pk %}" class="text-warning me-2"><i class="fas fa-pencil-alt"></i></a>
+					<a href="{% url 'college_delete' pk=college.pk %}" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+					</div>
+					{% endif %}
+				</div>
+				</div>
+			</div>
+			{% empty %}
+			<div class="col-12 text-center">
+				<span class="text-danger">No Colleges available.
+				{% if request.user.is_superuser %}
+				<a href="{% url 'college_add' %}" class="text-primary">Add College Now</a>
+				{% endif %}
+				</span>
+			</div>
+			{% endfor %}
+			</div>
+		</div>
+		</section>
+        <!-- Start Why choose -->
+<section class="why-choose section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Our Commitment to Quality Education</h2>
+                    <p>At tolleya, we strive to ensure that every child receives the education they deserve in every classroom across the circuit.</p>
+                </div>
+            </div>
+        </div>
+		<!--/ End Slider Area -->
+		<!-- Start Schedule Area -->
+		<section class="schedule">
+			<div class="container">
+				<div class="schedule-inner">
+					<div class="row">
+						<div class="col-lg-4 col-md-6 col-12">
+							<!-- Toggle Button for Management Consultation -->
+							<div 
+								class="d-flex align-items-center toggle-line mt-3" 
+								type="button" 
+								data-bs-toggle="collapse" 
+								data-bs-target="#managementConsultationCollapse" 
+								aria-expanded="false" 
+								aria-controls="managementConsultationCollapse"
+								style="cursor: pointer;"
+							>
+								<h4 class="mb-0"><i class="fa fa-users"></i> Consultation</h4>
+							</div>
+		
+							<!-- Collapsible Section -->
+							<div class="collapse mt-2" id="managementConsultationCollapse">
+								<div class="single-schedule first">
+									<div class="inner">
+										<div class="single-content">
+											<p>Schedule a meeting with our management team to discuss educational needs, policies, and collaboration opportunities.</p>
+											<a href="{% url 'engagewithus' %}">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+		
+						<div class="col-lg-4 col-md-6 col-12">
+							<!-- Toggle Button for Management Timetable -->
+							<div 
+								class="d-flex align-items-center toggle-line mt-3" 
+								type="button" 
+								data-bs-toggle="collapse" 
+								data-bs-target="#managementTimetableCollapse" 
+								aria-expanded="false" 
+								aria-controls="managementTimetableCollapse"
+								style="cursor: pointer;"
+							>
+								<h4 class="mb-0"><i class="icofont-calendar"></i> Management Timetable</h4>
+							</div>
+		
+							<!-- Collapsible Section -->
+							<div class="collapse mt-2" id="managementTimetableCollapse">
+								<div class="single-schedule middle">
+									<div class="inner">
+										<div class="single-content">
+											<p>Our management is available for consultations from 9:00 AM - 12:00 PM, and 14:00 PM - 16:00 PM. Virtual meetings are also available.</p>
+											<a href="{% url 'stayconnected' %}">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+		
+						<div class="col-lg-4 col-md-12 col-12">
+							<!-- Toggle Button for Management Hours -->
+							<div 
+								class="d-flex align-items-center toggle-line mt-3" 
+								type="button" 
+								data-bs-toggle="collapse" 
+								data-bs-target="#managementHoursCollapse" 
+								aria-expanded="false" 
+								aria-controls="managementHoursCollapse"
+								style="cursor: pointer;"
+							>
+								<h4 class="mb-0"><i class="icofont-ui-clock"></i> Management Hours</h4>
+							</div>
+		
+							<!-- Collapsible Opening Hours Section -->
+							<div class="collapse mt-2" id="managementHoursCollapse">
+								<div class="single-schedule last">
+									<div class="inner">
+										<div class="single-content">
+											<ul class="time-sidual">
+												<li class="day">Monday - Friday <span>7:30 AM - 4:00 PM</span></li>
+												<li class="day">Lunch Break <span>1:00 PM - 2:00 PM</span></li>
+											</ul>
+											<a href="{% url 'officehours' %}">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
+										</div>
+									</div>
+								</div>
+							</div> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <!-- Start Choose Left -->
+                <div class="choose-left">
+                    <h3>Our Vision</h3>
+                    <p>Quality Education for every child in every classroom in every school across the Tolleya. We believe in nurturing lifelong learners and responsible citizens.</p>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <ul class="list">
+                                <li><i class="fa fa-caret-right"></i>Excellence in Teaching</li>
+                                <li><i class="fa fa-caret-right"></i>Inclusive Education</li>
+                                <li><i class="fa fa-caret-right"></i>Community Engagement</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="list">
+                                <li><i class="fa fa-caret-right"></i>Innovative Learning</li>
+                                <li><i class="fa fa-caret-right"></i>Continuous Improvement</li>
+                                <li><i class="fa fa-caret-right"></i>Leadership Development</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Choose Left -->
+            </div>
+            <div class="col-lg-6 col-12">
+                <!-- Start Choose Rights -->
+                <div class="choose-right">
+                    <div class="video-image">
+                        <!-- Video Animation -->
+                        <div class="promo-video">
+                            <div class="waves-block">
+                                <div class="waves wave-1"></div>
+                                <div class="waves wave-2"></div>
+                                <div class="waves wave-3"></div>
+                            </div>
+                        </div>
+                        <!--/ End Video Animation -->
+						<div class="video-frame">
+							<!-- Display the image -->
+							<img src="{% static 'images/books.jpg' %}" alt="Books" class="img-fluid">
+						
+							<!-- Link to open the YouTube video -->
+							<a href="https://www.youtube.com/watch?v=RFVXy6CRVR4" class="video video-popup mfp-iframe">
+								<i class="fa fa-play"></i>
+							</a>
+						</div>
+						
+                    </div>
+                </div>
+                <!-- End Choose Rights -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--/ End Why choose -->
+		<!-- Start Call to action -->
+		<section class="call-action overlay" data-stellar-background-ratio="0.5">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-12">
+						<div class="content">
+							<h2>Schools of Specialisation (SOS) Assessment Dates</h2>
+							<p>Schools of Specialisation cater to learners with above-average aptitude in specific fields. To be considered for placement, applicants are required to participate in a Placement Test and obtain an above-average mark. Fields of specialisation include Sports, Maths Science and ICT, Commerce and Entrepreneurship, Engineering, or Performing and Creative Arts. <a href="#">Click here</a> for more information.</p>
+							<div class="button">
+								<a href="{% url 'soslistview' %}" class="btn">View</a>
+								<a href="{% url 'soslistview' %}" class="btn second">Learn More<i class="fa fa-long-arrow-right"></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--/ End Call to action -->
+
+		
+		<!-- Start portfolio -->
+		<section class="portfolio section" >
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="section-title">
+							<h2>Tolleya Comprises 29 Schools Dedicated to Excellence</h2>
+							<img src="{% static 'assets/mediafiles/img/section-img.png' %}" alt="#">
+							<p>The Tolleya is home to 29 Schools, each committed to providing quality education and fostering a strong learning environment for all students.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12 col-12">
+						<div class="owl-carousel portfolio-slider">
+						<!--recorded database system-->
+							
+								
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+		  
+		<!-- Start service -->
+		<section class="services section">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="section-title">
+							<h2>Services Offered by Tolleya</h2>
+							<p>The Tolleya provides a variety of services to support the educational needs of its 29 Schools, ensuring that every student has access to quality education and resources.</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4 col-md-6 col-12">
+						<!-- Start Single Service -->
+						<div class="single-service">
+							<i class="icofont icofont-education"></i>
+							<h4>Curriculum Support</h4>
+							<p>Providing guidance and resources to ensure that schools deliver the curriculum effectively, helping students achieve their full academic potential.</p>   
+						</div>
+						<!-- End Single Service -->
+					</div>
+					<div class="col-lg-4 col-md-6 col-12">
+						<!-- Start Single Service -->
+						<div class="single-service">
+							<i class="icofont icofont-teacher"></i>
+							<h4>Teacher Training</h4>
+							<p>Offering professional development and training programs to enhance the skills and knowledge of educators within the circuit.</p>   
+						</div>
+						<!-- End Single Service -->
+					</div>
+					<div class="col-lg-4 col-md-6 col-12">
+						<!-- Start Single Service -->
+						<div class="single-service">
+							<i class="fas fa-user-graduate"></i>
+							<h4>Student Support</h4>
+							<p>Providing counseling, mentorship, and additional resources to support students' academic and personal growth.</p>   
+						</div>
+						<!-- End Single Service -->
+					</div>
+					<div class="col-lg-4 col-md-6 col-12">
+						<!-- Start Single Service -->
+						<div class="single-service">
+							<i class="icofont icofont-book"></i>
+							<h4>Resource Allocation</h4>
+							<p>Ensuring that all schools within the circuit have access to the necessary educational materials and resources.</p>   
+						</div>
+						<!-- End Single Service -->
+					</div>
+					<div class="col-lg-4 col-md-6 col-12">
+						<!-- Start Single Service -->
+						<div class="single-service">
+							<i class="icofont icofont-gear"></i>
+							<h4>Infrastructure Support</h4>
+							<p>Coordinating maintenance and development of school facilities to provide a safe and conducive learning environment.</p>   
+						</div>
+						<!-- End Single Service -->
+					</div>
+					<div class="col-lg-4 col-md-6 col-12">
+						<!-- Start Single Service -->
+						<div class="single-service">
+							<i class="icofont icofont-users-alt-4"></i>
+							<h4>Community Engagement</h4>
+							<p>Fostering collaboration between schools and the community to enhance educational outcomes and support local development.</p>   
+						</div>
+						<!-- End Single Service -->
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--/ End service -->
+
+		<!-- ===================== READ MORE + SHARE JS ===================== -->
+		<script>
+		document.querySelectorAll('.read-more').forEach(button => {
+		button.addEventListener('click', function () {
+			const shortText = this.previousElementSibling.previousElementSibling;
+			const fullText = this.previousElementSibling;
+			if (fullText.classList.contains('d-none')) {
+			shortText.classList.add('d-none');
+			fullText.classList.remove('d-none');
+			this.textContent = 'Show Less';
+			} else {
+			shortText.classList.remove('d-none');
+			fullText.classList.add('d-none');
+			this.textContent = 'Read More';
+			}
+		});
+		});
+
+		document.querySelectorAll('.share-btn').forEach(button => {
+		button.addEventListener('click', async function () {
+			const title = this.getAttribute('data-title');
+			const path = this.getAttribute('data-url');
+			const image = this.getAttribute('data-img');
+			const fullUrl = window.location.origin + path;
+
+			const shareText = `${title}\nView it here: ${fullUrl}`;
+
+			if (navigator.share) {
+			try {
+				await navigator.share({
+				title: title,
+				text: shareText,
+				url: fullUrl
+				});
+			} catch (err) {
+				console.error('Share failed:', err);
+			}
+			} else {
+			const encoded = encodeURIComponent(shareText);
+			window.open(`https://wa.me/?text=${encoded}`, '_blank');
+			}
+		});
+		});
+		</script>
+
+		<!-- Start clients -->
+
+		<div id="school-section">
+		    <div class="container bg-primary py-5">
+		        <h2 class="text-center text-white mb-4">School Dashboard</h2>
+		        <div class="row">
+		            {% for school in schools %}
+		            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+		                <div class="card text-center bg-secondary h-100">
+		                    <!-- School Logo -->
+		                    <div class="card-header">
+		                        {% if school.logo %}
+		                        <img src="{{ school.logo.url }}" alt="{{ school.name }}" class="img-fluid rounded-circle" style="max-height: 100px;">
+		                        {% else %}
+		                        <img src="{% static 'img/default-logo.png' %}" alt="Default Logo" class="img-fluid rounded-circle" style="max-height: 100px;">
+		                        {% endif %}
+		                        <h5 class="mt-3 text-white">{{ school.name }}</h5>
+		                    </div>
+		                    <!-- School Details -->
+		                    <div class="card-body">
+		                        <p class="text-white"><strong>Principal:</strong> {{ school.head_principal }}</p>
+		                        <p class="text-white"><strong>Address:</strong> {{ school.address }}</p>
+		                        <p class="text-white"><strong>Contact:</strong> {{ school.email }}</p>
+		                        <p class="text-white"><strong>Website:</strong>
+		                            <a href="https://{{ school.website_url }}" class="text-warning" target="_blank">
+		                                {{ school.website_url }}
+		                            </a>
+		                        </p>
+		                        <p class="text-white"><strong>Total Learners:</strong> {{ school.count }}</p>
+		                        <p class="text-white"><strong>Filter By:</strong> {{ school.filter_by }}</p>
+		                        <p class="text-white"><strong>Grades:</strong> {{ school.grade }}</p>
+		                    </div>
+		                </div>
+		            </div>
+		            {% endfor %}
+		        </div>
+		    </div>
+		</div>
+
+		<!-- Start Appointment -->
+		<section class="appointment">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="section-title">
+							<h2>We're Here to Support You. Schedule a Meeting with Us</h2>
+							<p>Connect with us to discuss your needs, and we'll provide the assistance you deserve. Your success is our priority.</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-6 col-md-12 col-12">
+						<div id="appointment-section" >
+							<form method="POST">
+								{% csrf_token %}
+								{{ appointment_form.as_p }}
+								<button type="submit" class="btn btn-primary mt-3">Submit Appointment</button>
+							</form>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-12 ">
+						<div class="appointment-image">
+							<img src="{% static 'assets/mediafiles/img/course-06.jpg' %}" alt="#">
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- End Appointment -->
+		<!-- Start Newsletter Area -->
+		<section class="newsletter section py-5">
+		<div class="container">
+			<div class="row align-items-center mb-5">
+			<!-- Newsletter Text -->
+			<div class="col-lg-6 mb-4 mb-lg-0">
+				<div>
+				<h6 class="fw-bold">Stay Updated with Our Latest News</h6>
+				<p class="mb-0">Join our newsletter to receive the latest updates, important announcements, and educational insights directly to your inbox.</p>
+				</div>
+			</div>
+
+			<!-- Newsletter Form -->
+			<div class="col-lg-6">
+				<form method="POST" target="_blank" class="d-flex flex-column flex-sm-row align-items-start gap-2">
+				{% csrf_token %}
+				{{ subscription_form.as_p }}
+				<button type="submit" class="btn btn-primary">Subscribe</button>
+				</form>
+			</div>
+			</div>
+
+			<!-- Google Map & Contact Info -->
+			<div class="row g-4">
+			<!-- Google Map -->
+			<div class="col-lg-6">
+				<div class="h-100">
+				<iframe
+					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3668.078640335174!2d30.062238374562074!3d-23.1673297472331!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ec67b28a76fc89f%3A0x312bfe214748cb0e!2sElim%20Circuit!5e0!3m2!1sen!2sza!4v1737945504540!5m2!1sen!2sza"
+					width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+				</iframe>
+				</div>
+			</div>
+
+			<!-- Contact Information -->
+			<div class="col-lg-6">
+				<div class="row">
+				<!-- Phone -->
+				<div class="col-md-4 col-12 mb-4">
+					<div class="d-flex align-items-start">
+					<i class="icofont icofont-ui-call h4 me-3 text-primary"></i>
+					<div>
+						<h6 class="mb-1">+27 68 477 1271</h6>
+						<p class="mb-0 small">support@tolleya.vhembe.co.za</p>
+					</div>
+					</div>
+				</div>
+
+				<!-- Address -->
+				<div class="col-md-4 col-12 mb-4">
+					<div class="d-flex align-items-start">
+					<i class="icofont-google-map h4 me-3 text-primary"></i>
+					<div>
+						<h6 class="mb-1">R578 , Tsakani Primary</h6>
+						<p class="mb-0 small">Next to Rivoni School for the Blind</p>
+					</div>
+					</div>
+				</div>
+
+				<!-- Office Hours -->
+				<div class="col-md-4 col-12 mb-4">
+					<div class="d-flex align-items-start">
+					<i class="icofont icofont-wall-clock h4 me-3 text-primary"></i>
+					<div>
+						<h6 class="mb-1">Mon - Fri: 7:30am - 4pm</h6>
+						<p class="mb-0 small">Saturday & Sunday Closed</p>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		</section>
+		<!-- End Newsletter Area -->
+
+		
+		
+
+				<!-- Logo Section -->
+				<div class="row mt-4 align-items-center text-center">
+					<div class="col-6 col-md-3">
+						<img src="{% static 'images/department.jpg' %}" alt="Department" class="img-fluid logo-image">
+					</div>
+					<div class="col-6 col-md-3">
+						<img src="{% static 'images/limpopo.png' %}" alt="Limpopo" class="img-fluid logo-image">
+					</div>
+					<div class="col-6 col-md-3">
+						<img src="{% static 'images/sa-sams.png' %}" alt="Limpopo" class="img-fluid logo-image">
+					</div>
+					<div class="col-6 col-md-3">
+						<img src="{% static 'images/ddd-manager.png' %}" alt="Limpopo" class="img-fluid logo-image">
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- /End Newsletter Area -->
+		
+		<!-- Footer Area -->
+		<footer id="footer" class="footer ">
+			<!-- Footer Top -->
+			<div class="footer-top">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer">
+								<h2>About Us</h2>
+								<p>We are dedicated to supporting and enhancing the educational experience across our circuit's schools. Our mission is to provide guidance, resources, and leadership to ensure every student has access to quality education. Together, we strive to foster a collaborative environment where both educators and students can thrive.</p>
+								<!-- Social -->
+								<ul class="social">
+									<li>
+										<a href="https://web.facebook.com/people/Elim-Circuit/pfbid0g1Tbr4HZfKewd4Y8s7MiAe1XUmTLNzijSRCg49wMapeZKsuMHGiVX3bDqKuoteCbl/" target="_blank">
+											<i class="icofont-facebook"></i>
+										</a>
+									</li>
+									<li>
+										<a href="https://www.google.com/search?client=firefox-b-d&q=tolleya" target="_blank">
+											<i class="icofont-google-plus"></i>
+										</a>
+									</li>
+									<li><a href="https://wa.me/0671425751"><i class="icofont-whatsapp"></i></a></li>
+								</ul>
+								<!-- End Social -->
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer f-link">
+								<h2>Quick Links</h2>
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-12">
+										<ul>
+											<li><a href="{% url 'index' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Home</a></li>
+											<li><a href="{% url 'terms_of_use' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Terms of Service</a></li>
+											<li><a href="{% url 'privacy_policy' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Privacy Policy</a></li>
+											<li><a href="{% url 'about' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>About Us</a></li>
+											<li><a href="{% url 'services' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Services</a></li>
+											<li><a href="{% url 'cases' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Our Cases</a></li>
+											<li><a href="{% url 'help' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Help Center</a></li>	
+										</ul>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<ul>
+											<li><a href="{% url 'consulting' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Consulting</a></li>
+											<li><a href="{% url 'message' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Message Us</a></li>
+											<li><a href="{% url 'faq' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>FAQ</a></li>
+											<li>
+												<a href="#contact-section">
+													<i class="fa fa-caret-right" aria-hidden="true"></i>Contact Us
+												</a>
+											</li>
+
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer">
+								<h2>Open Hours</h2>
+								<p>We’re here to assist you. Find out our hours of operation and plan your visit accordingly.</p>
+								<ul class="time-sidual">
+									<li class="day">Monday - Friday <span>7.00-16.00</span></li>
+									<li class="day">Saturday - Sunday <span>Closed</span></li>
+									<li class="day">Monday - Thusday <span>7.00-16 .00</span></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer">
+								<h2>Newsletter</h2>
+								<p>Subscribe to our newsletter to receive all our latest news and updates directly in your inbox. Stay informed about the latest happenings and never miss an update. Join our community today!</p>
+								<form  method="POST" target="_blank" class="newsletter-inner">
+									{% csrf_token %}
+									{{ subscription_form.as_p }}
+									<button class="btn">Subscribe</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Footer Top -->
+			<!-- Copyright -->
+			<div class="copyright">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-12">
+							<div class="copyright-content">
+								<p>© Copyright 2024  |  All Rights Reserved by <a href="https://www.madenet.site" target="_blank">Madenet.Site</a> </p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Copyright -->
+		</footer>
+		<!--/ End Footer Area -->
+		
+		<!-- jquery Min JS -->
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+		<!-- jquery Migrate JS -->
+		<script src="{% static 'assets/js/jquery-migrate-3.0.0.js' %}"></script>
+		<!-- jquery Ui JS -->
+		<script src="{% static 'assets/js/jquery-ui.min.js' %}"></script>
+		<!-- Easing JS -->
+        <script src="{% static 'assets/js/easing.js' %}"></script>
+		<!-- Color JS -->
+		<script src="{% static 'assets/js/colors.js' %}"></script>
+		<script src="{% static 'assets/js/nav.js' %}"></script>
+		<!-- Popper JS -->
+		<script src="{% static 'assets/js/popper.min.js' %}"></script>
+		<!-- Bootstrap Datepicker JS -->
+		<script src="{% static 'assets/js/bootstrap-datepicker.js' %}"></script>
+		<!-- Jquery Nav JS -->
+        <script src="{% static 'assets/js/jquery.nav.js' %}"></script>
+		<!-- Slicknav JS -->
+		<script src="{% static 'assets/js/slicknav.min.js' %}"></script>
+		<!-- ScrollUp JS -->
+        <script src="{% static 'assets/js/jquery.scrollUp.min.js' %}"></script>
+		<!-- Niceselect JS -->
+		<script src="{% static 'assets/js/niceselect.js' %}"></script>
+		<!-- Tilt Jquery JS -->
+		<script src="{% static 'assets/js/tilt.jquery.min.js' %}"></script>
+		<!-- Owl Carousel JS -->
+        <script src="{% static 'assets/js/owl-carousel.js' %}"></script>
+		<!-- counterup JS -->
+		<script src="{% static 'assets/js/jquery.counterup.min.js' %}"></script>
+		<!-- Steller JS -->
+		<script src="{% static 'assets/js/steller.js' %}"></script>
+		<!-- Wow JS -->
+		<script src="{% static 'assets/js/wow.min.js' %}"></script>
+		<!-- Magnific Popup JS -->
+		<script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>
+		<!-- Counter Up CDN JS -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+		<!-- Bootstrap JS -->
+		<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+		<!-- Main JS -->
+		<script src="{% static 'assets/js/main.js' %}"></script>
+    </body>
+</html>
