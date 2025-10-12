@@ -105,38 +105,39 @@
        
         <!-- End Preloader -->
 		
+		
+        <!-- End Preloader -->
+		
 		<!-- Get Pro Button -->
-		<ul class="pro-features d-flex flex-column flex-lg-row align-items-start">
-			<!-- Login Button with Dropdown -->
-			<li class="dropdown me-3">
-				<a class="get-pro dropdown-toggle" href="#" role="button" id="loginDropdown" 
-				data-bs-toggle="dropdown" aria-expanded="false"
-				style="color: rgb(252, 252, 252); font-weight: bold;">
+		<ul class="pro-features">
+			<!-- Login Button with Dropdown for Role Selection -->
+			<li class="dropdown">
+				<a class="get-pro dropdown-toggle" href="#" role="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="color: rgb(252, 252, 252); font-weight: bold;">
 					Login
 				</a>
 			</li>
-
-			<!-- Navigation Links -->
-			<li class="big-title me-3"><a href="{% url 'login_page' %}">Sign In</a></li>
-			<li class="big-title me-3"><a href="{% url 'register_selection' %}">Sign Up</a></li>
-			<li class="title me-3"><a href="{% url 'college_list' %}">Apply to Universities</a></li>
-			<li class="me-3"><a href="{% url 'bursary_list' %}">Apply for Bursaries</a></li>
-
+		
+			<!-- Additional Navigation Links -->
+			<li class="big-title"><a href="{% url 'login_page' %}">Sign In</a></li>
+			<li class="big-title"><a href="{% url 'register_selection' %}">Sign Up</a></li>
+			<li class="title"><a href="{% url 'college_list' %}">Apply to Universities</a></li>
+			<li><a href="{% url 'bursary_list' %}">Apply for Bursaries</a></li>
+			
+		
 			<!-- External Action Buttons -->
-			<li>
-				<a href="{% url 'joblistview' %}" target="_blank" class="btn btn-primary">
+			<div class="button">
+				<a href="{% url 'joblistview' %}" target="_blank" class="btn">
 					Apply for Jobs
 				</a>
-			</li>
-
-			<!-- Question Papers -->
-			{% for paper in question_papers %}
-				<li class="question-paper">
-					<h6>{{ paper.grade.name }} - {{ paper.term.term }} - {{ paper.school.name }} - {{ paper.subject.name }}</h6>
-					<a href="{% url 'download' paper.id %}" class="btn btn-success">Download</a>
-				</li>
-			{% endfor %}
+				{% for paper in question_papers %}
+					<div class="question-paper">
+						<h3>{{ paper.grade.name }} - {{ paper.term.term }} - {{ paper.school.name }} - {{ paper.subject.name }}</h3>
+						<a href="{% url 'download' paper.id %}" class="btn btn-success">Download</a>
+					</div>
+				{% endfor %}
+			</div>
 		</ul>
+		
 
 	
 		<!-- Header Area -->
@@ -420,12 +421,6 @@
 				padding-left: 0;
 			}
 
-			/* Mobile: align items to the left */
-			@media (max-width: 768px) {
-				.pro-features {
-					align-items: flex-start !important;
-				}
-			}
 		</style>
 
 		<!-- Slider Area -->
