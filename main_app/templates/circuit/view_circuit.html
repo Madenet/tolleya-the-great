@@ -1,0 +1,27 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <a href="{% url 'circuit_gallery' %}" class="btn btn-secondary mb-4">← Back to Gallery</a>
+
+    <div class="card p-4">
+        <h3 class="card-title">{{ circuit.name }}</h3>
+        <div class="card-body">
+            <p><strong>Contact:</strong> {{ circuit.contact }}</p>
+            <p><strong>Email:</strong> {{ circuit.email }}</p>
+            <p><strong>WhatsApp Number:</strong> {{ circuit.whatsapp_number }}</p>
+            {% if circuit.address %}
+                <p><strong>Address:</strong> {{ circuit.address }}</p>
+            {% else %}
+                <p class="text-muted"><em>No address provided.</em></p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'edit_circuit' circuit.id %}" class="btn btn-warning">Edit</a>
+            <a href="{% url 'delete_circuit' circuit.id %}" class="btn btn-danger"
+               onclick="return confirm('Are you sure you want to delete this circuit?');">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

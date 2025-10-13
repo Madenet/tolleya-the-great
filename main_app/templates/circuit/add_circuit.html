@@ -1,0 +1,54 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<body class="m-5">
+    <div class="container">
+        <div class="row justify-content-center"> 
+            <div class="col-md-6">
+                <a href="{% url 'circuit_gallery' %}" class="btn btn-dark my-3">Go Back</a>
+                <div class="card">
+                    <form method="POST" action="{% url 'add_circuit' %}">
+                        {% csrf_token %}
+                        
+                        <!-- Name -->
+                        <div class="form-group m-3">
+                            <label>Circuit Name</label>
+                            <input required name="name" type="text" placeholder="Enter circuit name" class="form-control" value="{{ circuit.name|default:'' }}">
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="form-group m-3">
+                            <label>Contact</label>
+                            <input required name="contact" type="text" placeholder="Enter contact" class="form-control" value="{{ circuit.contact|default:'' }}">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group m-3">
+                            <label>Email</label>
+                            <input required name="email" type="email" placeholder="Enter email" class="form-control" value="{{ circuit.email|default:'' }}">
+                        </div>
+
+                        <!-- WhatsApp -->
+                        <div class="form-group m-3">
+                            <label>WhatsApp Number</label>
+                            <input required name="whatsapp_number" type="text" placeholder="Enter WhatsApp number" class="form-control" value="{{ circuit.whatsapp_number|default:'' }}">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group m-3">
+                            <label>Address</label>
+                            <textarea name="address" class="form-control" placeholder="Enter address">{{ circuit.address|default:'' }}</textarea>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="form-group m-3">
+                            <button type="submit" name="preview" value="true" class="btn btn-secondary">Preview</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

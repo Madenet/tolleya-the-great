@@ -7,7 +7,6 @@ from college.models import CollegeAndUniversities
 from bursary.models import Bursary
 from .models import *
 
-
 class FormSettings(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FormSettings, self).__init__(*args, **kwargs)
@@ -56,71 +55,98 @@ class CustomUserForm(FormSettings):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'gender',  'password','profile_pic', 'address' ]
+        fields = ['first_name','last_name', 'email', 'gender',  'password','profile_pic', 'address' ]
 
-#student form
+#student Form
 class StudentForm(CustomUserForm):
+    class Meta(CustomUserForm.Meta):
+        model = Student
+        fields = CustomUserForm.Meta.fields + ['school', 'grade', 'course', 'session', 'circuit']
+
     def __init__(self, *args, **kwargs):
         super(StudentForm, self).__init__(*args, **kwargs)
-        
-        # Make specific fields required
-        self.fields['school'].required = True
-        self.fields['grade'].required = True
-        
+
+        # Mark required fields
+        required_fields = ['circuit', 'school', 'grade', 'course', 'session']
+        for field in required_fields:
+            if field in self.fields:
+                self.fields[field].required = True
+
         # Optional: Add Bootstrap styling
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
-
-    class Meta(CustomUserForm.Meta):
-        model = Student
-        fields = CustomUserForm.Meta.fields + ['school', 'grade', 'course', 'session']
-    
+  
 
 #educator
 class EducatorForm(CustomUserForm):
-    subjects = forms.ModelMultipleChoiceField(
-        queryset=Subject.objects.all(),
-        widget=forms.SelectMultiple(attrs={'size': 5, 'class': 'form-control'}),
-        required=True,
-        help_text="Select all subjects you are qualified to teach"
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(EducatorForm, self).__init__(*args, **kwargs)
-        
-        # Make specific fields required
-        self.fields['school'].required = True
-        self.fields['grade'].required = True
-
-        # Optional: Add Bootstrap styling
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
-
-        # Crispy Forms layout (if Crispy Forms is used)
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(
-                Column('school', css_class='form-group col-md-6'),
-                Column('grade', css_class='form-group col-md-6'),
-                css_class='form-row'
-            ),
-            Div(
-                'subjects',
-                css_class='form-group subjects-container'
-            ),
-            Row(
-                Column('session', css_class='form-group col-md-4'),
-                Column('term', css_class='form-group col-md-4'),
-                Column('course', css_class='form-group col-md-4'),
-                css_class='form-row'
-            )
-        )
-
     class Meta(CustomUserForm.Meta):
         model = Educator
         fields = CustomUserForm.Meta.fields + [
-            'school', 'subjects', 'grade', 'session', 'term', 'course'
+            'circuit', 'school', 'grade', 'session', 'term', 'course', 'subjects'
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(EducatorForm, self).__init__(*args, **kwargs)
+
+        # Add missing model fields to form manually
+        self.fields['circuit'] = forms.ModelChoiceField(
+            queryset=Circuit.objects.all(),
+            required=True,
+            label="Circuit"
+        )
+        self.fields['school'] = forms.ModelChoiceField(
+            queryset=School.objects.all(),
+            required=True,
+            label="School"
+        )
+        self.fields['grade'] = forms.ModelChoiceField(
+            queryset=Grade.objects.all(),
+            required=True,
+            label="Grade"
+        )
+        self.fields['session'] = forms.ModelChoiceField(
+            queryset=Session.objects.all(),
+            required=True,
+            label="Session"
+        )
+        self.fields['term'] = forms.ModelChoiceField(
+            queryset=Term.objects.all(),
+            required=True,
+            label="Term"
+        )
+        self.fields['course'] = forms.ModelChoiceField(
+            queryset=Course.objects.all(),
+            required=True,
+            label="Course"
+        )
+        self.fields['subjects'] = forms.ModelMultipleChoiceField(
+            queryset=Subject.objects.all(),
+            required=True,
+            widget=forms.SelectMultiple(attrs={'size': 5}),
+            label="Subjects"
+        )
+
+        # Add Bootstrap classes
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+        # Crispy layout (optional)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('circuit', css_class='form-group col-md-6'),
+                Column('school', css_class='form-group col-md-6'),
+            ),
+            Row(
+                Column('grade', css_class='form-group col-md-4'),
+                Column('session', css_class='form-group col-md-4'),
+                Column('term', css_class='form-group col-md-4'),
+            ),
+            Row(
+                Column('course', css_class='form-group col-md-6'),
+                Column('subjects', css_class='form-group col-md-6'),
+            )
+        )
 
 #member
 class MemberForm(CustomUserForm):
@@ -205,6 +231,7 @@ class PrincipalForm(CustomUserForm):
         super(PrincipalForm, self).__init__(*args, **kwargs)
         
         # Make specific fields required
+        self.fields['circuit'].required = True
         self.fields['school'].required = True
         self.fields['grade'].required = True
 
@@ -214,14 +241,14 @@ class PrincipalForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Principal
-        fields = CustomUserForm.Meta.fields + ['school', 'grade', 'subject', 'term', 'course']
+        fields = CustomUserForm.Meta.fields + ['circuit', 'school', 'grade', 'subject', 'term', 'course']
 
 
 #principal edit form
 class PrincipalEditForm(forms.ModelForm):
     class Meta:
         model = Principal
-        fields = ['admin', 'school']
+        fields = ['admin', 'circuit', 'school']
         widgets = {
             'admin': forms.HiddenInput(),  # Keep the admin field hidden
         }

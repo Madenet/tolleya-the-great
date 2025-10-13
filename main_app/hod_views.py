@@ -204,6 +204,9 @@ def add_staff(request):
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
             address = form.cleaned_data.get('address')
+            school = form.cleaned_data.get('school')
+            circuit = school.circuit  # Get circuit related to the school
+
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
             password = form.cleaned_data.get('password')
@@ -233,6 +236,7 @@ def add_staff(request):
 def add_student(request):
     student_form = StudentForm(request.POST or None, request.FILES or None)
     context = {'form': student_form, 'page_title': 'Add Student'}
+
     if request.method == 'POST':
         if student_form.is_valid():
             first_name = student_form.cleaned_data.get('first_name')
@@ -241,30 +245,54 @@ def add_student(request):
             email = student_form.cleaned_data.get('email')
             gender = student_form.cleaned_data.get('gender')
             password = student_form.cleaned_data.get('password')
+
             course = student_form.cleaned_data.get('course')
             grade = student_form.cleaned_data.get('grade')
+            school = student_form.cleaned_data.get('school')
+            circuit = student_form.cleaned_data.get('circuit')
             session = student_form.cleaned_data.get('session')
-            passport = request.FILES['profile_pic']
+
+            # Handle image upload
+            passport = request.FILES.get('profile_pic')
             fs = FileSystemStorage()
-            filename = fs.save(passport.name, passport)
-            passport_url = fs.url(filename)
+            passport_url = None
+            if passport:
+                filename = fs.save(passport.name, passport)
+                passport_url = fs.url(filename)
+
             try:
                 user = CustomUser.objects.create_user(
-                    email=email, password=password, user_type=3, first_name=first_name, last_name=last_name, profile_pic=passport_url)
+                    email=email,
+                    password=password,
+                    user_type=3,
+                    first_name=first_name,
+                    last_name=last_name,
+                    profile_pic=passport_url
+                )
                 user.gender = gender
                 user.address = address
-                user.student.grade = grade
-                user.student.session = session
-                user.student.course = course
                 user.save()
-                messages.success(request, "Successfully Added")
-                return redirect(reverse('login_page'))
-            except Exception as e:
-                messages.error(request, "Could Not Add: " + str(e))
-        else:
-            messages.error(request, "Could Not Add: ")
-    return render(request, 'hod_template/add_student_template.html', context)
 
+                # Now create the Student instance
+                student = Student.objects.create(
+                    admin=user,
+                    course=course,
+                    session=session,
+                    circuit=circuit,
+                    school=school,
+                    grade=grade
+                )
+
+                messages.success(request, "Successfully Added Student")
+                return redirect(reverse('login_page'))
+
+            except Exception as e:
+                messages.error(request, f"Could Not Add Student: {e}")
+
+        else:
+            messages.error(request, "Form is not valid")
+
+    return render(request, 'hod_template/add_student_template.html', context)
 
 
 def add_principal(request):
@@ -279,6 +307,7 @@ def add_principal(request):
             gender = principal_form.cleaned_data.get('gender')
             password = principal_form.cleaned_data.get('password')
             school = principal_form.cleaned_data.get('school')
+            circuit = principal_form.cleaned_data.get('circuit')
             #added content
             grade = principal_form.cleaned_data.get('grade')
             subject = principal_form.cleaned_data.get('subject')
@@ -298,6 +327,7 @@ def add_principal(request):
                 user.principal.term = term
                 user.principal.course = course
                 user.principal.school = school
+                user.principal.circuit = circuit
                 user.save()
                 messages.success(request, "Successfully Added")
                 return redirect(reverse('login_page'))
@@ -310,73 +340,72 @@ def add_principal(request):
 
 
 def add_educator(request):
+    educator_form = EducatorForm(request.POST or None, request.FILES or None)
+    context = {'form': educator_form, 'page_title': 'Add Educator'}
+
     if request.method == 'POST':
-        first_name = request.POST.get('first_name', '').strip()
-        last_name = request.POST.get('last_name', '').strip()
-        email = request.POST.get('email', '').strip()
-        gender = request.POST.get('gender', '').strip()
-        password = request.POST.get('password', '').strip()
-        address = request.POST.get('address', '').strip()
-        course = request.POST.get('course', '').strip()
-        grade = request.POST.get('grade', '').strip()
-        school = request.POST.get('school', '').strip()
-        term = request.POST.get('term', '').strip()
-        session = request.POST.get('session', '').strip()
-        subjects = request.POST.getlist('subjects')  # Get selected subjects
-        profile_pic = request.FILES.get('profile_pic')
+        if educator_form.is_valid():
+            try:
+                # Extract CustomUser fields
+                first_name = educator_form.cleaned_data.get('first_name')
+                last_name = educator_form.cleaned_data.get('last_name')
+                email = educator_form.cleaned_data.get('email')
+                gender = educator_form.cleaned_data.get('gender')
+                password = educator_form.cleaned_data.get('password')
+                address = educator_form.cleaned_data.get('address')
 
-        if not first_name or not last_name or not email or not password:
-            messages.error(request, "All required fields must be filled.")
-            return redirect('add_educator')
+                # Extract Educator model fields
+                school = educator_form.cleaned_data.get('school')
+                grade = educator_form.cleaned_data.get('grade')
+                circuit = educator_form.cleaned_data.get('circuit')
+                term = educator_form.cleaned_data.get('term')
+                session = educator_form.cleaned_data.get('session')
+                course = educator_form.cleaned_data.get('course')
+                subjects = educator_form.cleaned_data.get('subjects')
+                profile_pic = request.FILES.get('profile_pic')
 
-        try:
-            # Handle file upload
-            profile_pic_url = None
-            if profile_pic:
-                fs = FileSystemStorage()
-                filename = fs.save(profile_pic.name, profile_pic)
-                profile_pic_url = fs.url(filename)
+                # Upload image
+                profile_pic_url = None
+                if profile_pic:
+                    fs = FileSystemStorage()
+                    filename = fs.save(profile_pic.name, profile_pic)
+                    profile_pic_url = fs.url(filename)
 
-            # Create CustomUser
-            user = CustomUser.objects.create_user(
-                email=email,
-                password=password,
-                user_type=5,
-                first_name=first_name,
-                last_name=last_name,
-                profile_pic=profile_pic_url
-            )
-            user.gender = gender
-            user.address = address
-            user.save()
+                # Create CustomUser
+                user = CustomUser.objects.create_user(
+                    email=email,
+                    password=password,
+                    user_type=5,
+                    first_name=first_name,
+                    last_name=last_name,
+                    profile_pic=profile_pic_url
+                )
+                user.gender = gender
+                user.address = address
+                user.save()
 
-            # Create Educator
-            educator = Educator.objects.create(
-                admin=user,
-                school_id=school,
-                grade=grade,
-                session=session,
-                term=term,
-                course=course
-            )
-            educator.subjects.set(subjects)  # Assign selected subjects
-            educator.save()
+                # Create Educator instance
+                educator = Educator.objects.create(
+                    admin=user,
+                    school=school,
+                    grade=grade,
+                    circuit=circuit,
+                    session=session,
+                    term=term,
+                    course=course
+                )
+                educator.subjects.set(subjects)
+                educator.save()
 
-            messages.success(request, "Successfully Added Educator")
-            return redirect(reverse('login_page'))
-        except Exception as e:
-            messages.error(request, f"Could Not Add Educator: {e}")
-    
-    # Fetch subjects and schools for the form
-    subjects = Subject.objects.all()
-    schools = School.objects.all()
-    context = {
-        'page_title': 'Add Educator',
-        'subjects': subjects,
-        'schools': schools,
-    }
+                messages.success(request, "Successfully Added Educator")
+                return redirect('login_page')
+
+            except Exception as e:
+                messages.error(request, f"Could Not Add Educator: {e}")
+        else:
+            messages.error(request, "Form is not valid")
+
     return render(request, 'hod_template/add_educator_template.html', context)
-
 
 
 
@@ -426,6 +455,7 @@ def add_member(request):
             gender = member_form.cleaned_data.get('gender')
             password = member_form.cleaned_data.get('password')
             school = member_form.cleaned_data.get('school')
+            circuit = school.circuit
             position = member_form.cleaned_data.get('position')
             term = member_form.cleaned_data.get('term')
             session = member_form.cleaned_data.get('session')
@@ -444,7 +474,11 @@ def add_member(request):
                 user.member.term = term
                 user.save()
                 messages.success(request, "Successfully Added")
-                return redirect(reverse('login_page'))
+               
+                # ✅ Redirect to the subdomain for this circuit
+                circuit_slug = circuit.slug  # e.g. 'elim', 'tsakani'
+                return redirect(f"https://{circuit_slug}.yourdomain.com/login/")
+
             except Exception as e:
                 messages.error(request, "Could Not Add: " + str(e))
         else:
@@ -517,76 +551,63 @@ def search_students(request):
     return JsonResponse(results, safe=False)
 
 
-#add parent
+
 def add_parent(request):
     if request.method == 'POST':
         # Fetch the parent data from the form
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
+        gender = request.POST.get('gender')
         password = request.POST.get('password')
         address = request.POST.get('address')
         profile_pic = request.FILES.get('profile_pic')
-        school_id = request.POST.get('school')
-        grade_id = request.POST.get('grade')  # Optional: depends on model
-        session_id = request.POST.get('session')
-        term_id = request.POST.get('term')
 
-        # Handle gender input (supporting M, F, O)
-        gender_input = request.POST.get('gender', '').strip().lower()
-        if gender_input.startswith('m'):
-            gender = 'M'
-        elif gender_input.startswith('f'):
-            gender = 'F'
-        elif gender_input.startswith('o'):
-            gender = 'O'
-        else:
-            messages.error(request, "Invalid gender selected.")
-            return redirect('add_parent')
-
-        # Get selected students
-        raw_student_ids = request.POST.get('students', '')
-        student_ids = [int(sid) for sid in raw_student_ids.split(',') if sid.isdigit()]
+        # Fetch the selected student IDs from the form (from the hidden field)
+        student_ids = request.POST.get('students', '').split(',')
         selected_students = Student.objects.filter(id__in=student_ids)
 
         try:
-            # Create the user
+            # Create the CustomUser (parent)
             user = CustomUser.objects.create_user(
                 email=email,
                 password=password,
-                user_type=8,
+                user_type=8,  # Assuming '8' is the user type for Parent
                 first_name=first_name,
                 last_name=last_name,
                 profile_pic=profile_pic
             )
+            # Set additional user data
             user.gender = gender
             user.address = address
             user.save()
 
-            # Create Parent object
+            # Create Parent instance and link the user
             parent = Parent.objects.create(
-                admin=user,
-                school_id=school_id,
-                session_id=session_id,
-                term_id=term_id,
+                user=user,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                gender=gender,
+                address=address,
+                profile_pic=profile_pic
             )
-            # Optional if grade is in model
-            if hasattr(parent, 'grade_id'):
-                parent.grade_id = grade_id
 
-            # Assign students
-            parent.student.set(selected_students)
+            # Associate the selected students with the parent
+            parent.students.set(selected_students)  # Many-to-many relationship
             parent.save()
 
+            # Show success message
             messages.success(request, "Parent and students added successfully.")
-            return redirect('login_page')  # Change this
+            return redirect('some_success_page')  # Redirect to a success page or another relevant page
 
         except Exception as e:
             messages.error(request, f"Could not add parent: {str(e)}")
-            return redirect('add_parent')
+            return redirect('add_parent')  # Stay on the 'add_parent' page in case of error
 
     else:
         return render(request, 'hod_template/add_parent_template.html', {'page_title': 'Add Parent'})
+
 
 
 def add_course(request):

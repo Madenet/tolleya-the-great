@@ -166,8 +166,12 @@ urlpatterns = [
     path('staff/result/fetch/', staff_views.fetch_student_result,
          name='fetch_student_result'),
 
-
- 
+    #circuits
+    path('circuit_gallery/', views.circuitGallery, name='circuit_gallery'),
+    path('circuit/<int:pk>/', views.viewCircuit, name='view_circuit'),
+    path('add/', views.addCircuit, name='add_circuit'),
+    path('delete/<int:pk>/', views.deleteCircuit, name='delete_circuit'),
+  
     # Student
     path("student/home/", student_views.student_home, name='student_home'),
     path("student/view/attendance/", student_views.student_view_attendance,

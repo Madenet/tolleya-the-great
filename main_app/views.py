@@ -193,6 +193,8 @@ def general_search_view(request):
 
 #password
 #login_page
+#password
+#login_page
 def login_page(request):
     if request.user.is_authenticated:
         if request.user.user_type == '1':
@@ -347,6 +349,90 @@ def get_attendance(request):
         return JsonResponse(json.dumps(attendance_list), safe=False)
     except Exception as e:
         return None
+
+
+# List circuits
+def circuitGallery(request):
+    user = request.user
+    search_query = request.GET.get('search')
+
+    if search_query:
+        circuits = Circuit.objects.filter(name__icontains=search_query)
+    else:
+        circuits = Circuit.objects.all()
+
+    context = {'circuits': circuits}
+    return render(request, 'circuits/circuit_gallery.html', context)
+
+
+# List circuits
+def circuitGallery(request):
+    user = request.user
+    try:
+        circuit = user.circuit_manager.circuit
+    except Circuit_Manager.DoesNotExist:
+        return redirect('no_access')  # Handle users without a circuit
+
+    context = {'circuit': circuit}
+    return render(request, 'circuit/circuit_gallery.html', context)
+
+
+# View a single circuit
+def viewCircuit(request, pk):
+    circuit = get_object_or_404(Circuit, id=pk)
+    return render(request, 'circuits/circuit_detail.html', {'circuit': circuit})
+
+
+# Add a new circuit with preview
+def addCircuit(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        circuit = Circuit.objects.create(
+            name=data['name'],
+            contact=data['contact'],
+            email=data['email'],
+            whatsapp_number=data['whatsapp_number'],
+            address=data.get('address', ''),
+        )
+
+        # Optionally update manager's circuit
+        manager = Circuit_Manager.objects.get(admin=request.user)
+        manager.circuit = circuit
+        manager.save()
+
+        return redirect('circuit_gallery')
+
+    return render(request, 'circuit/add_circuit.html')
+
+def editCircuit(request, pk):
+    circuit = get_object_or_404(Circuit, pk=pk)
+
+    if request.user.circuit_manager.circuit != circuit:
+        return redirect('no_access')
+
+    if request.method == 'POST':
+        data = request.POST
+        circuit.name = data['name']
+        circuit.contact = data['contact']
+        circuit.email = data['email']
+        circuit.whatsapp_number = data['whatsapp_number']
+        circuit.address = data.get('address', '')
+        circuit.save()
+        return redirect('view_circuit', pk=pk)
+
+    context = {'circuit': circuit}
+    return render(request, 'circuit/edit_circuit.html', context)
+
+# Delete a circuit
+def deleteCircuit(request, pk):
+    circuit = get_object_or_404(Circuit, pk=pk)
+
+    if request.user.circuit_manager.circuit != circuit:
+        return redirect('no_access')
+
+    circuit.delete()
+    return redirect('circuit_gallery')
 
 # ########################################################
 # News & Events

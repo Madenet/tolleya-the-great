@@ -144,6 +144,50 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-project-diagram"></i>
+                            <p>
+                                Circuits
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                {% url 'circuit_gallery' as circuit_gallery %}
+                                <a href="{{ circuit_gallery }}" class="nav-link {% if circuit_gallery == request.path %} active {% endif %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Circuit Gallery</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                {% url 'view_circuit' 1 as view_circuit %}
+                                <a href="{{ view_circuit }}" class="nav-link {% if view_circuit == request.path %} active {% endif %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>View Circuit</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                {% url 'add_circuit' as add_circuit %}
+                                <a href="{{ add_circuit }}" class="nav-link {% if add_circuit == request.path %} active {% endif %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Add Circuit</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                {% url 'delete_circuit' 1 as delete_circuit %}
+                                <a href="{{ delete_circuit }}" class="nav-link {% if delete_circuit == request.path %} active {% endif %}">
+                                    <i class="far fa-circle nav-icon text-danger"></i>
+                                    <p>Delete Circuit</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             {% url 'add_school' as add_school %}
@@ -3577,7 +3621,14 @@
                                         data-accordion="false">
 
                                         
-                                        
+                                        <li class="nav-item">
+                                            <i class="nav-icon fas fa-calendar-alt"></i>
+                                            <a href="{% url 'college_list' %}">Apply to Universities</a>
+                                        </li>
+			                            <li class="nav-item">
+                                            <i class="nav-icon fas fa-check-double"></i>
+                                            <a href="{% url 'bursary_list' %}">Apply for Bursaries</a>
+                                        </li>
                                         <li class="nav-item">
                                             {% url 'student_view_notification' as student_view_notification %}
                                             <a href="{{student_view_notification}}"

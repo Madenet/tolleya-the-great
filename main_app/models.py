@@ -37,67 +37,6 @@ POST = (
     (EVENTS, "Event"),
 )
 
-#Schools Recorded
-DR_T_G_NELUVHOLA_TRAINING_ACADEMY = "DR.T.G_Neluvhola_Training_Academy"
-DJUNANE = "DJUNANE"
-ELIM = "ELIM"
-HLALELANI = "HLALELANI"
-KETLANI = "KETLANI"
-MAHONISI = "MAHONISI"
-MASINDI = "MASINDI"
-MASUNGULO = "MASUNGULO"
-MULWELI = "MULWELI"
-MUNZHEDZI = "MUNZHEDZI"
-MUTHUHADINI = "MUTHUHADINI"
-NKHENSA = "NKHENSA"
-RIVONI = "RIVONI"
-SHIHLOBYENI = "SHIHLOBYENI"
-SHIRLEY = "SHIRLEY"
-TRUE_LIFE = "TRUE_LIFE"
-TSAKANI = "TSAKANI"
-TSHIMONELA = "TSHIMONELA"
-TSHIISAPHUNGO = "TSHIISAPHUNGO"
-VALDEZIA = "VALDEZIA"
-HS_PHILLIPS = "HS_PHILLIPS"
-LEMANA = "LEMANA"
-MDR = "MDR"
-OZIAS_DAVHANA = "OZIAS_DAVHANA"
-RIVUBYE = "RIVUBYE"
-TSHIAWELO = "TSHIAWELO"
-WATERVAL = "WATERVAL"
-OTHER = "OTHER"
-
-#name
-NAME = (
-    (DJUNANE , "DJUNANE"),
-    (ELIM , "ELIM"),
-    (HLALELANI, "HLALELANI"),
-    (KETLANI, "KETLANI"),
-    (MAHONISI, "MAHONISI"),
-    (MASINDI, "MASINDI"),
-    (MASUNGULO, "MASUNGULO"),
-    (MULWELI, "MULWELI"),
-    (MUNZHEDZI, "MUNZHEDZI"),
-    (MUTHUHADINI, "MUTHUHADINI"),
-    (NKHENSA, "NKHENSA"),
-    (RIVONI, "RIVONI"),
-    (SHIHLOBYENI, "SHIHLOBYENI"),
-    (SHIRLEY, "SHIRLEY"),
-    (TRUE_LIFE, "TRUE_LIFE"),
-    (TSAKANI, "TSAKANI"),
-    (TSHIMONELA, "TSHIMONELA"),
-    (TSHIISAPHUNGO, "TSHIISAPHUNGO"),
-    (VALDEZIA, "VALDEZIA"),
-    (HS_PHILLIPS, "HS PHILLIPS"),
-    (LEMANA, "LEMANA"),
-    (DR_T_G_NELUVHOLA_TRAINING_ACADEMY, "DR.T.G_Neluvhola_Training_Academy"),
-    (MDR, "MDR"),
-    (OZIAS_DAVHANA, "OZIAS DAVHANA"),
-    (RIVUBYE, "RIVUBYE"),
-    (TSHIAWELO, "TSHIAWELO"),
-    (WATERVAL, "WATERVAL"),
-    (OTHER, "OTHER"),
-)
 
 # School Type
 DEPENDENT_SCHOOL = "Dependent School"
@@ -156,39 +95,20 @@ class NewsAndEventsManager(models.Manager):
 class NewsAndEvents(models.Model):
     title = models.CharField(max_length=200, null=True)
     summary = models.TextField(max_length=2000, blank=True, null=True)
-    posted_as = models.CharField(choices=POST, max_length=10)
+    posted_as = models.CharField(choices=[('News', 'News'), ('Event', 'Event')], max_length=10)
     updated_date = models.DateTimeField(auto_now=True)
     upload_time = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to="news_images/%y/%m/%d/", default="default.png", null=True)
-    objects = NewsAndEventsManager()
 
-    # Get the image URL or the default image
+
+    def __str__(self):
+        return self.title
+
     def get_image(self):
         try:
             return self.image.url
         except:
             return settings.MEDIA_URL + "default.png"
-
-    # Resize the image if necessary
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        try:
-            img = Image.open(self.image.path)
-            if img.height > 300 or img.width > 300:
-                output_size = (300, 300)
-                img.thumbnail(output_size)
-                img.save(self.image.path)
-        except:
-            pass
-
-    # Delete the image file if it's not the default image
-    def delete(self, *args, **kwargs):
-        if self.image.url != settings.MEDIA_URL + "default.png":
-            self.image.delete()
-        super().delete(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
 #End
 
 #Custom User
@@ -249,6 +169,7 @@ class Grade(models.Model):
     name = models.CharField(max_length=120)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
         return self.name
@@ -272,7 +193,21 @@ class Term(models.Model):
 
     def __str__(self):
         return self.term_name
+
+
+# CIRCUIT MODEL
+class Circuit(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    contact = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
+    whatsapp_number = models.CharField(max_length=255)
+    address = models.TextField(null=True, blank=True)
     
+
+    def __str__(self):
+        return self.name  
+
+
 # SCHOOL MODEL
 class School(models.Model):
     user = models.OneToOneField(
@@ -283,8 +218,9 @@ class School(models.Model):
         blank=True
     )
     emis = models.CharField(max_length=255, unique=True)
-    name = models.CharField(max_length=255, choices=NAME, default=OTHER)
+    name = models.CharField(max_length=255, null=True, blank=True)
     grade = models.ForeignKey('Grade', on_delete=models.DO_NOTHING, null=True, blank=False)
+    circuit = models.ForeignKey('Circuit', on_delete=models.DO_NOTHING, null=True, blank=False)
     contact = models.CharField(max_length=255)
     phase = models.CharField(max_length=255, null=True, blank=True)
     sector = models.CharField(max_length=255, null=True, blank=True)
@@ -343,6 +279,7 @@ class Subject(models.Model):
 # EDUCATOR MODEL
 class Educator(models.Model):
     admin = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    circuit = models.ForeignKey(Circuit, on_delete=models.DO_NOTHING, null=True, blank=False)
     school = models.ForeignKey(School, on_delete=models.DO_NOTHING, null=True, blank=False)
     grade = models.ForeignKey('Grade', on_delete=models.DO_NOTHING, null=True)
     subjects = models.ManyToManyField('Subject')
@@ -364,6 +301,7 @@ class Student(models.Model):
     admin = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.DO_NOTHING, null=True, blank=False)
     session = models.ForeignKey('Session', on_delete=models.DO_NOTHING, null=True)
+    circuit = models.ForeignKey(Circuit, on_delete=models.DO_NOTHING, null=True, blank=False)
     school = models.ForeignKey(School, on_delete=models.DO_NOTHING, null=True, blank=False)
     grade = models.ForeignKey('Grade', on_delete=models.DO_NOTHING, null=True, blank=False)
 
@@ -534,10 +472,10 @@ class Parent(models.Model):
     def __str__(self):
         return f"{self.admin.last_name}, {self.admin.first_name}"
 
-        
 #Custom User 4
 class Principal(models.Model):
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    circuit = models.ForeignKey(Circuit, on_delete=models.DO_NOTHING, null=True, blank=False)
     school = models.ForeignKey(School, on_delete=models.DO_NOTHING, null=True, blank=False)
     grade = models.ForeignKey(Grade, on_delete=models.DO_NOTHING, null=True)
     #report
@@ -552,7 +490,7 @@ class Principal(models.Model):
 #Circuit manager
 class Circuit_Manager(models.Model):
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    circuit = models.CharField(max_length=120)
+    circuit = models.ForeignKey(Circuit, on_delete=models.DO_NOTHING, null=True, blank=False)
 
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
@@ -883,17 +821,87 @@ class PrivacyPolicy(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
 #Prospectors
+#Prospectors
 class Prospectors(models.Model):
     institution = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     copy = models.FileField(upload_to='store/prospectors/')
     logo = models.ImageField(upload_to='store/prospectors/')
 
+    class Meta:
+        managed = False  # Prevent Django from creating a new table in MA
+        db_table = 'main_app_prospectors'  # Ensure it maps to the correct CMS table
+
     def __str__(self):
-        return self.filename
+        return self.institution
 
-    def delete(self, *args, **kwargs):
-        self.copy.delete()
-        self.logo.delete()
-        super().delete(*args, **kwargs)
+#models
+class Comment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Best practice
+    # OR explicitly (if you prefer):
+    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_likes', blank=True)
+    
+    def __str__(self):
+        return f"Comment by {self.user.username}"
+    
+    @property
+    def like_count(self):
+        return self.likes.count()
+    
+    @property
+    def reply_count(self):
+        return self.replies.count()
+    
 
+class Document(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    file = models.FileField(upload_to='documents/')
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.title
+
+class PaperRequest(models.Model):
+    REQUEST_TYPES = [
+        ('QP', 'Question Paper'),
+        ('RM', 'Research Material'),
+        ('HL', 'Homework Help'),
+    ]
+    
+    request_type = models.CharField(max_length=2, choices=REQUEST_TYPES)
+    description = models.TextField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    guest_email = models.EmailField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    fulfilled = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.get_request_type_display()} Request"
+    
+#deepseek
+class AIChatLog(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
+    ip_address = models.GenericIPAddressField()
+    question_type = models.CharField(max_length=50, choices=[
+        ('career', 'Career Guidance'),
+        ('school', 'School Management'),
+        ('prospector', 'Undergraduate Prospector'),
+        ('bursary', 'Bursaries/Financial Aid'),
+        ('assessment', 'Assessments/Homework'),
+        ('memorandum', 'Memorandums/Answer Keys'),
+        ('general', 'General Question')
+    ])
+    question = models.TextField()
+    response = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.get_question_type_display()} - {self.created_at}"

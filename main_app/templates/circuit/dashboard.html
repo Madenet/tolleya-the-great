@@ -1,0 +1,426 @@
+{% load static %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS | Circuit Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'assets/css/design.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/contact.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/js/contact.js' %}">
+
+  </head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <img src="{% static 'images/logo.png' %}" alt="CMS">
+                    <div class="logo-text">
+                        <span class="logo-main">CMS</span>
+                        <span class="logo-sub">CIRCUIT MANAGEMENT SYSTEM</span>
+                    </div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+                    <li><a href="#circuits"><i class="fas fa-network-wired"></i> Circuits</a></li>
+                    <li><a href="#news"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="#careers"><i class="fas fa-briefcase"></i> Careers</a></li>
+                    <li><a href="{% url 'register_selection' %}" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!--news and updates-->
+    <section class="news" id="news"> 
+      <div class="container">
+          <div class="section-title">
+              <h2>Latest Education News</h2>
+              <p>Stay updated with the latest developments in South African education</p>
+          </div>
+          
+          <div class="news-grid">
+              {% for item in news_items %}
+              <div class="news-card">
+                  <div class="news-image">
+                      {% if item.image %}
+                          <img src="{{ item.get_image }}" alt="{{ item.title }}" class="img-fluid w-100">
+                      {% else %}
+                          <img src="https://via.placeholder.com/600x400" alt="News Image">
+                      {% endif %}
+                  </div>
+                  <div class="news-content">
+                      <div class="news-date">
+                          {{ item.updated_date|date:"F d, Y" }} | {{ item.posted_as }}
+                      </div>
+                      <h3 class="news-title">{{ item.title }}</h3>
+                      <p class="news-excerpt">{{ item.summary|truncatewords:25 }}</p>
+                      <a href="{% url 'news_detail' item.pk %}" class="news-link">
+                          Read More <i class="fas fa-arrow-right"></i>
+                      </a>
+                  </div>
+              </div>
+              {% empty %}
+              <p class="text-muted">No news items available at the moment.</p>
+              {% endfor %}
+          </div>
+      </div>
+    </section>
+
+    <!--ends-->
+    <section class="careers" id="careers">
+      <div class="container">
+          <div class="section-title">
+              <h2>Career Opportunities</h2>
+              <p>Join our team dedicated to improving education across South Africa</p>
+          </div>
+
+          <div class="careers-container">
+              <div class="performance-header">
+                  <h3>Current Job Openings</h3>
+                    <div class="performance-period">
+                      <a href="{% url 'index' %}" class="btn btn-outline-primary {% if not selected_location %}active{% endif %}">All</a>
+                      {% for loc in locations %}
+                          <a href="?location={{ loc.location }}" class="btn btn-outline-primary {% if selected_location == loc.location %}active{% endif %}">
+                              {{ loc.location }} ({{ loc.total }})
+                          </a>
+                      {% endfor %} 
+                    </div>
+              </div>
+             
+
+              <div class="row">
+                  {% for job in jobs %}
+                  <div class="col-md-4 mb-4">
+                      <div class="career-card">
+                          <div class="career-header d-flex justify-content-between">
+                              <div>
+                                  <h3 class="career-title">{{ job.description }}</h3>
+                                  {% if job.category.name %}
+                                  <div class="career-location">
+                                      <i class="fas fa-map-marker-alt"></i> {{ job.category.name }}
+                                  </div>
+                                  {% endif %}
+                              </div>
+                              <span class="career-type">Open</span>
+                          </div>
+
+                          {% if job.image %}
+                          <img class="img-fluid mb-2" src="{{ job.image.url }}" alt="Job image">
+                          {% endif %}
+
+                          <ul class="list-unstyled px-2">
+                              {% if job.website_url %}
+                              <li><a href="https://{{ job.website_url }}" target="_blank">🌐 Website</a></li>
+                              {% endif %}
+                              {% if job.whatsapp_number %}
+                              <li><a href="https://wa.me/{{ job.whatsapp_number }}" target="_blank">📱 WhatsApp</a></li>
+                              {% endif %}
+                              {% if job.facebook_url %}
+                              <li><a href="https://{{ job.facebook_url }}" target="_blank">📘 Facebook</a></li>
+                              {% endif %}
+                              {% if job.zoom_url %}
+                              <li><a href="https://{{ job.zoom_url }}" target="_blank">💻 Zoom</a></li>
+                              {% endif %}
+                              {% if job.microsoftTeam_url %}
+                              <li><a href="https://{{ job.microsoftTeam_url }}" target="_blank">👥 Microsoft Teams</a></li>
+                              {% endif %}
+                              {% if job.twitter_url %}
+                              <li><a href="https://{{ job.twitter_url }}" target="_blank">🐦 Twitter</a></li>
+                              {% endif %}
+                          </ul>
+
+                          <p class="career-description px-2">
+                              Posted by: {{ job.author.get_full_name }}
+                          </p>
+
+                          {% if user.is_authenticated and user.id == job.author.id %}
+                          <div class="text-end px-2">
+                              <a href="{% url 'delete-job' job.id %}" class="btn btn-sm btn-danger">
+                                  <i class="fas fa-trash"></i> Delete
+                              </a>
+                          </div>
+                          {% endif %}
+
+                          <div class="px-2 pb-3">
+                              <a href="{% url 'job' job.id %}" class="btn btn-secondary w-100">Apply Now</a>
+                          </div>
+                      </div>
+                  </div>
+                  {% empty %}
+                  <div class="col-md-12">
+                      <h3>No Job Opportunities</h3>
+                  </div>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+  </section>
+
+    <section class="circuits" id="circuits">
+      <div class="container">
+          <div class="section-title">
+              <h2>Provincial Circuit Management</h2>
+              <p>Comprehensive oversight of educational circuits across all nine provinces</p>
+          </div>
+
+          <!-- Shortcuts Panel -->
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="section-title text-center shortcuts-title">
+                      <h2>Shortcuts</h2>
+                      <img src="{% static 'images/section-img.png' %}" alt="#">
+                      <p class="mt-3">Visit all the links directly from Shortcuts</p>
+                  </div>
+              </div>
+          </div>
+          <div class="school-grid">
+              <!-- Shortcut: Schools -->
+              <div class="school-card">
+                  <div class="school-header">
+                      <span class="school-name">Schools</span>
+                  </div>
+                  <div class="school-details">
+                      <div class="school-detail">
+                          <span>Total:</span>
+                          <span>{{ schools_count }}</span>
+                      </div>
+                  </div>
+                  <div class="school-actions">
+                      <button class="school-btn school-btn-primary" onclick="window.location='#school-section';">
+                          <i class="fas fa-search"></i> Explore
+                      </button>
+                  </div>
+              </div>
+
+              <!-- Shortcut: Question Papers -->
+              <div class="school-card">
+                  <div class="school-header">
+                      <span class="school-name">Question Papers</span>
+                  </div>
+                  <div class="school-details">
+                      <div class="school-detail">
+                          <span>Total:</span>
+                          <span>{{ question_papers_count }}</span>
+                      </div>
+                  </div>
+                  <div class="school-actions">
+                      <button class="school-btn school-btn-primary" onclick="window.location='{% url 'questionpaperlist' %}';">
+                          <i class="fas fa-search"></i> Explore
+                      </button>
+                  </div>
+              </div>
+
+              <!-- Shortcut: Prospectors -->
+              <div class="school-card">
+                  <div class="school-header">
+                      <span class="school-name">Prospectors</span>
+                  </div>
+                  <div class="school-details">
+                      <div class="school-detail">
+                          <span>Total:</span>
+                          <span>{{ prospectors_count }}</span>
+                      </div>
+                  </div>
+                  <div class="school-actions">
+                      <button class="school-btn school-btn-primary" onclick="window.location='{% url 'prospectors_list' %}';">
+                          <i class="fas fa-search"></i> Explore
+                      </button>
+                  </div>
+              </div>
+
+              <!-- Shortcut: Universities & Colleges -->
+              <div class="school-card">
+                  <div class="school-header">
+                      <span class="school-name">Universities & Colleges</span>
+                  </div>
+                  <div class="school-details">
+                      <div class="school-detail">
+                          <span>Total:</span>
+                          <span>{{ colleges_count }}</span>
+                      </div>
+                  </div>
+                  <div class="school-actions">
+                      <button class="school-btn school-btn-primary" onclick="window.location='{% url 'college_list' %}';">
+                          <i class="fas fa-search"></i> Explore
+                      </button>
+                  </div>
+              </div>
+
+              <!-- Shortcut: Bursaries -->
+              <div class="school-card">
+                  <div class="school-header">
+                      <span class="school-name">Bursaries</span>
+                  </div>
+                  <div class="school-details">
+                      <div class="school-detail">
+                          <span>Total:</span>
+                          <span>{{ bursaries_count }}</span>
+                      </div>
+                  </div>
+                  <div class="school-actions">
+                      <button class="school-btn school-btn-primary" onclick="window.location='{% url 'bursary_list' %}';">
+                          <i class="fas fa-search"></i> Explore
+                      </button>
+                  </div>
+              </div>
+
+              <!-- Shortcut: Assessment Dates -->
+              <div class="school-card">
+                  <div class="school-header">
+                      <span class="school-name">Assessment Dates</span>
+                  </div>
+                  <div class="school-details">
+                      <div class="school-detail">
+                          <span>Total:</span>
+                          <span>{{ assessment_dates_count }}</span>
+                      </div>
+                  </div>
+                  <div class="school-actions">
+                      <button class="school-btn school-btn-primary" onclick="window.location='{% url 'soslistview' %}';">
+                          <i class="fas fa-search"></i> Explore
+                      </button>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Existing circuit tabs and content below remain unchanged -->
+
+      </div>
+    </section>
+    
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>South African Provincial Education Circuits</h1>
+                <p>Comprehensive monitoring and management of all nine provincial education circuits for improved learning outcomes.</p>
+                <div class="hero-buttons">
+                    <a href="#circuits" class="btn"><i class="fas fa-network-wired"></i> Explore Circuits</a>
+                    <a href="#" class="btn btn-secondary"><i class="fas fa-play-circle"></i> Watch Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>System Features</h2>
+                <p>Powerful tools to monitor and enhance educational performance across all nine provinces</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Provincial Coverage</h3>
+                    <p>Complete oversight of all 9 provincial education circuits with detailed performance metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>NSC Tracking</h3>
+                    <p>Monitor National Senior Certificate results and progression rates across all circuits.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Educator Analysis</h3>
+                    <p>Track teacher qualifications, distribution, and professional development needs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Resource Allocation</h3>
+                    <p>Analyze and optimize infrastructure and resource distribution across circuits.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Early Warning</h3>
+                    <p>Receive alerts for underperforming schools and circuits needing intervention.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>DBE Compliance</h3>
+                    <p>Generate reports meeting all Department of Basic Education requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Education in Your Province?</h2>
+                <p>Join education leaders across South Africa in leveraging data to improve learning outcomes.</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn"><i class="fas fa-envelope"></i> Contact Our Team</a>
+                    <a href="#" class="btn btn-accent"><i class="fas fa-calendar-alt"></i> Schedule Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+   
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>EduTrack</h3>
+                    <p style="color: #b0bec5; margin-bottom: 20px; line-height: 1.6;">Comprehensive provincial education circuit management system for South Africa.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#features"><i class="fas fa-chevron-right"></i> Features</a></li>
+                        <li><a href="#circuits"><i class="fas fa-chevron-right"></i> Provincial Circuits</a></li>
+                        <li><a href="#news"><i class="fas fa-chevron-right"></i> Education News</a></li>
+                        <li><a href="#careers"><i class="fas fa-chevron-right"></i> Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> DBE Guidelines</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> NSC Reports</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Research Papers</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Training Materials</a></li>
+                    </ul>
+          
+                  </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><a href="mailto:info@edutrack.gov.za"><i class="fas fa-envelope"></i> info@edutrack.gov.za</a></li>
+                        <li><a href="tel:+27101234567"><i class="fas fa-phone"></i> +27 10 123 4567</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Education Street</a></li>
+                        <li><a href="#"><i class="fas fa-city"></i> Pretoria, South Africa</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; Madenet National Circuit Management System. All rights reserved. | A Department of Basic Education Initiative</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
