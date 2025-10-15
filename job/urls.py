@@ -7,7 +7,7 @@ from .views import jobgalleryview, addJob, jobgallery, viewJob, deleteJob, JobCa
 urlpatterns = [ 
     path('', views.jobgallery, name='jobgallery'),
     path('job/<str:pk>/', views.viewJob, name='job'),
-    path('add/', views.addJob, name='add'),
+    path('addJob/', views.addJob, name='addJob'),
     #job list
     path('joblistview/', views.jobgalleryview, name='joblistview'),
     path('applicationview/', views.applicationview, name='applicationview'),

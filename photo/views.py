@@ -95,22 +95,7 @@ def addPhoto(request):
                 youtube_url=data.get('youtube_url', ''),
             )
 
-            # Send email to the user after successful photo addition
-            email_address = user.email
-            subject = 'Advertisement Added Successfully'
-            listview_url = "https://www.elimcircuit.com/photos/listview/"
-            message = (
-                'Thank you for adding an advert. Your submission was successful. '
-                'Click the link below to view the added advertisement:\n\n{}'
-            ).format(listview_url)
-
-            context = {'name': user.first_name, 'message': message}
-            email_template = get_template('emailapp/email.html').render(context)
-
-            email = EmailMessage(subject, email_template, from_email="Elim Circuit <your@email.com>", to=[email_address])
-            email.content_subtype = "html"
-            email.send()
-
+          
             return redirect('listview')  # Make sure the URL name is correct
         else:
             error_message = "Please upload the main image."

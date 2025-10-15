@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Job, Category, ApplyJob
+from job.models import *
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.contrib import messages
@@ -68,10 +68,10 @@ def addJob(request):
         else:
             error_message = "Please upload the main image."
             context = {'categories': categories, 'error_message': error_message}
-            return render(request, 'jobs/add.html', context)
+            return render(request, 'jobs/addJob.html', context)
 
     context = {'categories': categories}
-    return render(request, 'jobs/add.html', context)
+    return render(request, 'jobs/addJob.html', context)
 
 #applyjob
 def applyJob(request, job_id):

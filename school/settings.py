@@ -180,16 +180,22 @@ SITE_ID = 1
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
+is_local = os.environ.get('DJANGO_LOCAL', 'false').lower() == 'true'
 
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
         conn_max_age=600,
-        ssl_require=True
-    )
+        ssl_require=True,
+    ),
+    'railway': dj_database_url.parse(
+        os.environ.get(
+            'RAILWAY_DATABASE_URL_PUBLIC' if is_local else 'RAILWAY_DATABASE_URL'
+        ),
+        conn_max_age=600,
+        ssl_require=True,
+    ),
 }
-
-
 
 #aws connected online media file
 
