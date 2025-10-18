@@ -905,3 +905,63 @@ class AIChatLog(models.Model):
     
     def __str__(self):
         return f"{self.get_question_type_display()} - {self.created_at}"
+
+#video comment
+class VideoCategory(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+#video
+class Video(models.Model):
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    category = models.ForeignKey(VideoCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    video_file = models.FileField(upload_to='videos/', null=True, blank=True)  # ✅ Add this line
+    thumbnail = models.ImageField(upload_to='video_thumbnails/', null=True, blank=True)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+
+    # Social links
+    website_url = models.CharField(max_length=2000, null=True, blank=True)
+    gmail_url = models.CharField(max_length=2000, null=True, blank=True)
+    whatsapp_number = models.CharField(max_length=20, null=True, blank=True)
+    facebook_url = models.CharField(max_length=300, null=True, blank=True)
+    tiktok_url = models.CharField(max_length=300, null=True, blank=True)
+    zoom_url = models.CharField(max_length=900, null=True, blank=True)
+    microsoftTeam_url = models.CharField(max_length=900, null=True, blank=True)
+    location = models.CharField(max_length=900, blank=True, null=True)
+    twitter_url = models.CharField(max_length=900, null=True, blank=True)
+    playstore_url = models.CharField(max_length=900, null=True, blank=True)
+    linkedin_url = models.CharField(max_length=900, null=True, blank=True)
+    instagram_url = models.CharField(max_length=900, null=True, blank=True)
+    pinterest_url = models.CharField(max_length=900, null=True, blank=True)
+    youtube_url = models.CharField(max_length=1000, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
+#video comment
+class VideoComment(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name="replies")
+    text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Comment by {self.user} on {self.video}"
+
+
+class VideoLike(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ('video', 'user')
+
+    def __str__(self):
+        return f"{self.user} likes {self.video}"

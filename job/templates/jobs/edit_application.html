@@ -1,0 +1,63 @@
+{% extends 'main_app/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Edit Job Application</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% comment %} Text fields {% endcomment %}
+        {% for field in ['full_names','age','address','qualifications','motivation','recent_jobs','position','experience','contacts','whatsapp_no'] %}
+        <div class="mb-3">
+            <label for="{{ field }}" class="form-label">{{ field|capfirst|replace:"_"," " }}</label>
+            {% if field == "motivation" %}
+            <textarea class="form-control" id="{{ field }}" name="{{ field }}">{{ application[field] }}</textarea>
+            {% else %}
+            <input type="text" class="form-control" id="{{ field }}" name="{{ field }}" value="{{ application[field] }}">
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        {% comment %} Marital status select {% endcomment %}
+        <div class="mb-3">
+            <label for="marital_status" class="form-label">Marital Status</label>
+            <select name="marital_status" id="marital_status" class="form-control">
+                {% for value, label in application._meta.get_field('marital_status').choices %}
+                    <option value="{{ value }}" {% if value == application.marital_status %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% comment %} Category select {% endcomment %}
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select name="category" id="category" class="form-control">
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if cat.id == application.category.id %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% comment %} File uploads {% endcomment %}
+        <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input type="file" class="form-control" id="image" name="image">
+            {% if application.image %}
+                <img src="{{ application.image.url }}" alt="Current Image" class="img-thumbnail mt-2" style="height:150px;">
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="cv" class="form-label">CV</label>
+            <input type="file" class="form-control" id="cv" name="cv">
+            {% if application.cv %}
+                <p>Current CV: <a href="{{ application.cv.url }}" target="_blank">Download</a></p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a href="{% url 'applicationview' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

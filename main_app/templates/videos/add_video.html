@@ -1,0 +1,149 @@
+{% extends 'main_app/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Title -->
+                    <div class="form-group mb-3">
+                        <label>Title</label>
+                        <input required type="text" name="title" class="form-control" placeholder="Enter video title">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group mb-3">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" class="form-control" placeholder="Enter video description"></textarea>
+                    </div>
+
+                    <!-- Select existing category -->
+                    <div class="form-group mb-3">
+                        <label>Select Category</label>
+                        <select name="category" class="form-control">
+                            <option value="none">Select a category...</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Create new category -->
+                    <div class="form-group mb-3">
+                        <label>Create New Category</label>
+                        <input type="text" name="category_new" class="form-control" placeholder="Enter new category">
+                    </div>
+
+                    <!-- Video upload -->
+                    <div class="form-group mb-3">
+                        <label>Upload Video</label>
+                        <input required type="file" name="video_file" accept="video/*" class="form-control-file" id="videoInput">
+                    </div>
+
+                    <!-- Video preview -->
+                    <div id="videoPreview" class="form-group mb-3" style="display: none;">
+                        <label>Video Preview</label>
+                        <video id="previewVideo" controls width="100%" class="rounded"></video>
+                        <button type="button" class="btn btn-danger mt-2" onclick="cancelVideoPreview()">Cancel</button>
+                    </div>
+
+                    <!-- Thumbnail upload -->
+                    <div class="form-group mb-3">
+                        <label>Upload Thumbnail</label>
+                        <input type="file" name="thumbnail" accept="image/*" class="form-control-file">
+                    </div>
+
+                    <!-- WhatsApp number -->
+                    <div class="form-group mb-3">
+                        <label>WhatsApp Number</label>
+                        <input type="text" name="whatsapp_number" class="form-control" placeholder="Enter WhatsApp number">
+                    </div>
+
+                    <!-- Select URL type for dynamic fields -->
+                    <div class="form-group mb-3">
+                        <label>Select URL Type</label>
+                        <select name="url_type" id="urlType" class="form-control">
+                            <option value="">Select URL Type...</option>
+                            <option value="website_url">Website URL</option>
+                            <option value="facebook_url">Facebook URL</option>
+                            <option value="twitter_url">Twitter URL</option>
+                            <option value="playstore_url">Play Store URL</option>
+                            <option value="linkedin_url">LinkedIn URL</option>
+                            <option value="instagram_url">Instagram URL</option>
+                            <option value="pinterest_url">Pinterest URL</option>
+                            <option value="youtube_url">YouTube URL</option>
+                            <option value="tiktok_url">TikTok URL</option>
+                        </select>
+                    </div>
+
+                    <!-- Container for dynamic URL inputs -->
+                    <div id="dynamicUrlFields" class="mb-3"></div>
+
+                    <button type="button" class="btn btn-secondary mb-3" onclick="addUrlField()">Add URL Field</button>
+                    <button type="submit" class="btn btn-primary mb-3">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Dynamic URL fields
+function addUrlField() {
+    const urlTypeDropdown = document.getElementById('urlType');
+    const dynamicUrlFields = document.getElementById('dynamicUrlFields');
+    const selectedUrlType = urlTypeDropdown.value;
+
+    if (selectedUrlType) {
+        const urlField = document.createElement('div');
+        urlField.className = 'form-group mb-2';
+
+        const label = document.createElement('label');
+        label.textContent = selectedUrlType.replace("_", " ").toUpperCase();
+        urlField.appendChild(label);
+
+        const input = document.createElement('input');
+        input.name = selectedUrlType;
+        input.type = 'text';
+        input.placeholder = 'Enter ' + selectedUrlType.replace("_", " ");
+        input.className = 'form-control mb-1';
+        urlField.appendChild(input);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'btn btn-danger btn-sm';
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', function() {
+            dynamicUrlFields.removeChild(urlField);
+        });
+        urlField.appendChild(deleteButton);
+
+        dynamicUrlFields.appendChild(urlField);
+    }
+}
+
+// Video preview
+function cancelVideoPreview() {
+    const videoInput = document.getElementById('videoInput');
+    const videoPreview = document.getElementById('videoPreview');
+    const previewVideo = document.getElementById('previewVideo');
+    videoInput.value = '';
+    previewVideo.src = '#';
+    videoPreview.style.display = 'none';
+}
+
+const videoInput = document.getElementById('videoInput');
+const videoPreview = document.getElementById('videoPreview');
+const previewVideo = document.getElementById('previewVideo');
+
+videoInput.addEventListener('change', function(event) {
+    const selectedVideo = event.target.files[0];
+    if (selectedVideo) {
+        previewVideo.src = URL.createObjectURL(selectedVideo);
+        videoPreview.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

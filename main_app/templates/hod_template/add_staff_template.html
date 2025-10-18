@@ -36,35 +36,120 @@
     </div>
 </section>
 {% endblock content %}
+
 {% block custom_js %}
+<!-- Font Awesome for Eye Icon -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
 <script>
-    function validateEmail(email) {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-    $(document).ready(function(){
-        $("#id_email").keyup(function(){
-            
-            var email = $(this).val()
-            if (validateEmail(email)){
-            $.ajax({
-                url: "{% url 'check_email_availability' %}",
-                type: 'POST',
-                data:{email:email}
-            }).done(function(response){
-                if (response == "True"){
-                    $(".email_error").remove()
-                    $("<span class='invalid email_error'>Email Address Already Exist</span>").insertAfter("#id_email");
-                }
-                else{
-                    $(".email_error").remove()
-                    $("<span class='valid email_error'>Email Address Available</span>").insertAfter("#id_email");
-                }
-            }).fail(function(response){
-                $("<span class='alert alert-warning'>Server Could Not Process This</span>").insertAfter("#id_email");
-            })
+  function validateEmail(email) {
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+  $(document).ready(function () {
+    // 🔹 Hide the Add Staff button at first
+    const addBtn = $("button[type='submit']");
+    addBtn.hide();
+
+    // 🔹 Wrap password field with eye icon toggle
+    const passwordField = $("#id_password");
+    if (passwordField.length) {
+      passwordField.wrap('<div class="password-wrapper"></div>');
+      passwordField.after(`
+          <button type="button" id="togglePassword">
+            <i class="fas fa-eye"></i>
+          </button>
+      `);
+
+      // Toggle visibility
+      $(document).on("click", "#togglePassword", function () {
+        const inputType = passwordField.attr("type");
+        const icon = $(this).find("i");
+
+        if (inputType === "password") {
+          passwordField.attr("type", "text");
+          icon.removeClass("fa-eye").addClass("fa-eye-slash");
+        } else {
+          passwordField.attr("type", "password");
+          icon.removeClass("fa-eye-slash").addClass("fa-eye");
         }
+      });
+    }
+
+    // 🔹 Function to check if all fields are filled
+    function checkFormCompletion() {
+      let isValid = true;
+      const requiredFields = [
+        "#id_first_name",
+        "#id_last_name",
+        "#id_address",
+        "#id_school",
+        "#id_email",
+        "#id_gender",
+        "#id_password",
+        "#id_course",
+        "#id_profile_pic",
+      ];
+
+      requiredFields.forEach(function (selector) {
+        const value = $(selector).val();
+        if (!value || value.trim() === "") {
+          isValid = false;
+        }
+      });
+
+      // Email format validation
+      const emailVal = $("#id_email").val();
+      if (!validateEmail(emailVal)) {
+        isValid = false;
+      }
+
+      // Show/hide button based on completeness
+      if (isValid) {
+        addBtn.fadeIn();
+      } else {
+        addBtn.fadeOut();
+      }
+    }
+
+    // 🔹 Check form fields dynamically
+    $("input, select").on("input change", checkFormCompletion);
+
+    // 🔹 AJAX check for email availability
+    $("#id_email").keyup(function () {
+      var email = $(this).val();
+      if (validateEmail(email)) {
+        $.ajax({
+          url: "{% url 'check_email_availability' %}",
+          type: "POST",
+          data: { email: email },
         })
+          .done(function (response) {
+            if (response == "True") {
+              $(".email_error").remove();
+              $(
+                "<span class='invalid email_error'>Email Address Already Exist</span>"
+              ).insertAfter("#id_email");
+            } else {
+              $(".email_error").remove();
+              $(
+                "<span class='valid email_error'>Email Address Available</span>"
+              ).insertAfter("#id_email");
+            }
+            checkFormCompletion(); // recheck after email check
+          })
+          .fail(function (response) {
+            $(
+              "<span class='alert alert-warning'>Server Could Not Process This</span>"
+            ).insertAfter("#id_email");
+          });
+      }
     });
+  });
 </script>
 {% endblock custom_js %}

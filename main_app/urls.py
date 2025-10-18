@@ -375,4 +375,13 @@ urlpatterns = [
     path("password_reset/", views.custom_password_reset_request, name="password_reset_request"),
     path("password_reset/done/", custom_password_reset_done, name="custom_password_reset_done"),
     path("reset/<uidb64>/<token>/", views.custom_password_reset_confirm, name="password_reset_confirm"),
+    #videos
+    path('videos/', views.videos_view, name='videos'),
+    path('videos/add/', views.video_add_view, name='video_add'),
+    path('videos/<int:video_id>/', views.show_video, name='show_video'),
+    
+    # AJAX endpoints for likes and comments
+    path('videos/<int:video_id>/like/', views.like_video, name='like_video'),
+    path('videos/<int:video_id>/comment/', views.add_comment, name='add_comment'),
+    path('videos/<int:video_id>/comments/', views.get_comments, name='get_comments'),
 ]

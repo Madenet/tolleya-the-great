@@ -73,18 +73,25 @@ def addJob(request):
     context = {'categories': categories}
     return render(request, 'jobs/addJob.html', context)
 
-#applyjob
+
+#apply job 
 def applyJob(request, job_id):
+    # Redirect user if not logged in
+    if not request.user.is_authenticated:
+        messages.warning(request, "You need to register or log in before applying for a job.")
+        return redirect('register_selection')  # 👈 redirect to your actual register route name
+
+    # ✅ Only runs if the user is logged in
     user = request.user
     job = get_object_or_404(Job, id=job_id)
-    categories = user.category_set.all()
+    categories = user.category_set.all()  # safe to call now
 
     if request.method == 'POST':
         data = request.POST
         image = request.FILES.get('image')
         cv = request.FILES.get('cv')
 
-        # Determine category: use the job's category by default
+        # Determine category (either existing or new)
         if data.get('category') and data['category'] != 'none':
             category = Category.objects.get(id=data['category'])
         elif data.get('category_new'):
@@ -95,6 +102,7 @@ def applyJob(request, job_id):
         else:
             category = job.category  # fallback to the job's category
 
+        # Validate uploads
         if image and cv:
             ApplyJob.objects.create(
                 category=category,
@@ -113,7 +121,9 @@ def applyJob(request, job_id):
                 cv=cv,
             )
             messages.success(request, f"You have successfully applied for '{job.description}'!")
-            return redirect('index')
+
+            # ✅ redirect to your applicationview page
+            return redirect('applicationview')
 
         else:
             error_message = "Please upload both an image and your CV."
@@ -125,10 +135,20 @@ def applyJob(request, job_id):
 
 #applicationview
 def applicationview(request):
-	applyjobs = ApplyJob.objects.all()
-	context = {'applyjobs': applyjobs}
-	template = 'jobs/applicationview.html'	
-	return render(request, template, context)
+    user = request.user
+
+    # Redirect to register if user is not logged in
+    if not user.is_authenticated:
+        return redirect('login_page')  # change 'register' to your registration URL name
+
+    # Superuser or specific roles see all applications
+    if user.is_superuser or user.user_type in ['1','2','4','6','9']:
+        applyjobs = ApplyJob.objects.all().order_by('-created_at')
+    else:
+        applyjobs = ApplyJob.objects.filter(user=user).order_by('-created_at')
+
+    context = {'applyjobs': applyjobs, 'user': user}
+    return render(request, 'jobs/applicationview.html', context)
 
 #delete application image
 def deleteApplicationJob(request, pk):
@@ -138,6 +158,45 @@ def deleteApplicationJob(request, pk):
     applyjobs.delete()
     messages.success(request,"Product Deleted Successfuly")
     return redirect('joblistview')
+
+#edit job application
+def edit_application(request, pk):
+    application = get_object_or_404(ApplyJob, pk=pk)
+
+    # Only owner or superuser/admin roles can edit
+    if request.user != application.user and not request.user.is_superuser:
+        return redirect('applicationview')
+
+    if request.method == 'POST':
+        # Update all fields manually
+        application.full_names = request.POST.get('full_names', application.full_names)
+        application.age = request.POST.get('age', application.age)
+        application.address = request.POST.get('address', application.address)
+        application.qualifications = request.POST.get('qualifications', application.qualifications)
+        application.motivation = request.POST.get('motivation', application.motivation)
+        application.recent_jobs = request.POST.get('recent_jobs', application.recent_jobs)
+        application.position = request.POST.get('position', application.position)
+        application.marital_status = request.POST.get('marital_status', application.marital_status)
+        application.experience = request.POST.get('experience', application.experience)
+        application.contacts = request.POST.get('contacts', application.contacts)
+        application.whatsapp_no = request.POST.get('whatsapp_no', application.whatsapp_no)
+        category_id = request.POST.get('category')
+        if category_id:
+            application.category_id = category_id
+
+        # Handle image upload
+        if 'image' in request.FILES:
+            application.image = request.FILES['image']
+
+        # Handle CV upload
+        if 'cv' in request.FILES:
+            application.cv = request.FILES['cv']
+
+        application.save()
+        return redirect('applicationview')
+
+    categories = Category.objects.all()
+    return render(request, 'jobs/edit_application.html', {'application': application, 'categories': categories})
 
 #gallery
 def jobgallery(request):

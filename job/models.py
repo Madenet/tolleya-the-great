@@ -1,5 +1,8 @@
 from django.db import models
 from main_app.models import CustomUser
+from django.utils import timezone
+from django.conf import settings
+
 
 # Create your models here.
 EMPLOYED = "EMPLOYED"
@@ -70,8 +73,13 @@ class Job(models.Model):
         return self.description
 
 class ApplyJob(models.Model):
-    category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # links to your custom user model
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     full_names = models.CharField(max_length=2000, null=True, blank=True)
     age = models.CharField(max_length=2000, null=True, blank=True)
     address = models.CharField(max_length=2000, null=True, blank=True)
@@ -85,8 +93,7 @@ class ApplyJob(models.Model):
     whatsapp_no = models.CharField(max_length=2000, null=True, blank=True)
     image = models.ImageField(upload_to="jobs/img/%y/%m/%d/", default="default.png", null=True)
     cv = models.FileField(upload_to='jobs/cv/%y/%m/%d/')
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.full_names
-    
-    

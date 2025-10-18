@@ -1,136 +1,115 @@
 {% extends 'main_app/base.html' %}
-<!--ADD THE APPLICATION FOR JOBS FUNCTIONS-->
 {% block content %}
-    <style>
-        .image-thumbnail {
-            height: 200px;
-            object-fit: cover;
-            cursor: pointer; /* Add cursor pointer to make the image clickable */
-        }
+<style>
+    .image-thumbnail {
+        height: 200px;
+        object-fit: cover;
+        cursor: pointer;
+    }
 
-        .list-group-item a {
-            text-decoration: none;
-            color: black;
-        }
+    .list-group-item a {
+        text-decoration: none;
+        color: black;
+    }
 
-        /* Custom styles for the card and container */
-        .custom-card {
-            border: none;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, border-color 0.3s; /* Added border-color transition */
-            border-color: transparent; /* Initial border color */
-            height: 100%; /* Set the card height to take full container height */
-            display: flex;
-            flex-direction: column; /* Arrange items vertically */
-            justify-content: space-between; /* Distribute space evenly */
-        }
+    .custom-card {
+        border: none;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, border-color 0.3s;
+        border-color: transparent;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-        .custom-card:hover {
-            transform: scale(1.05);
-            border-color: #d2dde2; /* Change border color on hover */
-        }
+    .custom-card:hover {
+        transform: scale(1.05);
+        border-color: #d2dde2;
+    }
 
-        .custom-container {
-            background-color: #43586d;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            height: 100%; /* Set the container height to take full card height */
-        }
+    .custom-container {
+        background-color: #43586d;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        height: 100%;
+    }
 
-        .custom-heading {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-    </style>
+    .custom-heading {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+</style>
 
-    <body class="m-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            Categories
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <a href="{% url 'jobgallery' %}">All</a>
-                            </li>
-                            {% for category in categories %}
-                            <li class="list-group-item">
-                                <a href="{% url 'jobview' %}?category={{category.name}}">
-                                    {{category.name}}
-                                </a>
-                            </li>
-                            {% endfor %}
-                            <li class="list-group-item">
-                                <a href="{% url 'joblistview' %}" class="btn btn-dark btn-block btn-sm m-1 text-white">View All_Jobs</a>
-                             </li>
-     
-                             <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Job</a>
-                             <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Logout</a>
-                            
-                        </ul>
-                    </div>
+<div class="container m-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Categories
                 </div>
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="custom-heading">Jobs</h1>
-                        </div>
-                        {% for job in jobs %}
-                        <div class="col-md-4">
-                            <div class="custom-container">
-                                <div class="card custom-card">
-                                    {% if user.is_authenticated %}
-                                    {% if user.id == job.author.id %}
-                                    <a href="{% url 'delete-job' job.id %}" class="edit-color"><i class="fas fa-trash"></i></a>
-                                    {% endif %}
-                                    {% endif %}
-                                    <a href="{% url 'job' job.id %}">
-                                        <img class="image-thumbnail" src="{{job.image.url}}" alt="Card image cap">
-                                    </a>
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ job.description }}</h5>
-                                        <p class="card-text">Category: {{ job.category.name }}</p>
-                                        <ul class="list-unstyled">
-                                            {% if job.website_url %}
-                                            <li><a href="https://{{ job.website_url }}">Website</a></li>
-                                            {% endif %}
-                                            {% if job.whatsapp_number %}
-                                            <li>
-                                                <a href="https://wa.me/{{ job.whatsapp_number }}" target="_blank" class="whatsapp">
-                                                    <i class="bx bxl-whatsapp">WhatsApp</i>
-                                                </a>
-                                            </li>
-                                            {% endif %}
-                                            {% if job.facebook_url %}
-                                            <li><a href="https://{{ job.facebook_url }}">Facebook</a></li>
-                                            {% endif %}
-                                            {% if job.zoom_url %}
-                                            <li><a href="https://{{ job.zoom_url }}">Zoom</a></li>
-                                            {% endif %}
-                                            {% if job.microsoftTeam_url %}
-                                            <li><a href="https://{{ job.microsoftTeam_url }}">microsoftTeam</a></li>
-                                            {% endif %}
-                                            {% if job.twitter_url %}
-                                            <li><a href="https://{{ job.twitter_url }}">Twitter</a></li>
-                                            {% endif %}
-                                            <!-- Add more links with the unique variable (https://) as needed -->
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="col-md-12">
-                            <h3>No Job Opportunities</h3>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href="{% url 'jobgallery' %}">All</a>
+                    </li>
+                    {% for category in categories %}
+                    <li class="list-group-item">
+                        <a href="{% url 'jobview' %}?category={{category.name}}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                    <li class="list-group-item">
+                        <a href="{% url 'joblistview' %}" class="btn btn-dark btn-block btn-sm m-1 text-white">View All Jobs</a>
+                    </li>
+                    <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Job</a>
+                    <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Logout</a>
+                </ul>
             </div>
         </div>
-    </body>
+
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="custom-heading">Your Applied Jobs</h1>
+                </div>
+
+                {% for applyjob in applyjobs %}
+                <div class="col-md-4">
+                    <div class="custom-container">
+                        <div class="card custom-card">
+                            <!-- Edit/Delete buttons -->
+                            {% if user.is_superuser or user.user_type in '12469' or user == applyjob.user %}
+                                <div class="d-flex justify-content-end m-2">
+                                    <a href="{% url 'edit-application' applyjob.id %}" class="btn btn-sm btn-primary me-1">Edit</a>
+                                    <a href="{% url 'delete-application' applyjob.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                </div>
+                            {% endif %}
+
+                            <a href="{% url 'job' applyjob.category.id %}">
+                                <img class="image-thumbnail" src="{{ applyjob.image.url }}" alt="Job Image">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ applyjob.full_names }}</h5>
+                                <p class="card-text">Category: {{ applyjob.category.name }}</p>
+                                <p class="card-text">Position: {{ applyjob.position }}</p>
+                                <p class="card-text">Motivation: {{ applyjob.motivation|truncatewords:15 }}</p>
+                                {% if user.is_superuser or user.user_type in '12469' %}
+                                    <p class="card-text"><small class="text-muted">Applied by: {{ applyjob.user.get_full_name }}</small></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-md-12">
+                    <h3>No Job Opportunities</h3>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

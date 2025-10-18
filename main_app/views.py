@@ -1,5 +1,8 @@
 import json
 import requests
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, JsonResponse
@@ -39,8 +42,6 @@ from questpaper.models import *
 from django.contrib.auth import get_user_model
 
 
-
-#Index_view
 def index_view(request):
     # Fetch data from the theblog app models
     news_items = NewsAndEvents.objects.all().order_by("-updated_date")
@@ -57,8 +58,12 @@ def index_view(request):
     photos = Photo.objects.filter(approval_status='approved')
     
     # Jobs (added here)
-    jobs = Job.objects.all().order_by("-id")   # or however you want them ordered
+    jobs = Job.objects.all().order_by("-id")
     categories = Category.objects.all()
+    
+    # Videos - ADD THESE LINES
+    video_categories = VideoCategory.objects.all()
+    videos = Video.objects.select_related('category', 'author').order_by('-date_posted')[:6]  # Limit to 6 latest videos
 
     # Appointment form submission
     if request.method == 'POST' and 'appointment_submit' in request.POST:
@@ -87,7 +92,7 @@ def index_view(request):
     # Fetch subscription data
     subscriptions = Subscription.objects.all()
 
-    # Context data
+    # Context data - ADD VIDEOS TO CONTEXT
     context = {
         "schools": schools,
         "title": "News & Events",
@@ -103,15 +108,19 @@ def index_view(request):
         "subscription_form": subscription_form,
         "subscriptions": subscriptions,
         "photos": photos,
-        "jobs": jobs,   # 👈 added jobs to context
+        "jobs": jobs,
         "categories": categories,
+        # Add videos to context
+        "videos": videos,
+        "video_categories": video_categories,
         # Add counts for each shortcut
         "question_papers_count": question_papers.count(),
         "schools_count": schools.count(),
         "prospectors_count": Prospectors.objects.count(),
         "colleges_count": colleges.count(),
         "bursaries_count": bursaries.count(),
-        "jobs_count": jobs.count(),   # 👈 optional, if you need jobs count
+        "jobs_count": jobs.count(),
+        "videos_count": videos.count(),  # Optional: videos count
     }
 
     return render(request, 'landing/home.html', context)
@@ -1234,3 +1243,132 @@ def custom_password_reset_confirm(request, uidb64, token):
 
     messages.error(request, "The password reset link is invalid or has expired.")
     return redirect("password_reset_request")
+
+# Video add functions
+def video_add_view(request):
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        messages.error(request, "Please login to upload videos")
+        return redirect('login_page')  # Adjust to your login URL
+    
+    categories = VideoCategory.objects.all()
+
+    if request.method == "POST":
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        category_id = request.POST.get("category")
+        category_new = request.POST.get("category_new")
+        video_file = request.FILES.get("video_file")
+        thumbnail = request.FILES.get("thumbnail")
+
+        # Create or get category
+        if category_new:
+            category_obj, created = VideoCategory.objects.get_or_create(name=category_new)
+        elif category_id and category_id != 'none':
+            category_obj = VideoCategory.objects.get(id=category_id)
+        else:
+            category_obj = None
+
+        # Save the video
+        video = Video.objects.create(
+            author=request.user,
+            title=title,
+            description=description,
+            category=category_obj,
+            video_file=video_file,
+            thumbnail=thumbnail,
+            website_url=request.POST.get("website_url"),
+            gmail_url=request.POST.get("gmail_url"),
+            whatsapp_number=request.POST.get("whatsapp_number"),
+            facebook_url=request.POST.get("facebook_url"),
+            tiktok_url=request.POST.get("tiktok_url"),
+            zoom_url=request.POST.get("zoom_url"),
+            microsoftTeam_url=request.POST.get("microsoftTeam_url"),
+            location=request.POST.get("location"),
+            twitter_url=request.POST.get("twitter_url"),
+            playstore_url=request.POST.get("playstore_url"),
+            linkedin_url=request.POST.get("linkedin_url"),
+            instagram_url=request.POST.get("instagram_url"),
+            pinterest_url=request.POST.get("pinterest_url"),
+            youtube_url=request.POST.get("youtube_url"),
+        )
+
+        messages.success(request, "Video uploaded successfully!")
+        return redirect("show_video", video_id=video.id)
+
+    return render(request, "videos/add_video.html", {"categories": categories})
+
+# View videos
+def videos_view(request):
+    categories = VideoCategory.objects.all()
+    videos = Video.objects.select_related('category', 'author').order_by('-date_posted')
+    return render(request, 'videos/videos.html', {'videos': videos, 'categories': categories})
+
+# Show video
+def show_video(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    return render(request, 'videos/show_video.html', {'video': video})
+
+@require_POST
+def like_video(request, video_id):
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            'error': 'Authentication required',
+            'login_url': 'login_page'  # Adjust to your login URL
+        }, status=401)
+    
+    video = get_object_or_404(Video, id=video_id)
+    like, created = VideoLike.objects.get_or_create(video=video, user=request.user)
+    
+    if not created:
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    
+    return JsonResponse({
+        'liked': liked,
+        'likes_count': video.likes.count()
+    })
+
+@require_POST
+def add_comment(request, video_id):
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            'error': 'Authentication required',
+            'login_url': 'login_page'  # Adjust to your login URL
+        }, status=401)
+    
+    video = get_object_or_404(Video, id=video_id)
+    data = json.loads(request.body)
+    
+    comment = VideoComment.objects.create(
+        video=video,
+        user=request.user,
+        text=data.get('text')
+    )
+    
+    return JsonResponse({
+        'success': True,
+        'comment': {
+            'user_name': comment.user.username,
+            'text': comment.text,
+            'created_at': comment.created_at.strftime('%b %d, %Y')
+        }
+    })
+
+def get_comments(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    comments = video.comments.all().order_by('created_at')
+    
+    comments_data = []
+    for comment in comments:
+        comments_data.append({
+            'user_name': comment.user.username if comment.user else 'Unknown User',
+            'text': comment.text,
+            'created_at': comment.created_at.strftime('%b %d, %Y')
+        })
+    
+    return JsonResponse(comments_data, safe=False)
