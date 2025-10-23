@@ -2677,7 +2677,7 @@
 				postCommentBtn.textContent = 'Post';
 				if (error.message.includes('login') || error.message.includes('Authentication')) {
 				if (confirm('Please login to comment. Would you like to login now?')) {
-					window.location.href = '/accounts/login/?next=' + window.location.pathname;
+					window.location.href = '/login?next=' + window.location.pathname;
 				}
 				} else {
 				alert('Error posting comment. Please try again.');
@@ -2815,7 +2815,7 @@
 				console.error('Error:', error);
 				if (error.message.includes('login') || error.message.includes('Authentication')) {
 				if (confirm('Please login to like videos. Would you like to login now?')) {
-					window.location.href = '/accounts/login/?next=' + window.location.pathname;
+					window.location.href = '/login?next=' + window.location.pathname;
 				}
 				} else {
 				alert('Error liking video. Please try again.');
@@ -3114,147 +3114,150 @@
 			}
 		</style>
 
-		<!-- ===================== COMMUNITY EMPLOYMENT ================= -->
+		
+		<section>
+         <!-- ===================== COMMUNITY EMPLOYMENT ================= -->
 		<body>
-			<div class="container jobs-section"> <!-- 👈 wrapper for jobs -->
-				<div class="row">
-					<div class="col-md-3">
-						<div class="card">
-							<div class="card-header">Categories</div>
-							<ul class="list-group list-group-flush">
-								<li class="list-group-item">
-									<a href="{% url 'jobgallery' %}">All</a>
-								</li>
-								<li class="list-group-item">
-									<a href="{% url 'joblistview' %}" class="btn btn-dark btn-block btn-sm m-1 text-white">View All Jobs</a>
-								</li>
-								{% if user.is_authenticated %}
-								<a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Job</a>
-								{% endif %}
-								<a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Advertisement</a>
-							</ul>
-						</div>
-					</div>
-							{% for job in jobs %}
-							<div class="col-md-4">
-								<div class="custom-container">
-									<div class="card custom-card">
-										<a href="{% url 'jobview' job.id %}">
-											<img class="image-thumbnail" src="{{ job.image.url }}" alt="Job Image">
-										</a>
-										<div class="card-body">
-											<h5 class="card-title">{{ job.description }}</h5>
-											<p class="card-text">Category: {{ job.category.name }}</p>
-											<a href="{% url 'apply_job' job.id %}" class="btn btn-primary mt-2">Apply</a>
-										</div>
-									</div>
-								</div>
-							</div>
-							{% endfor %}
-
-							{% for job in jobs %}
-							<div class="modal fade" id="applyJobModal{{ job.id }}" tabindex="-1" aria-labelledby="applyJobLabel{{ job.id }}" aria-hidden="true">
-								<div class="modal-dialog modal-dialog-centered">
-									<div class="modal-content">
-									<div class="modal-header bg-primary text-white">
-										<h5 class="modal-title" id="applyJobLabel{{ job.id }}">Apply for: {{ job.description }}</h5>
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										<form method="POST" enctype="multipart/form-data" action="{% url 'apply_job' job.id %}">
-										{% csrf_token %}
-										
-										<div class="mb-3">
-											<label class="form-label">Full Names</label>
-											<input type="text" name="full_names" class="form-control" placeholder="Enter your full name">
-										</div>
-
-										<div class="mb-3">
-											<label class="form-label">Upload Image</label>
-											<input type="file" name="image" class="form-control">
-										</div>
-
-										<div class="mb-3">
-											<label class="form-label">Upload CV</label>
-											<input type="file" name="cv" class="form-control">
-										</div>
-
-										<div class="mb-3">
-											<label class="form-label">Category</label>
-											<select name="category" class="form-select">
-											<option value="none">--Select Category--</option>
-											{% for cat in categories %}
-												<option value="{{ cat.id }}">{{ cat.name }}</option>
-											{% endfor %}
-											</select>
-										</div>
-
-										<div class="mb-3">
-											<input type="text" name="category_new" class="form-control" placeholder="Or add new category">
-										</div>
-
-										<button type="submit" class="btn btn-success w-100">Apply Now</button>
-										</form>
-									</div>
-									</div>
-								</div>
-							</div>
-							{% endfor %}
-
-							{% for job in jobs %}
-							<div class="col-md-4">
-								<div class="job-container">
-									<div class="card job-card">
-										{% if user.is_authenticated and user.id == job.author.id %}
-										<a href="{% url 'delete-job' job.id %}" class="edit-color"><i class="fas fa-trash"></i></a>
-										{% endif %}
-
-										<a href="{% url 'job' job.id %}">
-											<img class="image-thumbnail" src="{{job.image.url}}" alt="Card image cap">
-										</a>
-										<div class="card-body">
-											<h5 class="card-title">{{ job.description }}</h5>
-											<p class="card-text">Category: {{ job.category.name }}</p>
-											<ul class="list-unstyled">
-												{% if job.website_url %}
-												<li><a href="https://{{ job.website_url }}">Website</a></li>
-												{% endif %}
-												{% if job.whatsapp_number %}
-												<li>
-													<a href="https://wa.me/{{ job.whatsapp_number }}" target="_blank" class="whatsapp">
-														<i class="bx bxl-whatsapp">WhatsApp</i>
-													</a>
-												</li>
-												{% endif %}
-												{% if job.facebook_url %}
-												<li><a href="https://{{ job.facebook_url }}">Facebook</a></li>
-												{% endif %}
-												{% if job.zoom_url %}
-												<li><a href="https://{{ job.zoom_url }}">Zoom</a></li>
-												{% endif %}
-												{% if job.microsoftTeam_url %}
-												<li><a href="https://{{ job.microsoftTeam_url }}">Microsoft Teams</a></li>
-												{% endif %}
-												{% if job.twitter_url %}
-												<li><a href="https://{{ job.twitter_url }}">Twitter</a></li>
-												{% endif %}
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-							{% empty %}
-							<div class="col-md-12">
-								<h3>No Job Opportunities</h3>
-							</div>
-							{% endfor %}
-						</div>
-					</div>
+		<div class="container jobs-section">
+			<div class="row">
+			<div class="col-md-3">
+				<div class="card">
+				<div class="card-header">Categories</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+					<a href="{% url 'jobgallery' %}">All</a>
+					</li>
+					<li class="list-group-item">
+					<a href="{% url 'joblistview' %}" class="btn btn-dark btn-block btn-sm m-1 text-white">View All Jobs</a>
+					</li>
+					{% if user.is_authenticated %}
+					<a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Job</a>
+					{% endif %}
+					<a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Advertisement</a>
+				</ul>
 				</div>
 			</div>
-		</body>
 
-		<section>
+			{% for job in jobs %}
+			<div class="col-md-4">
+				<div class="custom-container">
+				<div class="card custom-card job-click-card" data-url="{{ job.website_url|default:'' }}">
+					<div class="card-image-wrapper">
+					<img class="image-thumbnail" src="{{ job.image.url }}" alt="Job Image">
+					</div>
+					<div class="card-body">
+					<h5 class="card-title">{{ job.description|truncatechars:60 }}</h5>
+
+					<p class="card-text readmore-text" style="display:none;">
+						{{ job.description }}
+					</p>
+					<button class="btn btn-link p-0 readmore-btn" style="font-size: 14px;">Read More</button>
+
+					<p class="card-text mt-2 mb-2"><strong>Category:</strong> {{ job.category.name }}</p>
+
+					<!-- Social Media Icons -->
+					<div class="social-icons d-flex justify-content-start align-items-center flex-wrap mt-2">
+						{% if job.website_url %}
+						<a href="{{ job.website_url }}" target="_blank" class="icon-link">
+						<i class="fas fa-globe"></i>
+						</a>
+						{% endif %}
+						{% if job.whatsapp_number %}
+						<a href="{{ job.whatsapp_number }}" target="_blank" class="icon-link whatsapp">
+						<i class="fab fa-whatsapp"></i>
+						</a>
+						{% endif %}
+						{% if job.facebook_url %}
+						<a href="{{ job.facebook_url }}" target="_blank" class="icon-link facebook">
+						<i class="fab fa-facebook"></i>
+						</a>
+						{% endif %}
+						{% if job.zoom_url %}
+						<a href="{{ job.zoom_url }}" target="_blank" class="icon-link zoom">
+						<i class="fas fa-video"></i>
+						</a>
+						{% endif %}
+						{% if job.microsoftTeam_url %}
+						<a href="{{ job.microsoftTeam_url }}" target="_blank" class="icon-link teams">
+						<i class="fab fa-microsoft"></i>
+						</a>
+						{% endif %}
+						{% if job.twitter_url %}
+						<a href="{{ job.twitter_url }}" target="_blank" class="icon-link twitter">
+						<i class="fab fa-twitter"></i>
+						</a>
+						{% endif %}
+					</div>
+
+					<a href="{% url 'apply_job' job.id %}" class="btn btn-primary mt-3">Apply</a>
+					</div>
+				</div>
+				</div>
+			</div>
+			{% empty %}
+			<div class="col-md-12">
+				<h3>No Job Opportunities</h3>
+			</div>
+			{% endfor %}
+			</div>
+		</div>
+
+		<!-- JS for card click -->
+		<script>
+			document.querySelectorAll('.job-click-card').forEach(card => {
+			card.addEventListener('click', (e) => {
+				if (e.target.tagName.toLowerCase() !== 'a' && e.target.tagName.toLowerCase() !== 'button' && !e.target.closest('.readmore-btn')) {
+				const url = card.getAttribute('data-url');
+				if (url && url !== 'https://') {
+					window.open(url, '_blank');
+				}
+				}
+			});
+			});
+
+			// Read more toggle
+			document.querySelectorAll('.readmore-btn').forEach(btn => {
+			btn.addEventListener('click', (e) => {
+				e.preventDefault();
+				const text = btn.previousElementSibling;
+				const isHidden = text.style.display === 'none';
+				text.style.display = isHidden ? 'block' : 'none';
+				btn.textContent = isHidden ? 'Read Less' : 'Read More';
+			});
+			});
+		</script>
+
+		<!-- Style (keeps your original layout intact) -->
+		<style>
+			.job-click-card {
+			cursor: pointer;
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+			.job-click-card:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+			}
+			.social-icons .icon-link {
+			color: #444;
+			font-size: 20px;
+			margin-right: 12px;
+			transition: color 0.3s ease;
+			}
+			.icon-link:hover { color: #007bff; }
+			.icon-link.whatsapp:hover { color: #25D366; }
+			.icon-link.facebook:hover { color: #1877F2; }
+			.icon-link.zoom:hover { color: #0e71eb; }
+			.icon-link.teams:hover { color: #464eb8; }
+			.icon-link.twitter:hover { color: #1DA1F2; }
+			.readmore-btn {
+			color: #007bff;
+			text-decoration: none;
+			}
+			.readmore-btn:hover {
+			text-decoration: underline;
+			}
+		</style>
+		</body>
 
 		</section>
 
