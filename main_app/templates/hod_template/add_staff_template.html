@@ -1,27 +1,40 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
-{% block custom_css %}
-  <style>
-      .invalid{
-        font-style: italic;
-        font-weight: bold;
-        color: red;
-      }
-      .valid{
-        font-style: italic;
-        font-weight: bold;
-        color: green;
-      }
-  </style>
-{% endblock custom_css %}
-{% block content %}
 
+{% block custom_css %}
+<style>
+    .invalid{
+      font-style: italic;
+      font-weight: bold;
+      color: red;
+    }
+    .valid{
+      font-style: italic;
+      font-weight: bold;
+      color: green;
+    }
+    .password-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .password-wrapper button {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <!-- general form elements -->
                 <div class="card card-dark">
                     <div class="card-header">
                         <h3 class="card-title">{{page_title}}</h3>
@@ -29,8 +42,6 @@
 
                     {% include "main_app/form_template.html" with messages=messages  form=form button_text="Add Staff"%}
                 </div>
-                <!-- /.card -->
-
             </div>
         </div>
     </div>
@@ -38,118 +49,100 @@
 {% endblock content %}
 
 {% block custom_js %}
-<!-- Font Awesome for Eye Icon -->
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 />
 
 <script>
-  function validateEmail(email) {
-    const re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
-  }
+}
 
-  $(document).ready(function () {
-    // 🔹 Hide the Add Staff button at first
+$(document).ready(function () {
     const addBtn = $("button[type='submit']");
     addBtn.hide();
 
-    // 🔹 Wrap password field with eye icon toggle
     const passwordField = $("#id_password");
     if (passwordField.length) {
-      passwordField.wrap('<div class="password-wrapper"></div>');
-      passwordField.after(`
-          <button type="button" id="togglePassword">
-            <i class="fas fa-eye"></i>
-          </button>
-      `);
+        passwordField.wrap('<div class="password-wrapper"></div>');
+        passwordField.after(`
+            <button type="button" id="togglePassword">
+                <i class="fas fa-eye"></i>
+            </button>
+        `);
 
-      // Toggle visibility
-      $(document).on("click", "#togglePassword", function () {
-        const inputType = passwordField.attr("type");
-        const icon = $(this).find("i");
-
-        if (inputType === "password") {
-          passwordField.attr("type", "text");
-          icon.removeClass("fa-eye").addClass("fa-eye-slash");
-        } else {
-          passwordField.attr("type", "password");
-          icon.removeClass("fa-eye-slash").addClass("fa-eye");
-        }
-      });
+        $(document).on("click", "#togglePassword", function () {
+            const inputType = passwordField.attr("type");
+            const icon = $(this).find("i");
+            if (inputType === "password") {
+                passwordField.attr("type", "text");
+                icon.removeClass("fa-eye").addClass("fa-eye-slash");
+            } else {
+                passwordField.attr("type", "password");
+                icon.removeClass("fa-eye-slash").addClass("fa-eye");
+            }
+        });
     }
 
-    // 🔹 Function to check if all fields are filled
     function checkFormCompletion() {
-      let isValid = true;
-      const requiredFields = [
-        "#id_first_name",
-        "#id_last_name",
-        "#id_address",
-        "#id_school",
-        "#id_email",
-        "#id_gender",
-        "#id_password",
-        "#id_course",
-        "#id_profile_pic",
-      ];
+        let isValid = true;
+        const requiredFields = [
+            "#id_first_name",
+            "#id_last_name",
+            "#id_address",
+            "#id_school",
+            "#id_email",
+            "#id_gender",
+            "#id_password",
+            "#id_course",
+            "#id_profile_pic"
+        ];
 
-      requiredFields.forEach(function (selector) {
-        const value = $(selector).val();
-        if (!value || value.trim() === "") {
-          isValid = false;
+        requiredFields.forEach(function (selector) {
+            const value = $(selector).val();
+            if (!value || value.trim() === "") {
+                isValid = false;
+            }
+        });
+
+        const emailVal = $("#id_email").val();
+        if (!validateEmail(emailVal)) {
+            isValid = false;
         }
-      });
 
-      // Email format validation
-      const emailVal = $("#id_email").val();
-      if (!validateEmail(emailVal)) {
-        isValid = false;
-      }
-
-      // Show/hide button based on completeness
-      if (isValid) {
-        addBtn.fadeIn();
-      } else {
-        addBtn.fadeOut();
-      }
+        if (isValid) {
+            addBtn.fadeIn();
+        } else {
+            addBtn.fadeOut();
+        }
     }
 
-    // 🔹 Check form fields dynamically
     $("input, select").on("input change", checkFormCompletion);
 
-    // 🔹 AJAX check for email availability
     $("#id_email").keyup(function () {
-      var email = $(this).val();
-      if (validateEmail(email)) {
-        $.ajax({
-          url: "{% url 'check_email_availability' %}",
-          type: "POST",
-          data: { email: email },
-        })
-          .done(function (response) {
-            if (response == "True") {
-              $(".email_error").remove();
-              $(
-                "<span class='invalid email_error'>Email Address Already Exist</span>"
-              ).insertAfter("#id_email");
-            } else {
-              $(".email_error").remove();
-              $(
-                "<span class='valid email_error'>Email Address Available</span>"
-              ).insertAfter("#id_email");
-            }
-            checkFormCompletion(); // recheck after email check
-          })
-          .fail(function (response) {
-            $(
-              "<span class='alert alert-warning'>Server Could Not Process This</span>"
-            ).insertAfter("#id_email");
-          });
-      }
+        var email = $(this).val();
+        if (validateEmail(email)) {
+            $.ajax({
+                url: "{% url 'check_email_availability' %}",
+                type: 'POST',
+                data: {email: email},
+            }).done(function(response){
+                $(".email_error").remove();
+                if (response == "True") {
+                    $("<span class='invalid email_error'>Email Address Already Exist</span>").insertAfter("#id_email");
+                } else {
+                    $("<span class='valid email_error'>Email Address Available</span>").insertAfter("#id_email");
+                }
+                checkFormCompletion();
+            }).fail(function(){
+                $("<span class='alert alert-warning'>Server Could Not Process This</span>").insertAfter("#id_email");
+            });
+        }
     });
-  });
+
+    checkFormCompletion(); // initial check
+});
 </script>
 {% endblock custom_js %}

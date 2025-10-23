@@ -136,6 +136,7 @@
                         </li>
                     </ul>
                 </li>
+                <!-- School Dropdown -->
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-book"></i>
@@ -144,168 +145,137 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <li class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-project-diagram"></i>
-                            <p>
-                                Circuits
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                {% url 'circuit_gallery' as circuit_gallery %}
-                                <a href="{{ circuit_gallery }}" class="nav-link {% if circuit_gallery == request.path %} active {% endif %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Circuit Gallery</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                {% url 'view_circuit' 1 as view_circuit %}
-                                <a href="{{ view_circuit }}" class="nav-link {% if view_circuit == request.path %} active {% endif %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>View Circuit</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                {% url 'add_circuit' as add_circuit %}
-                                <a href="{{ add_circuit }}" class="nav-link {% if add_circuit == request.path %} active {% endif %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Add Circuit</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                {% url 'delete_circuit' 1 as delete_circuit %}
-                                <a href="{{ delete_circuit }}" class="nav-link {% if delete_circuit == request.path %} active {% endif %}">
-                                    <i class="far fa-circle nav-icon text-danger"></i>
-                                    <p>Delete Circuit</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             {% url 'add_school' as add_school %}
-                            <a href="{{add_school}}"
-                                class="nav-link  {% if add_school == request.path %} active {% endif %}">
+                            <a href="{{ add_school }}" class="nav-link {% if add_school == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Add School
-
-                                </p>
+                                <p>Add School</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'manage_school' as manage_school %}
                             {% url 'edit_subject' subject_id as edit_school %}
-                            <a href="{{manage_school}}"
-                                class="nav-link  {% if edit_school == request.path or manage_school == request.path %} active {% endif %}">
+                            <a href="{{ manage_school }}" class="nav-link {% if edit_school == request.path or manage_school == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Manage School
-
-                                </p>
+                                <p>Manage School</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'addsos' as addsos %}
-                            <a href="{{addsos}}"
-                                class="nav-link  {% if addsos == request.path %} active {% endif %}">
+                            <a href="{{ addsos }}" class="nav-link {% if addsos == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Add Assesment Dates
-
-                                </p>
+                                <p>Add Assessment Dates</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'soslistview' as soslistview %}
-                            <a href="{{soslistview}}"
-                                class="nav-link  {% if soslistview == request.path %} active {% endif %}">
+                            <a href="{{ soslistview }}" class="nav-link {% if soslistview == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Assessment List
-
-                                </p>
+                                <p>Assessment List</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'add_term' as add_term %}
-                            <a href="{{add_term}}"
-                                class="nav-link  {% if add_term == request.path %} active {% endif %}">
+                            <a href="{{ add_term }}" class="nav-link {% if add_term == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Add Term
-
-                                </p>
+                                <p>Add Term</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'manage_term' as manage_term %}
                             {% url 'edit_term' term_id as edit_term %}
-                            <a href="{{manage_term}}"
-                                class="nav-link  {% if edit_term == request.path or manage_term == request.path %} active {% endif %}">
+                            <a href="{{ manage_term }}" class="nav-link {% if edit_term == request.path or manage_term == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Manage Term
-
-                                </p>
+                                <p>Manage Term</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'add_grade' as add_grade %}
-                            <a href="{{add_grade}}"
-                                class="nav-link  {% if add_grade == request.path %} active {% endif %}">
+                            <a href="{{ add_grade }}" class="nav-link {% if add_grade == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Add Grade
-
-                                </p>
+                                <p>Add Grade</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'manage_grade' as manage_grade %}
-                            {% url 'edit_grade' subject_id as edit_school %}
-                            <a href="{{manage_grade}}"
-                                class="nav-link  {% if edit_grade == request.path or manage_grade == request.path %} active {% endif %}">
+                            {% url 'edit_grade' subject_id as edit_grade %}
+                            <a href="{{ manage_grade }}" class="nav-link {% if edit_grade == request.path or manage_grade == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Manage Grade
-
-                                </p>
+                                <p>Manage Grade</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'add_subject' as add_subject %}
-                            <a href="{{add_subject}}"
-                                class="nav-link  {% if add_subject == request.path %} active {% endif %}">
+                            <a href="{{ add_subject }}" class="nav-link {% if add_subject == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Add Subject
-
-                                </p>
+                                <p>Add Subject</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             {% url 'manage_subject' as manage_subject %}
                             {% url 'edit_subject' subject_id as edit_subject %}
-                            <a href="{{manage_subject}}"
-                                class="nav-link  {% if edit_subject == request.path or manage_subject == request.path %} active {% endif %}">
+                            <a href="{{ manage_subject }}" class="nav-link {% if edit_subject == request.path or manage_subject == request.path %} active {% endif %}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Manage Subject
+                                <p>Manage Subject</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
-                                </p>
+                <!-- Circuits Dropdown -->
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-project-diagram"></i>
+                        <p>
+                            Circuits
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            {% url 'circuit_gallery' as circuit_gallery %}
+                            <a href="{{ circuit_gallery }}" class="nav-link {% if circuit_gallery == request.path %} active {% endif %}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Circuit Gallery</p>
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            {% url 'view_circuit' 1 as view_circuit %}
+                            <a href="{{ view_circuit }}" class="nav-link {% if view_circuit == request.path %} active {% endif %}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>View Circuit</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            {% url 'add_circuit' as add_circuit %}
+                            <a href="{{ add_circuit }}" class="nav-link {% if add_circuit == request.path %} active {% endif %}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add Circuit</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            {% url 'delete_circuit' 1 as delete_circuit %}
+                            <a href="{{ delete_circuit }}" class="nav-link {% if delete_circuit == request.path %} active {% endif %}">
+                                <i class="far fa-circle nav-icon text-danger"></i>
+                                <p>Delete Circuit</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
+
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-clock"></i>

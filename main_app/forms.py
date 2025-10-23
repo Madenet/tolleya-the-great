@@ -650,3 +650,15 @@ class CustomPasswordResetForm(forms.Form):
         if not CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError("No user with this email address found.")
         return email
+
+
+class NewsAndEventsForm(forms.ModelForm):
+    class Meta:
+        model = NewsAndEvents
+        fields = ['title', 'summary', 'posted_as', 'image']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'summary': forms.Textarea(attrs={'class': 'form-control'}),
+            'posted_as': forms.Select(attrs={'class': 'form-control'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }

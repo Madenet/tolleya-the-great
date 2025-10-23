@@ -1,72 +1,117 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
+
 {% block custom_css %}
-  <style>
-      .invalid{
-        font-style: italic;
-        font-weight: bold;
-        color: red;
-      }
-      .valid{
-        font-style: italic;
-        font-weight: bold;
-        color: green;
-      }
-  </style>
+<style>
+  .invalid {
+    font-style: italic;
+    font-weight: bold;
+    color: red;
+  }
+  .valid {
+    font-style: italic;
+    font-weight: bold;
+    color: green;
+  }
+  button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+</style>
 {% endblock custom_css %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
-
 <section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-dark">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="card card-dark">
+          <div class="card-header">
+            <h3 class="card-title">{{ page_title }}</h3>
+          </div>
 
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Add Student"%}
-                </div>
-                <!-- /.card -->
-
-            </div>
+          {% include "main_app/form_template.html" with messages=messages form=form button_text="Add Student" %}
         </div>
+        <!-- /.card -->
+      </div>
     </div>
+  </div>
 </section>
 {% endblock content %}
+
 {% block custom_js %}
 <script>
-    function validateEmail(email) {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-    $(document).ready(function(){
-        $("#id_email").keyup(function(){
-            
-            var email = $(this).val()
-            if (validateEmail(email)){
-            $.ajax({
-                url: "{% url 'check_email_availability' %}",
-                type: 'POST',
-                data:{email:email}
-            }).done(function(response){
-                if (response == "True"){
-                    $(".email_error").remove()
-                    $("<span class='invalid email_error'>Email Address Already Exist</span>").insertAfter("#id_email");
-                }
-                else{
-                    $(".email_error").remove()
+function validateEmail(email) {
+  const re =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 
-                    $("<span class='valid email_error'>Email Address Available</span>").insertAfter("#id_email");
-                }
-            }).fail(function(response){
-                $("<span class='alert alert-warning'>Server Could Not Process This</span>").insertAfter("#id_email");
-            })
-        }
-        })
+$(document).ready(function () {
+  const form = $("form");
+  const addButton = form.find("button[type='submit']");
+  addButton.prop("disabled", true);
+
+  let emailValid = false;
+
+  function checkFormFilled() {
+    let allFilled = true;
+
+    form.find("input, select, textarea").each(function () {
+      if ($(this).prop("required") && $(this).val().trim() === "") {
+        allFilled = false;
+      }
     });
+
+    if (allFilled && emailValid) {
+      addButton.prop("disabled", false);
+    } else {
+      addButton.prop("disabled", true);
+    }
+  }
+
+  // Validate email input dynamically
+  $("#id_email").on("keyup change", function () {
+    var email = $(this).val();
+    if (validateEmail(email)) {
+      $.ajax({
+        url: "{% url 'check_email_availability' %}",
+        type: "POST",
+        data: { email: email },
+      })
+        .done(function (response) {
+          if (response === "True") {
+            $(".email_error").remove();
+            $("<span class='invalid email_error'>Email Address Already Exists</span>").insertAfter("#id_email");
+            emailValid = false;
+          } else {
+            $(".email_error").remove();
+            $("<span class='valid email_error'>Email Address Available</span>").insertAfter("#id_email");
+            emailValid = true;
+          }
+          checkFormFilled();
+        })
+        .fail(function () {
+          $(".email_error").remove();
+          $("<span class='invalid email_error'>Server Error — Try Again</span>").insertAfter("#id_email");
+          emailValid = false;
+          checkFormFilled();
+        });
+    } else {
+      $(".email_error").remove();
+      $("<span class='invalid email_error'>Invalid Email Format</span>").insertAfter("#id_email");
+      emailValid = false;
+      checkFormFilled();
+    }
+  });
+
+  // Monitor all inputs in the form
+  form.find("input, select, textarea").on("keyup change", function () {
+    checkFormFilled();
+  });
+});
 </script>
 {% endblock custom_js %}

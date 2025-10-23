@@ -10,16 +10,21 @@
         width: 100% !important;
     }
 
-    .invalid{
+    .invalid {
         font-style: italic;
         font-weight: bold;
         color: red;
-      }
-      .valid{
+    }
+
+    .valid {
         font-style: italic;
         font-weight: bold;
         color: green;
-      }
+    }
+
+    .is-invalid {
+        border: 2px solid red !important;
+    }
 </style>
 {% endblock custom_css %}
 
@@ -51,6 +56,7 @@
                             <div class="form-group">
                                 <label for="gender">Gender</label>
                                 <select name="gender" class="form-control" id="gender" required>
+                                    <option value="">Select Gender</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
                                     <option value="O">Other</option>
@@ -68,7 +74,7 @@
                                 <label for="profile_pic">Profile Picture</label>
                                 <input type="file" name="profile_pic" class="form-control" id="profile_pic">
                             </div>
-                            <!-- Search Bar for Students -->
+
                             <!-- Search Bar for Students -->
                             <div class="search-dropdown" id="searchDropdown">
                                 <div class="input-group">
@@ -89,123 +95,15 @@
                             <!-- Selected Students Display -->
                             <div id="selectedStudentsList" style="margin-top: 10px;">
                                 <strong>Selected Students:</strong>
-                                <ul id="studentList">
-                                    <!-- Dynamically added students will appear here -->
-                                </ul>
+                                <ul id="studentList"></ul>
                             </div>
 
-                            <!-- Hidden input to store the selected student IDs -->
+                            <!-- Hidden input to store selected student IDs -->
                             <input type="hidden" name="students" id="students" value="">
-
-                            <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const searchInput = document.getElementById("id_q");
-                                const searchButton = document.getElementById("searchButton");
-                                const studentsResults = document.getElementById("studentsResults");
-                                const studentList = document.getElementById("studentList");
-                                const hiddenStudentInput = document.getElementById("students");
-
-                                let selectedStudents = []; // To store selected students
-
-                                function fetchStudents(query) {
-                                    fetch(`/search_students/?q=${encodeURIComponent(query)}`, {
-                                        method: "GET",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                    })
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        studentsResults.innerHTML = ""; // Clear previous results
-                                        if (data.length > 0) {
-                                            data.forEach((student) => {
-                                                const div = document.createElement("div");
-                                                div.classList.add("dropdown-item");
-                                                div.textContent = student.name;
-                                                div.setAttribute("data-id", student.id); // Store student ID for selection
-
-                                                div.addEventListener("click", function () {
-                                                    const studentId = div.getAttribute("data-id");
-                                                    const studentName = div.textContent;
-
-                                                    // Add the student to the selected list if not already added
-                                                    if (!selectedStudents.some(student => student.id === studentId)) {
-                                                        selectedStudents.push({ id: studentId, name: studentName });
-                                                        updateStudentList();
-                                                    }
-
-                                                    // Clear the search field and close the dropdown
-                                                    searchInput.value = '';
-                                                    studentsResults.style.display = "none";
-                                                });
-
-                                                studentsResults.appendChild(div);
-                                            });
-                                            studentsResults.style.display = "block"; // Show dropdown
-                                        } else {
-                                            studentsResults.innerHTML = "<div class='dropdown-item'>No students found</div>";
-                                            studentsResults.style.display = "block"; // Show dropdown with no results
-                                        }
-                                    })
-                                    .catch((error) => {
-                                        console.error("Error fetching students:", error);
-                                    });
-                                }
-
-                                // Function to dynamically render the selected students
-                                function updateStudentList() {
-                                    studentList.innerHTML = ''; // Clear the current list
-                                    selectedStudents.forEach(student => {
-                                        const li = document.createElement("li");
-                                        li.textContent = student.name;
-
-                                        const removeButton = document.createElement("button");
-                                        removeButton.textContent = "Remove";
-                                        removeButton.classList.add("btn", "btn-sm", "btn-danger", "ml-2");
-                                        removeButton.addEventListener("click", function () {
-                                            // Remove student from selected list
-                                            selectedStudents = selectedStudents.filter(s => s.id !== student.id);
-                                            updateStudentList();
-                                        });
-
-                                        li.appendChild(removeButton);
-                                        studentList.appendChild(li);
-                                    });
-
-                                    // Update the hidden input with the selected student IDs
-                                    hiddenStudentInput.value = selectedStudents.map(s => s.id).join(',');
-                                }
-
-                                // Search button click handler
-                                searchButton.addEventListener("click", function () {
-                                    const query = searchInput.value.trim();
-                                    if (query.length > 0) {
-                                        fetchStudents(query);
-                                    } else {
-                                        studentsResults.style.display = "none";
-                                    }
-                                });
-
-                                // Real-time search as the user types
-                                searchInput.addEventListener("keyup", function () {
-                                    const query = searchInput.value.trim();
-                                    if (query.length > 0) {
-                                        fetchStudents(query);
-                                    } else {
-                                        studentsResults.style.display = "none";
-                                    }
-                                });
-                            });
-                            </script>
-
-
-                            
-
-                            <!-- Select Students Section -->
-                            
                         </div>
+
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Add Parent</button>
+                            <button type="submit" id="submitBtn" class="btn btn-primary">Add Parent</button>
                         </div>
                     </form>
                 </div>
@@ -218,83 +116,125 @@
 {% block custom_js %}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("id_q");
-        const studentsResults = document.getElementById("studentsResults");
-        
-        searchInput.addEventListener("keyup", function () {
-            const query = searchInput.value.trim();
-            if (query.length > 0) {
-                fetch("{% url 'search_students' %}?q=" + encodeURIComponent(query), {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Clear previous results
-                    studentsResults.innerHTML = "";
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("id_q");
+    const searchButton = document.getElementById("searchButton");
+    const studentsResults = document.getElementById("studentsResults");
+    const studentList = document.getElementById("studentList");
+    const hiddenStudentInput = document.getElementById("students");
+    const form = document.querySelector("form");
+    const submitBtn = document.getElementById("submitBtn");
 
-                    // Display results in dropdown
-                    if (data.length > 0) {
-                        data.forEach(student => {
-                            const div = document.createElement("div");
-                            div.classList.add("dropdown-item");
-                            div.textContent = student.name;
-                            div.setAttribute("data-id", student.id); // Store student ID for selection
+    let selectedStudents = [];
 
-                            div.addEventListener("click", function () {
-                                const studentId = div.getAttribute("data-id");
-                                const studentName = div.textContent;
-                                // You can handle the selected student here, for example:
-                                console.log(`Selected Student ID: ${studentId}, Name: ${studentName}`);
-                                searchInput.value = studentName; // Update input field with selected student
-                                studentsResults.style.display = "none"; // Hide dropdown
-                            });
+    // Fetch students dynamically
+    function fetchStudents(query) {
+        fetch(`/search_students/?q=${encodeURIComponent(query)}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            studentsResults.innerHTML = "";
+            if (data.length > 0) {
+                data.forEach((student) => {
+                    const div = document.createElement("div");
+                    div.classList.add("dropdown-item");
+                    div.textContent = student.name;
+                    div.setAttribute("data-id", student.id);
 
-                            studentsResults.appendChild(div);
-                        });
-                        studentsResults.style.display = "block"; // Show dropdown if results exist
-                    } else {
-                        studentsResults.innerHTML = "<div class='dropdown-item'>No students found</div>";
-                        studentsResults.style.display = "block"; // Show dropdown with no results
-                    }
-                })
-                .catch(error => console.error("Error fetching students:", error));
+                    div.addEventListener("click", function () {
+                        const studentId = div.getAttribute("data-id");
+                        const studentName = div.textContent;
+
+                        if (!selectedStudents.some(s => s.id === studentId)) {
+                            selectedStudents.push({ id: studentId, name: studentName });
+                            updateStudentList();
+                        }
+
+                        searchInput.value = '';
+                        studentsResults.style.display = "none";
+                        validateForm();
+                    });
+
+                    studentsResults.appendChild(div);
+                });
+                studentsResults.style.display = "block";
             } else {
-                studentsResults.style.display = "none"; // Hide dropdown if query is empty
+                studentsResults.innerHTML = "<div class='dropdown-item'>No students found</div>";
+                studentsResults.style.display = "block";
+            }
+        })
+        .catch((error) => console.error("Error fetching students:", error));
+    }
+
+    // Update selected student list
+    function updateStudentList() {
+        studentList.innerHTML = "";
+        selectedStudents.forEach(student => {
+            const li = document.createElement("li");
+            li.textContent = student.name;
+
+            const removeButton = document.createElement("button");
+            removeButton.textContent = "Remove";
+            removeButton.classList.add("btn", "btn-sm", "btn-danger", "ml-2");
+            removeButton.addEventListener("click", function () {
+                selectedStudents = selectedStudents.filter(s => s.id !== student.id);
+                updateStudentList();
+                validateForm();
+            });
+
+            li.appendChild(removeButton);
+            studentList.appendChild(li);
+        });
+
+        hiddenStudentInput.value = selectedStudents.map(s => s.id).join(',');
+    }
+
+    // Search functionality
+    searchButton.addEventListener("click", function () {
+        const query = searchInput.value.trim();
+        if (query.length > 0) {
+            fetchStudents(query);
+        } else {
+            studentsResults.style.display = "none";
+        }
+    });
+
+    searchInput.addEventListener("keyup", function () {
+        const query = searchInput.value.trim();
+        if (query.length > 0) {
+            fetchStudents(query);
+        } else {
+            studentsResults.style.display = "none";
+        }
+    });
+
+    // Validation
+    const requiredFields = ["first_name", "last_name", "email", "gender", "password"];
+
+    function validateForm() {
+        let allFilled = true;
+
+        requiredFields.forEach(id => {
+            const field = document.getElementById(id);
+            if (!field || field.value.trim() === "") {
+                field.classList.add("is-invalid");
+                allFilled = false;
+            } else {
+                field.classList.remove("is-invalid");
             }
         });
-    });
 
-    function validateEmail(email) {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-    $(document).ready(function(){
-        $("#id_email").keyup(function(){
-            
-            var email = $(this).val()
-            if (validateEmail(email)){
-            $.ajax({
-                url: "{% url 'check_email_availability' %}",
-                type: 'POST',
-                data:{email:email}
-            }).done(function(response){
-                if (response == "True"){
-                    $(".email_error").remove()
-                    $("<span class='invalid email_error'>Email Address Already Exist</span>").insertAfter("#id_email");
-                }
-                else{
-                    $(".email_error").remove()
-                    $("<span class='valid email_error'>Email Address Available</span>").insertAfter("#id_email");
-                }
-            }).fail(function(response){
-                $("<span class='alert alert-warning'>Server Could Not Process This</span>").insertAfter("#id_email");
-            })
+        if (!hiddenStudentInput.value.trim()) {
+            allFilled = false;
         }
-        })
-    });
+
+        submitBtn.disabled = !allFilled;
+    }
+
+    form.addEventListener("input", validateForm);
+    validateForm(); // Initial check
+});
 </script>
 {% endblock custom_js %}

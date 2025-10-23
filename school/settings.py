@@ -198,14 +198,18 @@ DATABASES = {
 }
 
 #aws connected online media file
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#aws database
 
+#aws database
+# AWS S3 configuration
 #aws database
 #aes configurations
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME")
+AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME")  # e.g., us-west-1
 
 AWS_DEFAULT_ACL = None  # Optional, makes sure no ACLs are applied
 
@@ -213,13 +217,9 @@ AWS_DEFAULT_ACL = None  # Optional, makes sure no ACLs are applied
 #file overwrite
 AWS_S3_FILE_OVERWRITE = False
 # Media storage in S3
-DEFAULT_FILE_STORAGE = 'school.storages_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
-
-# Optional: if you use S3 for static files as well
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

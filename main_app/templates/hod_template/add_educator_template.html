@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+
 {% block custom_css %}
 <style>
     .invalid {
@@ -39,24 +40,24 @@
                     <div class="card-header">
                         <h3 class="card-title">{{ page_title }}</h3>
                     </div>
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" id="educatorForm">
                         {% csrf_token %}
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="first_name">First Name</label>
-                                <input type="text" class="form-control" name="first_name" placeholder="Enter First Name" required>
+                                <input type="text" class="form-control required-field" name="first_name" placeholder="Enter First Name" required>
                             </div>
                             <div class="form-group">
                                 <label for="last_name">Last Name</label>
-                                <input type="text" class="form-control" name="last_name" placeholder="Enter Last Name" required>
+                                <input type="text" class="form-control required-field" name="last_name" placeholder="Enter Last Name" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
+                                <input type="email" class="form-control required-field" name="email" placeholder="Enter Email" required>
                             </div>
                             <div class="form-group">
                                 <label for="gender">Gender</label>
-                                <select class="form-control" name="gender" required>
+                                <select class="form-control required-field" name="gender" required>
                                     <option value="">Select Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -64,15 +65,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
+                                <input type="password" class="form-control required-field" name="password" placeholder="Enter Password" required>
                             </div>
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <textarea class="form-control" name="address" rows="3" placeholder="Enter Address"></textarea>
+                                <textarea class="form-control required-field" name="address" rows="3" placeholder="Enter Address" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="school">School</label>
-                                <select class="form-control" name="school" required>
+                                <select class="form-control required-field" name="school" required>
                                     <option value="">Select School</option>
                                     {% for school in schools %}
                                         <option value="{{ school.id }}">{{ school.name }}</option>
@@ -86,7 +87,7 @@
                                         <div class="form-check">
                                             <input 
                                                 type="checkbox" 
-                                                class="form-check-input" 
+                                                class="form-check-input subject-checkbox" 
                                                 id="subject_{{ subject.id }}" 
                                                 name="subjects" 
                                                 value="{{ subject.id }}">
@@ -97,14 +98,13 @@
                                     {% endfor %}
                                 </div>
                             </div>
-                            
                             <div class="form-group">
                                 <label for="profile_pic">Profile Picture</label>
                                 <input type="file" class="form-control" name="profile_pic">
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Add Educator</button>
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-primary" id="addEducatorBtn" disabled>Add Educator</button>
                         </div>
                     </form>
                 </div>
@@ -112,4 +112,31 @@
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("educatorForm");
+    const requiredFields = form.querySelectorAll(".required-field");
+    const subjectCheckboxes = form.querySelectorAll(".subject-checkbox");
+    const submitBtn = document.getElementById("addEducatorBtn");
+
+    function validateForm() {
+        let allFilled = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                allFilled = false;
+            }
+        });
+
+        // At least one subject must be selected
+        const subjectSelected = Array.from(subjectCheckboxes).some(cb => cb.checked);
+
+        submitBtn.disabled = !(allFilled && subjectSelected);
+    }
+
+    requiredFields.forEach(field => field.addEventListener("input", validateForm));
+    subjectCheckboxes.forEach(cb => cb.addEventListener("change", validateForm));
+});
+</script>
 {% endblock content %}
